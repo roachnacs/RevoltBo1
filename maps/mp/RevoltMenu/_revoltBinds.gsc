@@ -148,6 +148,7 @@ doMovement()
 
 changeclasscanbind()
 {
+    self endon("disconnect");
     self thread doChangeClass();
     waittillframeend;
     if(self.pers["CCType"] == "canswap")
@@ -228,6 +229,7 @@ doChangeClass()
 
 donac() // shoutout joey
 {
+    self endon("disconnect");
     camo = self getcamo();
     primary = self getprimary();
     right = 0;
@@ -296,6 +298,7 @@ donac() // shoutout joey
 
 doSnac()
 {
+    self endon("disconnect");
     if(self getCurrentWeapon() == self.pers["snacweap1"])
     {
         self SetSpawnWeapon( self.pers["snacweap2"] );
