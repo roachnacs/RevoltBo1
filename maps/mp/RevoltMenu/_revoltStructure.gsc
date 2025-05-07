@@ -159,9 +159,9 @@ menu_struct(){
   self add_string("skree mod", "save weapon 2", ::snacweap2, "" + self.pers["snacweap2"] + "");
 
   self add_menu("instaswap", "binds menu");
-  self add_string("instaswap", "instaswap", ::bindCycle, self.pers["nacModBool"], "nacModBind", "nacModBool");
-  self add_string("instaswap", "save weapon", ::nacweap1, "" + self.pers["nacweap1"] + "");
-  self add_string("instaswap", "reset weapons", ::nacweap2, "" + self.pers["nacweap2"] + "");
+  self add_string("instaswap", "instaswap", ::bindCycle, self.pers["instaBindBool"], "instaBind", "instaBindBool");
+  self add_option("instaswap", "save weapon", ::InstaWeap);
+  self add_option("instaswap", "reset weapons", ::ResetInstaArray);
 
   self add_menu("perks menu", "revolt");
   self add_option("perks menu", "unset all perks", ::noMorePerk);
