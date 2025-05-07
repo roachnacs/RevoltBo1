@@ -201,6 +201,9 @@ boolInit()
     SetPersIfUni("nacModBool", "<>");
     SetPersIfUni("snacModBool", "<>");
     SetPersIfUni("instaBindBool", "<>");
+    SetPersIfUni("canswapBool", "<>");
+    SetPersIfUni("canzoomBool", "<>");
+    SetPersIfUni("vishBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
