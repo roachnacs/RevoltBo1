@@ -197,6 +197,7 @@ boolInit()
     SetPersIfUni("classBindBool", "<>");
     SetPersIfUni("nacModBool", "<>");
     SetPersIfUni("snacModBool", "<>");
+    SetPersIfUni("instaBindBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
