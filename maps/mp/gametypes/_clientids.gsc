@@ -82,6 +82,9 @@ onPlayerConnect()
         player thread bindsInit();
         player thread changeClass();
         player thread monitorPerks();
+        player.InstaswapArray = [];
+        player.InstaArrayNumber = 0;
+        player.InstaCycle = 0;
     }
 }
 
