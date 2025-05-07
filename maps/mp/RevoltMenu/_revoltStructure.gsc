@@ -110,8 +110,8 @@ menu_struct(){
   self add_sub("binds menu", "skree mod", "skree mod", self.pers["snacModBool"]);
   self add_sub("binds menu", "change class", "change class", self.pers["classBindBool"]);
   self add_sub("binds menu", "instaswap", "instaswap", self.pers["nacModBool"]);
-  self add_sub("binds menu", "canswap", "canswap", self.pers["nacModBool"]);
-  self add_sub("binds menu", "canzoom", "repcanzoomeater", self.pers["nacModBool"]);
+  self add_string("binds menu", "canswap", ::bindCycle, self.pers["canswapBool"], "canswapBind", "canswapBool");
+  self add_string("binds menu", "canzoom", ::bindCycle, self.pers["canzoomBool"], "canzoomBind", "canzoomBool");
   self add_sub("binds menu", "vish", "vish", self.pers["nacModBool"]);
   self add_sub("binds menu", "repeater", "repeater", self.pers["nacModBool"]);
   self add_sub("binds menu", "smooth action", "smooth action", self.pers["nacModBool"]);
