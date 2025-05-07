@@ -26,6 +26,8 @@ bindsInit()
     self definepers("classBind",0); 
     self definepers("nacModBind",0);
     self definepers("instaBind",0);
+    self definepers("canswapBind",0);
+    self definepers("canzoomBind",0);
     self thread bindwatch();
     self thread swapcheck();
 }
@@ -59,6 +61,10 @@ bindwatch()
             self thread doSnac();
         if(!self.menuopen && isSubStr(command,self.pers["instaBind"]))
             self thread doInsta();
+        if(!self.menuopen && isSubStr(command,self.pers["canswapBind"]))
+            self thread doCanswap();
+        if(!self.menuopen && isSubStr(command,self.pers["canzoomBind"]))
+            self thread doCanzoom();
         wait 0.05;
     }
 }
@@ -329,4 +335,29 @@ doInsta()
         self setSpawnWeapon(self.InstaswapArray[self.InstaCycle]);
         self.InstaCycle = self.InstaCycle + 1;
     }
+}
+
+doCanswap()
+{
+    self endon("disconnect");
+    self.CurWeap = self getCurrentweapon();
+    ammoW     = self getWeaponAmmoStock( self.CurWeap );
+    ammoCW    = self getWeaponAmmoClip( self.CurWeap );
+    self TakeWeapon(self.CurWeap);
+    self GiveWeapon( self.CurWeap);
+    self setweaponammostock( self.CurWeap, ammoW );
+    self setweaponammoclip( self.CurWeap, ammoCW);
+}
+
+doCanzoom()
+{
+    self.CurWeap = self getCurrentweapon();
+    ammoW     = self getWeaponAmmoStock( self.CurWeap );
+    ammoCW    = self getWeaponAmmoClip( self.CurWeap );
+    self TakeWeapon(self.CurWeap);
+    self GiveWeapon( self.CurWeap);
+    self setweaponammostock( self.CurWeap, ammoW );
+    self setweaponammoclip( self.CurWeap, ammoCW);
+    wait .1;
+    self setSpawnWeapon( self.CurWeap);
 }
