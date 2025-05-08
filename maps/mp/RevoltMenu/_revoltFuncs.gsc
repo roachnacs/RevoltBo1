@@ -1158,6 +1158,18 @@ ResetInstaArray()
     self iPrintLn("^1Instaswap list was reset");
 }
 
+cowboyType()
+{
+    if(self.pers["cowboyType"] == "cowboy")
+    {
+        self.pers["cowboyType"] = "super cowboy";
+    }
+    else if(self.pers["cowboyType"] == "super cowboy")
+    {
+        self.pers["cowboyType"] = "cowboy";
+    }
+}
+
 // perks
 
 noMorePerk()
