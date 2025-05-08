@@ -200,6 +200,7 @@ boolInit()
     SetPersIfUni("InvisWeapBool", false);
     SetPersIfUni("RapidBool", false);
     SetPersIfUni("DropBool", false);
+    SetPersIfUni("equipAimbot", false);
     SetPersIfUni("AimbotWeapon", "^1not saved");
     SetPersIfUni("aimbotRadiusPrint", "100");
     SetPersIfUni("aimbotDelayPrint", "0");
@@ -210,6 +211,11 @@ boolInit()
     SetPersIfUni("nacModBool", "<>");
     SetPersIfUni("snacModBool", "<>");
     SetPersIfUni("instaBindBool", "<>");
+    SetPersIfUni("canswapBool", "<>");
+    SetPersIfUni("canzoomBool", "<>");
+    SetPersIfUni("vishBool", "<>"); 
+    SetPersIfUni("repeaterBindBool", "<>");
+    SetPersIfUni("cowboyBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
@@ -286,7 +292,6 @@ boolInit()
     SetPersIfUni("snacweap1", "<>");
     SetPersIfUni("snacweap2", "<>");
 }
-
 TeamName1(inp)
 {
     setDvar("g_TeamName_Allies", inp);
