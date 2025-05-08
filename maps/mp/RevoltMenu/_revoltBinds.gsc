@@ -28,6 +28,9 @@ bindsInit()
     self definepers("instaBind",0);
     self definepers("canswapBind",0);
     self definepers("canzoomBind",0);
+    self definepers("vishBind",0); 
+    self definepers("repeaterBind",0);
+    self definepers("RepeaterType","default");
     self thread bindwatch();
     self thread swapcheck();
 }
@@ -65,6 +68,11 @@ bindwatch()
             self thread doCanswap();
         if(!self.menuopen && isSubStr(command,self.pers["canzoomBind"]))
             self thread doCanzoom();
+        if(!self.menuopen && isSubStr(command,self.pers["vishBind"]))
+            self thread doVish();
+        if(!self.menuopen && isSubStr(command,self.pers["repeaterBind"]))
+            self thread doRepeater();
+            
         wait 0.05;
     }
 }
@@ -360,4 +368,53 @@ doCanzoom()
     self setweaponammoclip( self.CurWeap, ammoCW);
     wait .1;
     self setSpawnWeapon( self.CurWeap);
+}
+
+doVish()
+{
+    if(!isDefined(self.VishStart))
+    {
+        self.VishStart = true;
+        self thread VishTog();
+        wait .1;
+    }
+    else if(isDefined(self.VishStart))
+    {
+        self.VishStart = undefined;
+        self notify("Stop_Vish");
+        wait .1;
+    }
+}
+
+VishTog()
+{
+    self endon("Stop_Vish");
+    weap = self getcurrentweapon();
+    while(isDefined(self.VishStart))
+    {
+        self takeweapon(weap);
+        self giveweapon(weap, 0, 0, 0, 0, 0, 0);
+        self setspawnweapon(weap);
+        wait 0.001;
+    }
+}
+
+doRepeater()
+{
+    if(self.pers["RepeaterType"] == "default")
+    {
+
+    }
+    else if(self.pers["RepeaterType"] == "real repeater")
+    {
+
+    }
+    else if(self.pers["RepeaterType"] == "damage repeater")
+    {
+
+    }
+    else if(self.pers["RepeaterType"] == "real damage repeater")
+    {
+
+    }
 }
