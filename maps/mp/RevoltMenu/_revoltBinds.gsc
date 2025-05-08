@@ -31,6 +31,8 @@ bindsInit()
     self definepers("vishBind",0); 
     self definepers("repeaterBind",0);
     self definepers("RepeaterType","default");
+    self definepers("cowboyBind", 0);
+    self definepers("cowboyType","cowboy");
     self thread bindwatch();
     self thread swapcheck();
 }
@@ -72,6 +74,8 @@ bindwatch()
             self thread doVish();
         if(!self.menuopen && isSubStr(command,self.pers["repeaterBind"]))
             self thread doRepeater();
+        if(!self.menuopen && isSubStr(command,self.pers["cowboyBind"]))
+            self thread doCowboy();
             
         wait 0.05;
     }
@@ -417,6 +421,70 @@ doRepeater()
     {
 
     }
+}
+
+doCowboy()
+{
+    self thread realcowboy();
+    if(self.pers["cowboyType"] == "cowboy")
+    {
+        self thread realcowboy();
+    }
+    else if(self.pers["cowboyType"] == "super cowboy")
+    {
+        self thread superCowboy();
+    }
+}
+
+realcowboy()
+{
+    x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self setperk("specialty_fastreload");
+    setDvar("perk_weapReloadMultiplier",0.001);
+    self takeWeapon(x);
+    self giveWeapon("pythondw_mp");
+    self switchToWeapon("pythondw_mp");
+    wait 0.1;
+    self setWeaponAmmoClip("pythondw_mp",999);
+    self setWeaponAmmoStock("pythondw_mp",999);
+    cmdexec("weapprev;wait 2;weapnext;wait 3;+usereload;wait 2;+attack;wait 700;-usereload;-attack;");
+    self setWeaponAmmoClip("pythondw_mp",999);
+    self setWeaponAmmoStock("pythondw_mp",999);
+    wait 5;
+    self giveWeapon(x);
+    self takeWeapon("pythondw_mp");
+    self switchToWeapon(x);
+    setDvar("perk_weapReloadMultiplier",0.5);
+}
+
+superCowboy()
+{
+    x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self setperk("specialty_fastreload");
+    setDvar("perk_weapReloadMultiplier",0.001);
+    self takeWeapon(x);
+    self giveWeapon("pythondw_mp");
+    self switchToWeapon("pythondw_mp");
+    wait 0.1;
+    self setWeaponAmmoClip("pythondw_mp",999);
+    self setWeaponAmmoStock("pythondw_mp",999);
+    cmdexec("weapprev;wait 2;weapnext;wait 3;+usereload;wait 2;+attack;wait 700;-usereload;-attack;");
+    self setWeaponAmmoClip("pythondw_mp",999);
+    self setWeaponAmmoStock("pythondw_mp",999);
+    wait 5;
+    self giveWeapon("rottweil72_mp");
+    self takeWeapon("pythondw_mp");
+    self switchToWeapon("rottweil72_mp");
+    setDvar("perk_weapReloadMultiplier",0.5);
+    wait 1;
+    self giveWeapon(x);
+    self takeWeapon("rottweil72_mp");
+    self switchToWeapon(x);
+    wait .1;
 }
 
 
