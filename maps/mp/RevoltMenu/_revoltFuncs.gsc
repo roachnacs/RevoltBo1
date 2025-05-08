@@ -1134,6 +1134,30 @@ snacweap2()
     self.pers["snacweap2"] = self getCurrentWeapon();
 }
 
+InstaWeap()
+{
+    self.InstaswapArray[self.InstaArrayNumber] = self getcurrentweapon();
+    self.InstaArrayNumber = self.InstaArrayNumber + 1;
+    self thread PrintInstaArray();
+    self.InstaCycle = 0;
+}
+
+PrintInstaArray()
+{
+    for(i = 0; i < self.InstaArrayNumber; i++ )
+    {
+        self iPrintLn("^?" + self.InstaswapArray[i]);
+    }
+}
+
+ResetInstaArray()
+{
+    self.InstaswapArray = [];
+    self.InstaArrayNumber = 0;
+    self.InstaCycle = 0;
+    self iPrintLn("^1Instaswap list was reset");
+}
+
 // perks
 
 noMorePerk()
