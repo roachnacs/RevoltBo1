@@ -23,7 +23,7 @@
 | |   | || (      | | \   || |   | |                     
 | )   ( || (____/\| )  \  || (___) |                     
 |/     \|(_______/|/    )_)(_______)                     
-                                                         
+                 
 Version: 0.0.1
 Date: April 15, 2025
 */
@@ -56,6 +56,15 @@ init()
     level.claymorearray = [];
     precacheItem( "scavenger_item_mp" ); 
     precacheShader( "hud_scavenger_pickup" ); 
+    PreCacheModel("t5_veh_rcbomb_allies");
+	PreCacheModel("t5_veh_rcbomb_axis");
+    precacheItem( "scavenger_item_mp" );
+    precacheShader( "hud_scavenger_pickup" );
+    PrecacheShader("hud_icon_stuck_semtex");
+    PrecacheShader("hud_icon_stuck_arrow");
+    PrecacheShader("overlay_low_health");
+    PrecacheShader("net_new_animation");
+	PrecacheVehicle("rc_car_medium_mp");
 }
 
 onPlayerConnect()
@@ -201,9 +210,6 @@ boolInit()
     SetPersIfUni("nacModBool", "<>");
     SetPersIfUni("snacModBool", "<>");
     SetPersIfUni("instaBindBool", "<>");
-    SetPersIfUni("canswapBool", "<>");
-    SetPersIfUni("canzoomBool", "<>");
-    SetPersIfUni("vishBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);

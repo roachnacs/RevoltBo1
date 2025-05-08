@@ -418,3 +418,406 @@ doRepeater()
 
     }
 }
+
+
+/*
+ ______      ___      ___   ____  _____      __ ___  ____        _       _______     ____    ____       _        ______   _____  ____  _____  ______     ________  _____  _____  ____  _____   ______   ______   
+|_   _ \   .'   `.  .'   `.|_   \|_   _|    / /|_  ||_  _|      / \     |_   __ \   |_   \  /   _|     / \      |_   _ \ |_   _||_   \|_   _||_   _ `.  |_   __  ||_   _||_   _||_   \|_   _|.' ___  |.' ____ \  
+  | |_) | /  .-.  \/  .-.  \ |   \ | |     / /   | |_/ /       / _ \      | |__) |    |   \/   |      / _ \       | |_) |  | |    |   \ | |    | | `. \   | |_ \_|  | |    | |    |   \ | | / .'   \_|| (___ \_| 
+  |  __'. | |   | || |   | | | |\ \| |    / /    |  __'.      / ___ \     |  __ /     | |\  /| |     / ___ \      |  __'.  | |    | |\ \| |    | |  | |   |  _|     | '    ' |    | |\ \| | | |        _.____`.  
+ _| |__) |\  `-'  /\  `-'  /_| |_\   |_  / /    _| |  \ \_  _/ /   \ \_  _| |  \ \_  _| |_\/_| |_  _/ /   \ \_   _| |__) |_| |_  _| |_\   |_  _| |_.' /  _| |_       \ \__/ /    _| |_\   |_\ `.___.'\| \____) | 
+|_______/  `.___.'  `.___.'|_____|\____|/_/    |____||____||____| |____||____| |___||_____||_____||____| |____| |_______/|_____||_____|\____||______.'  |_____|       `.__.'    |_____|\____|`.____ .' \______.' 
+                                                                                                                                                                                                                 
+                                                                                                                                                                                                                 
+
+
+realcowboy()
+{
+                x = self getCurrentWeapon();
+                stock = self getWeaponAmmoStock(x);
+                clip = self getWeaponAmmoClip(x);
+	         self setperk("specialty_fastreload");
+             setDvar("perk_weapReloadMultiplier",0.001);
+             self takeWeapon(x);
+             self giveWeapon("pythondw_mp");
+             self switchToWeapon("pythondw_mp");
+             wait 0.1;
+             self setWeaponAmmoClip("pythondw_mp",999);
+             self setWeaponAmmoStock("pythondw_mp",999);
+             cmdexec("weapprev;wait 2;weapnext;wait 3;+usereload;wait 2;+attack;wait 700;-usereload;-attack;");
+             self setWeaponAmmoClip("pythondw_mp",999);
+             self setWeaponAmmoStock("pythondw_mp",999);
+             wait 5;
+             self giveWeapon(x);
+             self takeWeapon("pythondw_mp");
+             self switchToWeapon(x);
+             setDvar("perk_weapReloadMultiplier",0.5);
+}
+
+flash()
+{
+    self thread maps\mp\_flashgrenades::applyFlash(1, 1);
+}
+
+thirdeye()
+{
+    self thread maps\mp\_flashgrenades::applyFlash(0, 0);
+}
+
+
+stucksemtex()
+{
+if(self.semmy == 1)
+    {
+    self.semtex["shader"] = createRectangle( "hud_icon_stuck_semtex", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.semtex["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
+    self thread pulseHudElement(self.semtex["shaders"], 0.4, .75, 0.09);
+    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_semtex_alert", 0.3 );
+    self.semtex["shader"] destroy();
+    self.semtex["shaders"] destroy();
+    self suicide( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
+    PlayFX( level._supply_drop_explosion_fx, self.origin );
+    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
+    
+    }
+
+    else if(self.semmy == 2)
+    {
+    self.semtex["shader"] = createRectangle( "hud_icon_stuck_semtex", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.semtex["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
+    self thread pulseHudElement(self.semtex["shaders"], 0.4, .75, 0.09);
+    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_semtex_alert", 0.3 );
+    self.semtex["shader"] destroy();
+    self.semtex["shaders"] destroy();
+    self RadiusDamage( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
+    PlayFX( level._supply_drop_explosion_fx, self.origin );
+    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
+    }
+    else if(self.semmy == 3)
+    {
+    self.semtex["shader"] = createRectangle( "hud_icon_stuck_semtex", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.semtex["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
+    self thread pulseHudElement(self.semtex["shaders"], 0.4, .75, 0.09);
+    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_semtex_alert", 0.3 );
+    self.semtex["shader"] destroy();
+    self.semtex["shaders"] destroy();
+    }
+}
+
+
+onsemmy(name)
+{
+    if(name == "Explodes/Kills You")
+    {
+        self.semmy = 1;
+        self iprintln("Stuck Semtex Bind Action will ^6Explode/Kill You.");
+    }
+    if(name == "Explodes")
+    {
+        self.semmy = 2;
+        self iprintln("Stuck Semtex Bind Action will ^6Explode.");
+    }
+    if(name == "Only Overlay")
+    {
+        self.semmy = 3;
+        self iprintln("Stuck Semtex Bind Action will ^6Only Overlay.");
+    }
+}
+
+
+stuckarrow()
+{
+if(self.arrow == 1)
+    {
+    self thread [[level.callbackPlayerDamage]]( self, self, self.pers["SelfDamage"], 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+    self.arrow["shader"] = createRectangle( "hud_icon_stuck_arrow", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.arrow["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
+    self thread pulseHudElement(self.arrow["shaders"], 0.4, .75, 0.09);
+    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_crossbow_alert", 0.3 );
+    self.arrow["shader"] destroy();
+    self.arrow["shaders"] destroy();
+    self suicide( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
+    PlayFX( level._supply_drop_explosion_fx, self.origin );
+    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
+    
+    }
+
+    else if(self.arrow == 2)
+    {
+    self thread [[level.callbackPlayerDamage]]( self, self, self.pers["SelfDamage"], 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+    self.arrow["shader"] = createRectangle( "hud_icon_stuck_arrow", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.arrow["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
+    self thread pulseHudElement(self.arrow["shaders"], 0.4, .75, 0.09);
+    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_crossbow_alert", 0.3 );
+    self.arrow["shader"] destroy();
+    self.arrow["shaders"] destroy();
+    self RadiusDamage( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
+    PlayFX( level._supply_drop_explosion_fx, self.origin );
+    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
+    }
+    else if(self.arrow == 3)
+    {
+    self thread [[level.callbackPlayerDamage]]( self, self, self.pers["SelfDamage"], 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+    self.arrow["shader"] = createRectangle( "hud_icon_stuck_arrow", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.arrow["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
+    self thread pulseHudElement(self.arrow["shaders"], 0.4, .75, 0.09);
+    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_crossbow_alert", 0.3 );
+    self.arrow["shader"] destroy();
+    self.arrow["shaders"] destroy();
+    }
+}
+
+
+onarrow(name)
+{
+    if(name == "Explodes/Kills You")
+    {
+        self.arrow = 1;
+        self iprintln("Stuck Arrow Bind Action will ^6Explode/Kill You.");
+    }
+    if(name == "Explodes")
+    {
+        self.arrow = 2;
+        self iprintln("Stuck Arrow Bind Action will ^6Explode.");
+    }
+    if(name == "Only Overlay")
+    {
+        self.arrow = 3;
+        self iprintln("Stuck Arrow Bind Action will ^6Only Overlay.");
+    }
+}
+
+
+
+dropscav()
+{
+    if(self.scav == 1)
+    {
+    self setPerk("specialty_scavenger");
+    item = self dropScavengerItem( "scavenger_item_mp" );
+    item thread maps\mp\gametypes\_weapons::scavenger_think();
+    }
+
+    else if(self.scav == 2)
+    {
+    self.EmptyWeap = self getCurrentweapon();
+    WeapEmpClip    = self getWeaponAmmoClip(self.EmptyWeap);
+    WeapEmpStock     = self getWeaponAmmoStock(self.EmptyWeap);
+    self.scavenger_icon = NewClientHudElem( self );
+    self.scavenger_icon.horzAlign = "center";
+    self.scavenger_icon.vertAlign = "middle";
+    self.scavenger_icon.x = -36;
+    self.scavenger_icon.y = 32;
+    width = 64;
+    height = 32;
+    self.scavenger_icon setShader( "hud_scavenger_pickup", width, height );
+    self.scavenger_icon.alpha = 1;
+    self.scavenger_icon fadeOverTime( 2.5 );
+    self.scavenger_icon.alpha = 0;
+    self setweaponammostock(self.EmptyWeap, WeapEmpStock);
+    self setweaponammoclip(self.EmptyWeap, WeapEmpClip - WeapEmpClip);
+    wait 0.5;
+    self setweaponammostock(self.EmptyWeap, WeapEmpStock);
+    wait 1.8;
+    self.scavenger_icon destroy();
+    }
+}
+
+
+onscav(name)
+{
+    if(name == "Real Scav")
+    {
+        self.scav = 1;
+        self iprintln("Scav Bind Action will ^6drop scav.");
+    }
+    if(name == "Overlay")
+    {
+        self.scav = 2;
+        self iprintln("Scav Bind Action will ^6overlay.");
+    }
+}
+
+gflip()
+{
+    x = self getCurrentweapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self takeWeapon(x);
+    self setStance("prone");
+    self giveWeapon("m1911_mp");
+    self switchToWeapon("m1911_mp");
+    wait 0.01;
+    self setStance("prone");
+    self takeWeapon("m1911_mp");
+    self giveWeapon(x);
+    self setweaponammostock(x, 0);
+    self setweaponammoclip(x, 0);
+    self switchToWeapon(x);
+    wait 0.13;
+    self setStance("stand");
+    self setweaponammostock(x, stock);
+    self setweaponammoclip(x, clip);
+}
+
+l96()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("l96a1_mp");
+    self switchtoweapon("l96a1_mp");
+}
+
+wa2k()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("wa2000_mp");
+    self switchtoweapon("wa2000_mp");
+}
+
+psg1()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("psg1_mp");
+    self switchtoweapon("psg1_mp");
+}
+
+drag()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("dragunov_mp");
+    self switchtoweapon("dragunov_mp");
+}
+
+
+conn()
+{
+    self.fakelag["Text"] = self createtext( "default", 2.4, "CENTER", "default", 2, -152, undefined, 1, 1, "Connection Interrupted" );
+    self.fakelag["Guy"] = createRectangle( "net_new_animation", "CENTER", "CENTER", 0, 115, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.fakelag["Text"].alpha = 1;
+    self.fakelag["Guy"].alpha = 1;
+    wait 5;
+    self.fakelag["Text"].alpha = 0;
+    self.fakelag["Guy"].alpha = 0;
+    self.fakelag["Text"] destroy();
+    self.fakelag["Guy"] destroy();
+
+}
+
+drop_weapon_location()
+{
+    self.pers["drop_weapon_location"] = self getOrigin() + (0, 0, 20);
+    setDvar("weapx",self.origin[0]);
+    setDvar("weapy",self.origin[1]);
+    setDvar("weapz",self.origin[2]);
+    self iprintln("^7Your weapon will drop at: ^6" + self.pers["drop_weapon_location"]);
+
+}
+
+drop_weapon(new_location)
+{
+    level.weapon delete();
+    level.weapon.placeholder delete();
+    weapon = self.pers["drop_weapon_name"];
+    type = self.pers["drop_weapon_type"];
+
+    level.weapon = spawn("weapon_" + weapon, self.pers["drop_weapon_location"]);
+    level.weapon.angles = (0, 0, 0);
+    level.weapon.weapon = weapon;
+    level.weapon itemWeaponSetAmmo(999, 999);
+
+    level.weapon.placeholder = spawn("script_origin", self.pers["drop_weapon_location"]);
+    level.weapon.placeholder enableLinkTo();
+    level.weapon linkTo(level.weapon.placeholder);
+
+    return weapon;
+}
+
+drop_weapon_name()
+{
+    self.pers["drop_weapon_name"] = self getCurrentWeapon();
+}
+
+enable()
+{
+    self enableWeapons();
+}
+
+disable()
+{
+    self disableWeapons();
+}
+
+radio()
+{
+    x = self getCurrentWeapon();
+    self takeWeapon(x);
+    self giveWeapon("helicopter_gunner_mp");
+    self switchToWeapon("helicopter_gunner_mp");
+    wait 0.2;
+    self giveWeapon(x);
+    self waittill("weapon_change");
+    self takeWeapon("helicopter_gunner_mp");
+}
+
+
+rcrem()
+{
+    x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self takeWeapon(x);
+    self giveWeapon("rcbomb_mp");
+    self switchToWeapon("rcbomb_mp");
+    wait 0.2;
+    self giveWeapon(x);
+    self setweaponammostock(x, stock);
+    self setweaponammoclip(x, clip);
+    wait 0.7;
+    self takeWeapon("rcbomb_mp");
+    self switchToWeapon(x);
+}
+
+
+c4can()
+{
+    x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self takeWeapon(x);
+    self giveWeapon("satchel_charge_mp");
+    self switchToWeapon("satchel_charge_mp");
+    wait 0.2;
+    self giveWeapon(x);
+    self setweaponammostock(x, stock);
+    self setweaponammoclip(x, clip);
+    wait 0.45;
+    self takeWeapon("satchel_charge_mp");
+    self switchToWeapon(x);
+}
+
+
+ubyy()
+{
+    self disableweapons();
+	wait 0.01;
+	self enableweapons();
+}
+
+
+
+//(DEBUGGING BULLSHIT)
+whatsmypers()
+{
+    self iPrintln("Your pers is: ^6"+self.pers["fuckfuckfuckfuck"]);
+}
+
+whatsmypers2()
+{
+    self iPrintln("Your pers is: ^6"+self.pers["HELP ME"]);
+}
+
+USES DIFFERENT ELEMS/BULLSHIT */

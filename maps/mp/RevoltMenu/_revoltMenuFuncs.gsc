@@ -69,7 +69,7 @@ Render()
     self.hud.horzmid = self createRectangle("LEFT", "TOP", 160, 103, "white", 200, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
     self.hud.horzbott = self createRectangle("LEFT", "TOP", 160, 224, "white", 200, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
     self.hud.title = self createText("OBJECTIVE", 1.8, "LEFT", "CENTER", 167, -122, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, self.menu.current);
-    self.hud.byLine = self createText("EXTRASMALL", 1, "LEFT", "CENTER", 320, 12, 2, (1, 1, 1), 1, "by roach");
+    self.hud.byLine = self createText("EXTRASMALL", 1, "LEFT", "CENTER", 297, 12, 2, (1, 1, 1), 1, "by roach/boon");
     self.hud.currentLocation = self createText("EXTRASMALL", 1, "RIGHT", "CENTER", 355, -108, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, "(0, 0, 0)");
 
     /*

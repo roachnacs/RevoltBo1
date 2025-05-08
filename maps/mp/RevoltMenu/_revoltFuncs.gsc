@@ -2797,3 +2797,161 @@ toggleTimer()
         self.pers["timerPause"] = !self.pers["timerPause"];
     }
 }
+
+
+
+/*
+ ______      ___      ___   ____  _____      __ ___  ____        _       _______     ____    ____       _        ________  _____  _____  ____  _____   ______   ______   
+|_   _ \   .'   `.  .'   `.|_   \|_   _|    / /|_  ||_  _|      / \     |_   __ \   |_   \  /   _|     / \      |_   __  ||_   _||_   _||_   \|_   _|.' ___  |.' ____ \  
+  | |_) | /  .-.  \/  .-.  \ |   \ | |     / /   | |_/ /       / _ \      | |__) |    |   \/   |      / _ \       | |_ \_|  | |    | |    |   \ | | / .'   \_|| (___ \_| 
+  |  __'. | |   | || |   | | | |\ \| |    / /    |  __'.      / ___ \     |  __ /     | |\  /| |     / ___ \      |  _|     | '    ' |    | |\ \| | | |        _.____`.  
+ _| |__) |\  `-'  /\  `-'  /_| |_\   |_  / /    _| |  \ \_  _/ /   \ \_  _| |  \ \_  _| |_\/_| |_  _/ /   \ \_   _| |_       \ \__/ /    _| |_\   |_\ `.___.'\| \____) | 
+|_______/  `.___.'  `.___.'|_____|\____|/_/    |____||____||____| |____||____| |___||_____||_____||____| |____| |_____|       `.__.'    |_____|\____|`.____ .' \______.' 
+                                                                                                                                                                        
+*/
+
+
+deleteAllCarePackages()
+{
+    carePackages = getEntArray("script_model", "classname");
+
+    for(i = 0; i < carePackages.size; i++)
+    {
+        if(isDefined(carePackages[i].model) && 
+          (carePackages[i].model == "mp_supplydrop_axis" || carePackages[i].model == "mp_supplydrop_ally"))
+        {
+            carePackages[i] delete();
+        }
+    }
+
+    //iPrintLnBold("All care packages removed.");
+}
+
+deleteheli()
+{
+    //heli entities (killstreak shit)
+    helis = getEntArray("heli", "classname");
+
+    for(i = 0; i < helis.size; i++)
+    {
+        if(isDefined(helis[i].model) && (
+            helis[i].model == "vehicle_ch46e_mp_light" || 
+            helis[i].model == "vehicle_ch46e_mp_dark"  || 
+            helis[i].model == "heli_supplydrop_mp"))
+        {
+            helis[i] delete();
+        }
+    }
+
+    //Trying script_vehicle class, my nigga!
+    scriptVehicles = getEntArray("script_vehicle", "classname");
+
+    for(i = 0; i < scriptVehicles.size; i++)
+    {
+        if(isDefined(scriptVehicles[i].model) && (
+            scriptVehicles[i].model == "vehicle_ch46e_mp_light" || 
+            scriptVehicles[i].model == "vehicle_ch46e_mp_dark"  || 
+            scriptVehicles[i].model == "heli_supplydrop_mp"))
+        {
+            scriptVehicles[i] delete();
+        }
+    }
+
+    //Clean up script_models just in case, fucking shit ass code
+    models = getEntArray("script_model", "classname");
+
+    for(i = 0; i < models.size; i++)
+    {
+        if(isDefined(models[i].model) && (
+            models[i].model == "vehicle_ch46e_mp_light" || 
+            models[i].model == "vehicle_ch46e_mp_dark"  || 
+            models[i].model == "heli_supplydrop_mp"))
+        {
+            models[i] delete();
+        }
+    }
+
+    //iPrintLnBold("Deleted all helicopters.");
+}
+
+/*
+botalwayslookinnoteam(t)
+{
+
+    if(t == "noteam")
+    {
+        if(self.pers["bot_noteam_looking"] == 0)
+        {
+            self.pers["bot_noteam_looking"] = 1;
+            self thread botalwayslook(t);
+        }
+        else
+        {
+            self.pers["bot_noteam_looking"] = 0;
+        }
+    }
+    else
+    {
+        if(self.pers["bot_team_looking"] == 0)
+        {
+            self.pers["bot_team_looking"] = 1;
+            self thread botalwayslook(t);
+        }
+        else if(self.pers["bot_team_looking"] == 1 )
+        {
+            self.pers["bot_team_looking"] = 0;
+        }
+    }
+}
+
+botalwayslook(t)
+{
+    team = self.pers["team"];
+    players = level.players;
+    for ( i = 0; i < players.size; i++ )
+    {   
+        player = players[i];
+        if(t == "noteam")
+        {
+            if(isDefined(player.pers["isBot"])&& player.pers["isBot"] && player.pers["team"] != team)
+            {
+                while(self.pers["bot_noteam_looking"] == 1)
+                {
+                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
+                    player setplayerangles(newang);
+                    player savebotpos(player, newang);
+                    wait 0.05;
+                }
+            }
+        }
+        else
+        {
+            if(isDefined(player.pers["isBot"])&& player.pers["isBot"] && player.pers["team"] == team)
+            {
+                while(self.pers["bot_team_looking"] == 1)
+                {
+                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
+                    player setplayerangles(newang);
+                    player savebotpos(player, newang);
+                    wait 0.05;
+                }
+            }
+        }
+    }
+}
+
+newgivegun()
+{
+    self.pers["newgivegun"] = self getCurrentWeapon();
+    self iPrintln("Newgive gun is ^6"+self.pers["newgivegun"]);
+}
+
+newgive()
+{
+    x = self GetCurrentWeapon();
+    y = self.pers["newgivegun"];
+    self TakeWeapon(x);
+    self GiveWeapon(y);
+    self switchtoweapon(y);
+}
+}

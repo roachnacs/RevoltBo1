@@ -104,6 +104,8 @@ menu_struct(){
   self add_option("spawnables menu", "spawn slide", ::slide);
   self add_option("spawnables menu", "spawn green crate", ::spawngreencrate);
   self add_option("spawnables menu", "spawn red crate", ::spawnredcrate);
+  self add_option("spawnables menu", "Delete Carepackages", ::deleteAllCarePackages);
+  self add_option("spawnables menu", "Delete Helis", ::deleteheli);
 
   self add_menu("binds menu", "revolt");
   self add_sub("binds menu", "nac mod", "nac mod", self.pers["nacModBool"]);
