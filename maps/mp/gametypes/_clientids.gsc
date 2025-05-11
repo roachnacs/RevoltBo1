@@ -215,7 +215,8 @@ boolInit()
     SetPersIfUni("canzoomBool", "<>");
     SetPersIfUni("vishBool", "<>"); 
     SetPersIfUni("repeaterBindBool", "<>");
-    SetPersIfUni("cowboyBool", "<>");
+    SetPersIfUni("cowboyBool", "<>");  
+    SetPersIfUni("smoothactionBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
@@ -290,8 +291,9 @@ boolInit()
     SetPersIfUni("nacweap1", "<>");
     SetPersIfUni("nacweap2", "<>");
     SetPersIfUni("snacweap1", "<>");
-    SetPersIfUni("snacweap2", "<>");
+    SetPersIfUni("snacweap2", "<>"); 
 }
+
 TeamName1(inp)
 {
     setDvar("g_TeamName_Allies", inp);
