@@ -111,18 +111,18 @@ menu_struct(){
   self add_sub("binds menu", "nac mod", "nac mod", self.pers["nacModBool"]);
   self add_sub("binds menu", "skree mod", "skree mod", self.pers["snacModBool"]);
   self add_sub("binds menu", "change class", "change class", self.pers["classBindBool"]);
-  self add_sub("binds menu", "instaswap", "instaswap", self.pers["nacModBool"]);
+  self add_sub("binds menu", "instaswap", "instaswap", self.pers["instaBindBool"]);
   self add_string("binds menu", "canswap", ::bindCycle, self.pers["canswapBool"], "canswapBind", "canswapBool");
   self add_string("binds menu", "canzoom", ::bindCycle, self.pers["canzoomBool"], "canzoomBind", "canzoomBool");
-  self add_sub("binds menu", "vish", "vish", self.pers["nacModBool"]);
-  self add_sub("binds menu", "repeater", "repeater", self.pers["nacModBool"]);
-  self add_sub("binds menu", "smooth action", "smooth action", self.pers["nacModBool"]);
+  self add_string("binds menu", "vish", ::bindCycle, self.pers["vishBool"], "vishBind", "vishBool");
+  self add_sub("binds menu", "repeater", "repeater", self.pers["repeaterBindBool"]);
+  self add_string("binds menu", "smooth action",::bindCycle, self.pers["smoothactionBool"], "smoothAnimBind", "smoothactionBool");
   self add_sub("binds menu", "illusion reload", "illusion reload", self.pers["nacModBool"]);
   self add_sub("binds menu", "rapid fire", "rapid fire", self.pers["nacModBool"]);
   self add_sub("binds menu", "fake scav", "fake scav", self.pers["nacModBool"]);
   self add_sub("binds menu", "last stand", "last stand", self.pers["nacModBool"]);
   self add_sub("binds menu", "gflip", "gflip", self.pers["nacModBool"]);
-  self add_sub("binds menu", "cowboy", "cowboy", self.pers["nacModBool"]);
+  self add_string("binds menu", "cowboy", ::bindCycle, self.pers["cowboyBool"], "cowboyBind", "cowboyBool");
   self add_sub("binds menu", "center gun", "center gun", self.pers["nacModBool"]);
   self add_sub("binds menu", "alt swap", "alt swap", self.pers["nacModBool"]);
   self add_sub("binds menu", "drop weapon", "drop weapon", self.pers["nacModBool"]);
@@ -164,6 +164,10 @@ menu_struct(){
   self add_string("instaswap", "instaswap", ::bindCycle, self.pers["instaBindBool"], "instaBind", "instaBindBool");
   self add_option("instaswap", "save weapon", ::InstaWeap);
   self add_option("instaswap", "reset weapons", ::ResetInstaArray);
+
+  self add_menu("repeater", "binds menu");
+  self add_string("repeater", "repeater", ::bindCycle, self.pers["repeaterBindBool"], "repeaterBind", "repeaterBindBool");
+  self add_string("repeater", "repeater type", ::repeaterType, self.pers["RepeaterType"]);
 
   self add_menu("perks menu", "revolt");
   self add_option("perks menu", "unset all perks", ::noMorePerk);
