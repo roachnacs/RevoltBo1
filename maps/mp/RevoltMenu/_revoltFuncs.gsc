@@ -1158,15 +1158,23 @@ ResetInstaArray()
     self iPrintLn("^1Instaswap list was reset");
 }
 
-cowboyType()
+repeaterType()
 {
-    if(self.pers["cowboyType"] == "cowboy")
+    if(self.pers["RepeaterType"] == "default")
     {
-        self.pers["cowboyType"] = "super cowboy";
+        self.pers["RepeaterType"] = "real repeater";
     }
-    else if(self.pers["cowboyType"] == "super cowboy")
+    else if(self.pers["RepeaterType"] == "real repeater")
     {
-        self.pers["cowboyType"] = "cowboy";
+        self.pers["RepeaterType"] = "damage repeater";
+    }
+    else if(self.pers["RepeaterType"] == "damage repeater")
+    {
+        self.pers["RepeaterType"] = "frag repeater";
+    }
+    else if(self.pers["RepeaterType"] == "frag repeater")
+    {
+        self.pers["RepeaterType"] = "default";
     }
 }
 
