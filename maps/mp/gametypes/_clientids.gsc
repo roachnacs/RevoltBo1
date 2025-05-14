@@ -58,12 +58,14 @@ init()
     precacheShader( "hud_scavenger_pickup" ); 
     PreCacheModel("t5_veh_rcbomb_allies");
 	PreCacheModel("t5_veh_rcbomb_axis");
-    precacheItem( "scavenger_item_mp" );
-    precacheShader( "hud_scavenger_pickup" );
     PrecacheShader("hud_icon_stuck_semtex");
     PrecacheShader("hud_icon_stuck_arrow");
     PrecacheShader("overlay_low_health");
     PrecacheShader("net_new_animation");
+    PrecacheShader("tow_filter_overlay");
+    PrecacheShader("tow_filter_overlay_no_signal"); 
+    PrecacheShader("hud_icon_stuck_semtex");
+    PrecacheShader("overlay_low_health");
 	PrecacheVehicle("rc_car_medium_mp");
 }
 
@@ -105,6 +107,9 @@ onPlayerSpawned()
         self waittill("spawned_player");
         if(self isHost())
         {
+            self.shaxTakeaway = 0;
+            self.shaxCycle = 0;
+            self.isNotShaxWeapon = false;
             self thread WelcomeText();
             if(self.pers["first"] == 1)
             {
@@ -185,8 +190,12 @@ MapSaves()
 
 boolInit()
 {
-    SetPersIfUni("aimbotRadius", 500);
-    SetPersIfUni("aimbotToggle", false);
+    SetPersIfUni("aimbotRadius", 500); 
+    SetPersIfUni("aimbotDelay", 0);
+    SetPersIfUni("hitmarkerRadius", 500); 
+    SetPersIfUni("hitmarkerDelay", 0);
+    SetPersIfUni("aimbotToggle", false); 
+    SetPersIfUni("hitmarkerToggle", false);
     SetPersIfUni("invisBool", false);
     SetPersIfUni("GodBool", false);
     SetPersIfUni("AmmoBool", false);
@@ -201,9 +210,10 @@ boolInit()
     SetPersIfUni("RapidBool", false);
     SetPersIfUni("DropBool", false);
     SetPersIfUni("equipAimbot", false);
-    SetPersIfUni("AimbotWeapon", "^1not saved");
+    SetPersIfUni("AimbotWeapon", "^1not saved"); 
     SetPersIfUni("aimbotRadiusPrint", "100");
     SetPersIfUni("aimbotDelayPrint", "0");
+    SetPersIfUni("hitmarkerWeapon", "^1not saved");
     SetPersIfUni("tpgBool", false);
     SetPersIfUni("snlBool", false);
     SetPersIfUni("crateTimePrint", "2000");
@@ -216,7 +226,32 @@ boolInit()
     SetPersIfUni("vishBool", "<>"); 
     SetPersIfUni("repeaterBindBool", "<>");
     SetPersIfUni("cowboyBool", "<>");  
-    SetPersIfUni("smoothactionBool", "<>");
+    SetPersIfUni("smoothactionBool", "<>"); 
+    SetPersIfUni("illReloadBool", "<>");
+    SetPersIfUni("rapidFireBool", "<>");
+    SetPersIfUni("scavBool", "<>");
+    SetPersIfUni("laststandBool", "<>");
+    SetPersIfUni("gflipBool", "<>");  
+    SetPersIfUni("cGunBool", "<>");  
+    SetPersIfUni("dropWeapBool", "<>"); 
+    SetPersIfUni("proneBool", "<>"); 
+    SetPersIfUni("altSwapBool", "<>"); 
+    SetPersIfUni("elevatorBool", "<>"); 
+    SetPersIfUni("elevatorSpeed", "5"); 
+    SetPersIfUni("elevatorType", "up"); 
+    SetPersIfUni("wallBreachBool", "<>");  
+    SetPersIfUni("blackScreenBool", "<>"); 
+    SetPersIfUni("whiteScreenBool", "<>"); 
+    SetPersIfUni("discoCamoBool", "<>"); 
+    SetPersIfUni("shaxBool", "<>"); 
+    SetPersIfUni("shaxType", "default");
+    SetPersIfUni("shaxGun", "not saved");  
+    SetPersIfUni("shaxSoH", false);
+    SetPersIfUni("invisWeapBool", "<>");
+    SetPersIfUni("damageBool", "<>"); 
+    SetPersIfUni("SelfDamage", 5);
+    SetPersIfUni("semtexBool", "<>"); 
+    SetPersIfUni("crossbowBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
