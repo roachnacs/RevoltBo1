@@ -66,6 +66,11 @@ menu_struct(){
   self add_string("aimbot menu", "aimbot weapon", ::AimbotWeapon, self.pers["AimbotWeapon"]);
   self add_string("aimbot menu", "aimbot strength", ::aimbotRadius, self.pers["aimbotRadiusPrint"]);
   self add_string("aimbot menu", "aimbot delay", ::aimbotDelay, self.pers["aimbotDelayPrint"]);
+  self add_bool("aimbot menu", "hitmarker aimbot", ::hitmarkerAimbot, self.pers["hitmarkerToggle"]);
+  self add_string("aimbot menu", "hitmarker weapon", ::hitmarkerWeapon, self.pers["hitmarkerWeapon"]);
+  self add_string("aimbot menu", "hitmarker strength", ::hitmarkerRadius, "" + self.pers["hitmarkerRadius"] + "");
+  self add_string("aimbot menu", "hitmarker delay", ::hitmarkerDelay, "" + self.pers["hitmarkerDelay"] + "");
+  self add_bool("aimbot menu", "equipment aimbot", ::equipAimbotTog, self.pers["equipAimbot"]);
 
   self add_menu("teleport menu", "revolt");
   self add_option("teleport menu", "save location", ::savePosition);
@@ -75,8 +80,6 @@ menu_struct(){
   self add_sub("teleport menu", "move yourself", "move yourself");
   self add_sub("teleport menu", "map teleports", "map teleports");
   self add_option("teleport menu", "load shot location", ::MapSavedLocation);
-  //self add_option("teleport menu", "get map name", ::MapName);
-  //self add_option("teleport menu", "get coords", ::Coords);
 
   self add_menu("move yourself", "teleport menu");
   self add_option("move yourself", "move north", ::selfMove, "n");
@@ -96,16 +99,16 @@ menu_struct(){
   self add_option("spawnables menu", "crosshair carepackage", ::CrosscarePackageStall);
   self add_option("spawnables menu", "crosshair midair carepackage", ::CrosscarePackageStall2);
   self add_string("spawnables menu", "change capture speed", ::ChangeCarepackTiming, self.pers["crateTimePrint"]);
-  self add_option("spawnables menu", "^1spawn helicopter", ::test);
+  self add_option("spawnables menu", "spawn friendly helicopter", ::SpawnHeli);
+  self add_option("spawnables menu", "spawn enemy helicopter", ::SpawnHeli);
   self add_option("spawnables menu", "^1spawn rcxd", ::test);
   self add_option("spawnables menu", "^1spawn dog", ::test);
   self add_option("spawnables menu", "spawn scav pack", ::spawnScavPack);
-  self add_option("spawnables menu", "spawn bounce", ::normalbounce);
-  self add_option("spawnables menu", "spawn slide", ::slide);
+  self add_option("spawnables menu", "spawn bounce", ::normalbounce); 
   self add_option("spawnables menu", "spawn green crate", ::spawngreencrate);
   self add_option("spawnables menu", "spawn red crate", ::spawnredcrate);
-  self add_option("spawnables menu", "Delete Carepackages", ::deleteAllCarePackages);
-  self add_option("spawnables menu", "Delete Helis", ::deleteheli);
+  self add_option("spawnables menu", "remove carepacks", ::deleteAllCarePackages);
+  self add_option("spawnables menu", "remove helicopters", ::deleteheli);
 
   self add_menu("binds menu", "revolt");
   self add_sub("binds menu", "nac mod", "nac mod", self.pers["nacModBool"]);
@@ -117,34 +120,27 @@ menu_struct(){
   self add_string("binds menu", "vish", ::bindCycle, self.pers["vishBool"], "vishBind", "vishBool");
   self add_sub("binds menu", "repeater", "repeater", self.pers["repeaterBindBool"]);
   self add_string("binds menu", "smooth action",::bindCycle, self.pers["smoothactionBool"], "smoothAnimBind", "smoothactionBool");
-  self add_sub("binds menu", "illusion reload", "illusion reload", self.pers["nacModBool"]);
-  self add_sub("binds menu", "rapid fire", "rapid fire", self.pers["nacModBool"]);
-  self add_sub("binds menu", "fake scav", "fake scav", self.pers["nacModBool"]);
-  self add_sub("binds menu", "last stand", "last stand", self.pers["nacModBool"]);
-  self add_sub("binds menu", "gflip", "gflip", self.pers["nacModBool"]);
+  self add_string("binds menu", "illusion reload", ::bindCycle, self.pers["illReloadBool"], "illReloadBind", "illReloadBool");
+  self add_string("binds menu", "rapid fire", ::bindCycle, self.pers["rapidFireBool"], "rapidFireBind", "rapidFireBool");
+  self add_string("binds menu", "fake scav", ::bindCycle, self.pers["scavBool"], "scavBind", "scavBool");
+  self add_sub("binds menu", "last stand", "last stand", self.pers["laststandBool"]);
+  self add_string("binds menu", "gflip", ::bindCycle, self.pers["gflipBool"], "gflipBind", "gflipBool");
   self add_string("binds menu", "cowboy", ::bindCycle, self.pers["cowboyBool"], "cowboyBind", "cowboyBool");
-  self add_sub("binds menu", "center gun", "center gun", self.pers["nacModBool"]);
-  self add_sub("binds menu", "alt swap", "alt swap", self.pers["nacModBool"]);
-  self add_sub("binds menu", "drop weapon", "drop weapon", self.pers["nacModBool"]);
-  self add_sub("binds menu", "prone", "prone", self.pers["nacModBool"]);
-  self add_sub("binds menu", "elevator", "elevator", self.pers["nacModBool"]);
-  self add_sub("binds menu", "wall breach", "wall breach", self.pers["nacModBool"]);
-  self add_sub("binds menu", "black screen", "black screen", self.pers["nacModBool"]);
-  self add_sub("binds menu", "static screen", "static screen", self.pers["nacModBool"]);
-  self add_sub("binds menu", "disco camo", "disco camo", self.pers["nacModBool"]);
-  self add_sub("binds menu", "shax", "shax", self.pers["nacModBool"]);
-  self add_sub("binds menu", "invisible gun", "invisible gun", self.pers["nacModBool"]);
-  self add_sub("binds menu", "damage", "damage", self.pers["nacModBool"]);
-  self add_sub("binds menu", "damage repeater", "damage repeater", self.pers["nacModBool"]);
-  self add_sub("binds menu", "frag repeater", "frag repeater", self.pers["nacModBool"]);
-  self add_sub("binds menu", "knockback", "knockback", self.pers["nacModBool"]);
-  self add_sub("binds menu", "semtex stuck", "semtex stuck", self.pers["nacModBool"]);
-  self add_sub("binds menu", "crossbow stuck", "crossbow stuck", self.pers["nacModBool"]);
-  self add_sub("binds menu", "bot uav", "bot uav", self.pers["nacModBool"]);
-  self add_sub("binds menu", "bot mantle", "bot mantle", self.pers["nacModBool"]);
-  self add_sub("binds menu", "launch bot", "launch bot", self.pers["nacModBool"]);
-  self add_sub("binds menu", "claymore launch", "claymore launch", self.pers["nacModBool"]);
-  self add_sub("binds menu", "activate sentry", "activate sentry", self.pers["nacModBool"]);
+  self add_string("binds menu", "center gun", ::bindCycle, self.pers["cGunBool"], "cGunBind", "cGunBool");
+  self add_string("binds menu", "alt swap", ::bindCycle, self.pers["altSwapBool"], "altSwapBind", "altSwapBool");
+  self add_string("binds menu", "drop weapon", ::bindCycle, self.pers["dropWeapBool"], "dropWeapBind", "dropWeapBool");
+  self add_string("binds menu", "prone", ::bindCycle, self.pers["proneBool"], "proneBind", "proneBool");
+  self add_sub("binds menu", "elevator", "elevator", self.pers["elevatorBool"]);
+  self add_string("binds menu", "wall breach", ::bindCycle, self.pers["wallBreachBool"], "wallBreachBind", "wallBreachBool");
+  self add_string("binds menu", "black screen", ::bindCycle, self.pers["blackScreenBool"], "blackScreenBind", "blackScreenBool");
+  self add_string("binds menu", "static screen", ::bindCycle, self.pers["whiteScreenBool"], "whiteScreenBind", "whiteScreenBool");
+  self add_string("binds menu", "disco camo", ::bindCycle, self.pers["discoCamoBool"], "discoCamoBind", "discoCamoBool");
+  self add_sub("binds menu", "shax", "shax", self.pers["shaxBool"]); // timings not done
+  self add_string("binds menu", "invisible gun", ::bindCycle, self.pers["invisWeapBool"], "invisWeapBind", "invisWeapBool");
+  self add_sub("binds menu", "damage", "damage", self.pers["damageBool"]);
+  self add_sub("binds menu", "knockback", "knockback", self.pers["nacModBool"]); // NOT DONE
+  self add_string("binds menu", "semtex stuck", ::bindCycle, self.pers["semtexBool"], "semtexBind", "semtexBool");
+  self add_string("binds menu", "crossbow stuck", ::bindCycle, self.pers["crossbowBool"], "crossbowBind", "crossbowBool");
 
   self add_menu("change class", "binds menu");
   self add_string("change class", "change class type", ::changeClassType, "" + self.pers["CCType"] + "");
@@ -168,6 +164,81 @@ menu_struct(){
   self add_menu("repeater", "binds menu");
   self add_string("repeater", "repeater", ::bindCycle, self.pers["repeaterBindBool"], "repeaterBind", "repeaterBindBool");
   self add_string("repeater", "repeater type", ::repeaterType, self.pers["RepeaterType"]);
+
+  self add_menu("last stand", "binds menu");
+  self add_string("last stand", "last stand", ::bindCycle, self.pers["laststandBool"], "laststandBind", "laststandBool");
+  self add_string("last stand", "last stand weapon", ::lastStandWeap, level.laststandpistol);
+
+  self add_menu("elevator", "binds menu");
+  self add_string("elevator", "elevator", ::bindCycle, self.pers["elevatorBool"], "elevatorBind", "elevatorBool");
+  self add_string("elevator", "elevator speed", ::elevatorSpeed, "" + self.pers["elevatorSpeed"] + "");
+  self add_string("elevator", "elevator type", ::elevatorType, "" + self.pers["elevatorType"] + "");
+
+  self add_menu("shax", "binds menu");
+  self add_string("shax", "shax", ::bindCycle, self.pers["shaxBool"], "shaxBind", "shaxBool");
+  self add_sub("shax", "shax weapon", "shax weapon", self.pers["shaxGun"]);
+  self add_bool("shax", "sleight of hand shax", ::shaxSoH, self.pers["shaxSoH"]);
+  self add_string("shax", "shax type", ::shaxTypeCycle, "" + self.pers["shaxType"] + "");
+
+  self add_menu("shax weapon", "shax");
+  self add_sub("shax weapon", "shax smgs", "shax smgs");
+	self add_sub("shax weapon", "shax ars", "shax ars");
+	self add_sub("shax weapon", "shax shotguns", "shax shotguns");
+	self add_sub("shax weapon", "shax lmgs", "shax lmgs");
+	self add_sub("shax weapon", "shax snipers", "shax snipers");
+	self add_sub("shax weapon", "shax pistols", "shax pistols");
+
+  self add_menu("shax smgs", "shax weapon");
+ 	self add_option("shax smgs", "mp5k", ::ShaxWeapon, "mp5k_mp");
+ 	self add_option("shax smgs", "skorpion", ::ShaxWeapon, "skorpion_mp");
+	self add_option("shax smgs", "mac11", ::ShaxWeapon, "mac11_mp");
+ 	self add_option("shax smgs", "ak74u", ::ShaxWeapon, "ak74u_mp");
+ 	self add_option("shax smgs", "uzi", ::ShaxWeapon, "uzi_mp");
+ 	self add_option("shax smgs", "pm63", ::ShaxWeapon, "pm63_mp");
+ 	self add_option("shax smgs", "mpl", ::ShaxWeapon, "mpl_mp");
+ 	self add_option("shax smgs", "spectre", ::ShaxWeapon, "spectre_mp");
+ 	self add_option("shax smgs", "kiparis", ::ShaxWeapon, "kiparis_mp");
+
+  self add_menu("shax ars", "shax weapon");
+ 	self add_option("shax ars", "m16", ::ShaxWeapon, "m16_mp");
+ 	self add_option("shax ars", "enfield", ::ShaxWeapon, "enfield_mp");
+ 	self add_option("shax ars", "m14", ::ShaxWeapon, "m14_mp");
+ 	self add_option("shax ars", "famas", ::ShaxWeapon, "famas_mp");
+ 	self add_option("shax ars", "galil", ::ShaxWeapon, "galil_mp");
+ 	self add_option("shax ars", "aug", ::ShaxWeapon, "aug_mp");
+ 	self add_option("shax ars", "fn fal", ::ShaxWeapon, "fnfal_mp");
+ 	self add_option("shax ars", "ak47", ::ShaxWeapon, "ak47_mp");
+ 	self add_option("shax ars", "commando", ::ShaxWeapon, "commando_mp");
+ 	self add_option("shax ars", "g11", ::ShaxWeapon, "g11_mp");
+
+  self add_menu("shax shotguns", "shax weapon");
+	self add_option("shax shotguns", "olympia", ::ShaxWeapon, "rottweil72_mp");
+	self add_option("shax shotguns", "stakeout", ::ShaxWeapon, "ithaca_grip_mp");
+	self add_option("shax shotguns", "spas-12", ::ShaxWeapon, "spas_mp");
+	self add_option("shax shotguns", "hs10", ::ShaxWeapon, "hs10_mp");
+
+	self add_menu("shax lmgs", "shax weapon");
+	self add_option("shax lmgs", "hk21", ::ShaxWeapon, "hk21_mp");
+	self add_option("shax lmgs", "rpk", ::ShaxWeapon, "rpk_mp");
+	self add_option("shax lmgs", "m60", ::ShaxWeapon, "m60_mp");
+	self add_option("shax lmgs", "stoner 63", ::ShaxWeapon, "stoner63_mp");
+	
+	self add_menu("shax snipers", "shax weapon");
+	self add_option("shax snipers", "dragunov", ::ShaxWeapon, "dragunov_mp");
+	self add_option("shax snipers", "wa2000", ::ShaxWeapon, "wa2000_mp");
+	self add_option("shax snipers", "l96a1", ::ShaxWeapon, "l96a1_mp");
+	self add_option("shax snipers", "psg1", ::ShaxWeapon, "psg1_mp");
+
+	self add_menu("shax pistols", "shax weapon");
+	self add_option("shax pistols", "asp", ::ShaxWeapon, "asp_mp");
+	self add_option("shax pistols", "m1911", ::ShaxWeapon, "m1911_mp");
+	self add_option("shax pistols", "makarov", ::ShaxWeapon, "makarov_mp");
+	self add_option("shax pistols", "python", ::ShaxWeapon, "python_mp");
+	self add_option("shax pistols", "cz75", ::ShaxWeapon, "cz75_mp");
+
+  self add_menu("damage", "binds menu");
+  self add_string("damage", "damage", ::bindCycle, self.pers["damageBool"], "damageBind", "damageBool");
+  self add_string("damage", "damage amount", ::CycleSelfDamage, "" + self.pers["SelfDamage"] + "");
 
   self add_menu("perks menu", "revolt");
   self add_option("perks menu", "unset all perks", ::noMorePerk);
@@ -216,7 +287,6 @@ menu_struct(){
   self add_option("killstreak menu", "dogs_mp", ::doKillstreak, "dogs_mp");
   self add_option("killstreak menu", "helicopter_player_firstperson_mp", ::doKillstreak, "helicopter_player_firstperson_mp");
   self add_option("killstreak menu", "m202_flash_mp", ::doKillstreak, "m202_flash_mp");
-
 
   self add_menu("weapons menu", "revolt");
   self add_option("weapons menu", "take current weapon", ::takecurrentweapon);
@@ -325,7 +395,7 @@ menu_struct(){
 	self add_option("other", "valkyrie rocket", ::GivePlayerWeapon, "m220_tow_mp");
 	self add_option("other", "rc-xd remote", ::GivePlayerWeapon, "rcbomb_mp");
 	self add_option("other", "bomb", ::GivePlayerWeapon, "briefcase_bomb_mp");
-	self add_option("Other", "claymore", ::GivePlayerWeapon, "claymore_mp");
+	self add_option("other", "claymore", ::GivePlayerWeapon, "claymore_mp");
 	self add_option("other", "jammer", ::GivePlayerWeapon, "scrambler_mp");
 	self add_option("other", "tactical insertion", ::GivePlayerWeapon, "tactical_insertion_mp");
 	self add_option("other", "motion sensor", ::GivePlayerWeapon, "acoustic_sensor_mp");
