@@ -344,7 +344,6 @@ KYS()
 
 ToggleAimbot()
 {
-    self endon( "disconnect" );
     if(self.pers["aimbotToggle"] == false)
     {
         self.pers["aimbotToggle"] = !self.pers["aimbotToggle"];
@@ -417,7 +416,6 @@ AimbotWeapon()
 
 aimbotRadius()
 {
-    self endon( "disconnect" );
     if(self.pers["aimbotRadius"] == 100)
     {
         self.pers["aimbotRadius"] = 500;
@@ -442,7 +440,6 @@ aimbotRadius()
 
 aimbotDelay()
 {
-    self endon( "disconnect" );
     if(self.pers["aimbotDelay"] == 0)
     {
         self.pers["aimbotDelayPrint"] = "0.1";
@@ -475,11 +472,169 @@ aimbotDelay()
     }
 }
 
+
+hitmarkerAimbot()
+{
+    if(self.pers["hitmarkerToggle"] == false)
+    {
+        self.pers["hitmarkerToggle"] = !self.pers["hitmarkerToggle"];
+        self thread HmAimbot();
+    }
+    else if( self.pers["hitmarkerToggle"] == true )
+    {
+        self.pers["hitmarkerToggle"] = !self.pers["hitmarkerToggle"];
+        self notify("Stop_trickshot");
+    }
+}
+
+HmAimbot()
+{
+    self endon("disconnect");
+    self endon("Stop_trickshot");
+    while(self.pers["hitmarkerToggle"] == true)
+    {   
+        self waittill( "weapon_fired" );
+        forward = self getTagOrigin("j_head");
+        end = self thread vector_scal(anglestoforward(self getPlayerAngles()), 100000);
+        bulletImpact = BulletTrace( forward, end, 0, self )[ "position" ];
+        for(i=0;i<level.players.size;i++)
+        {
+            if(isDefined(self.pers["hitmarkerWeapon"]) && self getcurrentweapon() == self.pers["hitmarkerWeapon"])
+            {
+                player = level.players[i];
+                playerorigin = player getorigin();
+                if(level.teamBased && self.pers["team"] == level.players[i].pers["team"] && level.players[i] && level.players[i] == self)
+                    continue;
+
+                if(distance(bulletImpact, playerorigin) < self.pers["hitmarkerRadius"] && isAlive(level.players[i]))
+                {
+                    if(isDefined(self.pers["hitmarkerDelay"]))
+                    wait (self.pers["hitmarkerDelay"]);
+                    level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 2, 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+                }
+            }
+            if(!isDefined(self.pers["aimbotweapon"]))
+            {
+                player = level.players[i];
+                playerorigin = player getorigin();
+                if(level.teamBased && self.pers["team"] == level.players[i].pers["team"] && level.players[i] && level.players[i] == self)
+                    continue;
+
+                if(distance(bulletImpact, playerorigin) < self.pers["hitmarkerRadius"] && isAlive(level.players[i]))
+                {
+                    if(isDefined(self.pers["hitmarkerDelay"]))
+                    wait (self.pers["hitmarkerDelay"]);
+                    level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 2, 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+                }
+            }
+        }
+        wait .1;    
+    }
+}
+
+hitmarkerWeapon()
+{
+    if(self.pers["hitmarkerWeapon"] == "^1not saved")
+    {
+        self.SavedAimWeap = self getCurrentWeapon();
+        self.pers["hitmarkerWeapon"] = self.SavedAimWeap;
+    }
+    else if (self.pers["hitmarkerWeapon"] != "^1not saved")
+    {
+        self.pers["hitmarkerWeapon"] = "^1not saved";
+    }
+}
+
+hitmarkerRadius()
+{
+    if(self.pers["hitmarkerRadius"] == 100)
+    {
+        self.pers["hitmarkerRadius"] = 500;
+    }
+    else if(self.pers["hitmarkerRadius"] == 500)
+    {
+        self.pers["hitmarkerRadius"] = 1500;
+    }
+    else if(self.pers["hitmarkerRadius"] == 1500)
+    {
+        self.pers["hitmarkerRadius"] = 5000;
+    }
+    else if(self.pers["hitmarkerRadius"] == 5000)
+    {
+        self.pers["hitmarkerRadius"] = 100;
+    }
+}
+
+hitmarkerDelay()
+{
+    if(self.pers["hitmarkerDelay"] == 0)
+    {
+        self.pers["hitmarkerDelay"] = .1;
+    }
+    else if(self.pers["hitmarkerDelay"] == .1)
+    {
+        self.pers["hitmarkerDelay"] = .2;
+    }
+    else if(self.pers["hitmarkerDelay"] == .2)
+    {
+        self.pers["hitmarkerDelay"] = .3;
+    }
+    else if(self.pers["hitmarkerDelay"] == .3)
+    {
+        self.pers["hitmarkerDelay"] = .4;
+    }
+    else if(self.pers["hitmarkerDelay"] == .4)
+    {
+        self.pers["hitmarkerDelay"] = .5;
+    }
+    else if(self.pers["hitmarkerDelay"]== .5)
+    {
+        self.pers["hitmarkerDelay"] = 0;
+    }
+}
+
+equipAimbotTog()
+{
+    if(self.pers["equipAimbot"] == false)
+    {
+        self.pers["equipAimbot"] = !self.pers["equipAimbot"];
+        self thread equipmentAimbot();
+    }
+    else if (self.pers["equipAimbot"] == true)
+    {
+        self.pers["equipAimbot"] = !self.pers["equipAimbot"];
+       self notify("EquiAimbot");
+    }
+}
+
+equipmentAimbot()
+{
+    self endon("disconnect");
+    self endon("EquiAimbot");
+    while(self.pers["equipAimbot"] == true)
+    {    
+        self waittill( "weapon_fired" );
+        start = self getTagOrigin("j_head");
+        end = self thread vector_scal( anglestoforward( self getPlayerAngles() ), 100000 );
+        trace = BulletTrace( start, end, false, self )[ "position" ];
+        for(i=0;i<level.c4array.size;i++)
+        {
+            c4 = level.c4array[i];
+            if(distance(trace, c4 getorigin()) < 500)
+            {
+                c4 [[c4.detonate]]( self );
+            }
+        }
+        wait .1;    
+    }
+}
+
 vector_scal(vec, scale)
 {
     vec = (vec[0] * scale, vec[1] * scale, vec[2] * scale);
     return vec;
 }
+
 
 // teleport
 
@@ -1023,69 +1178,15 @@ monitortrampoline( model )
     level endon( "game_ended" );
     for(;;)
     {
-        if( distance( self.origin, model.origin ) < 85 )
+        if( distance( self.origin, model.origin ) < 25 )
         {
             if( self isonground() )
             {
                 self setorigin( self.origin );
             }
-            self setvelocity( self getvelocity() + ( 0, 0, 999 ) );
+            self setvelocity( self getvelocity() + ( 0, 0, 300 ) );
         }
         wait 0.01;
-    }
-}
-
-slide()
-{
-    slidesize = level.slideSpawned;
-    dir = self getplayerangles();
-    self.slide[slidesize] = spawn("script_model", self.origin + ( -10, 0, 10 ));
-    self.slide[slidesize] setModel("mp_supplydrop_ally");
-    self.slide[slidesize].angles = ( 0, dir[1] - 90, 60 );
-    level.slideSpawned++;
-    self.slideIsVisible = true;
-    self iprintln("slide has been spawned on your position!");
-    self iprintln("[{+speed_throw}], [{+activate}], near a slide to hide the model");
-
-    wait .3;
-    for(;;)
-    {
-        if(distance(self.origin, self.slide[slidesize].origin) < 50)
-        {
-            if(self meleebuttonpressed())
-            {
-                direction = anglesToForward(self getPlayerAngles());
-                wait .1;       
-                i = 0;
-                    while( i < 15 )
-                    {
-                        self.allowedtoslide = 1;
-                        self setvelocity( ( direction[0] * 1000, direction[1] * 1000, 999 ) );
-                        wait 0.05;
-                        i++;
-                    }
-            }
-        }
-        if(distance(self.origin, self.slide[slidesize].origin) < 200)
-        {
-            if(self adsbuttonpressed() && self usebuttonpressed())
-            {
-                if(self.slideIsVisible == true)
-                {
-                    self.slide[slidesize] hide();
-                    self.slideIsVisible = false;
-                    wait .5;
-                }
-                else
-                {
-                    self.slide[slidesize] show();
-                    self.slideIsVisible = true;
-                    wait .5;
-                }
-            }   
-
-        }
-    wait .1;
     }
 }
 
@@ -1094,6 +1195,78 @@ spawnScavPack()
     self setPerk("specialty_scavenger");
     item = self dropScavengerItem( "scavenger_item_mp" );
     item thread maps\mp\gametypes\_weapons::scavenger_think();
+}
+
+deleteAllCarePackages()
+{
+    carePackages = getEntArray("script_model", "classname");
+
+    for(i = 0; i < carePackages.size; i++)
+    {
+        if(isDefined(carePackages[i].model) && 
+          (carePackages[i].model == "mp_supplydrop_axis" || carePackages[i].model == "mp_supplydrop_ally"))
+        {
+            carePackages[i] delete();
+        }
+    }
+}
+
+SpawnHeli()
+{
+    self.DropZone2 = self.origin + (0,0,2500);
+    self.DropZoneAngle2 = self.angle;
+    players = level.players;
+    bot = players[1];
+    self thread maps\mp\gametypes\_supplydrop::NewHeli( self.DropZone2, "turret_drop_mp", bot, bot.team);
+    self iprintln("Helicopter Spawned");
+}
+
+SpawnHeliFriend()
+{
+    self.DropZone2 = self.origin + (0,0,2500);
+    self.DropZoneAngle2 = self.angle;
+    self thread maps\mp\gametypes\_supplydrop::NewHeli( self.DropZone2, "turret_drop_mp", self, self.team);
+    self iprintln("Helicopter Spawned");
+}
+
+deleteheli()
+{
+    helis = getEntArray("heli", "classname");
+
+    for(i = 0; i < helis.size; i++)
+    {
+        if(isDefined(helis[i].model) && (
+            helis[i].model == "vehicle_ch46e_mp_light" || 
+            helis[i].model == "vehicle_ch46e_mp_dark"  || 
+            helis[i].model == "heli_supplydrop_mp"))
+        {
+            helis[i] delete();
+        }
+    }
+    scriptVehicles = getEntArray("script_vehicle", "classname");
+
+    for(i = 0; i < scriptVehicles.size; i++)
+    {
+        if(isDefined(scriptVehicles[i].model) && (
+            scriptVehicles[i].model == "vehicle_ch46e_mp_light" || 
+            scriptVehicles[i].model == "vehicle_ch46e_mp_dark"  || 
+            scriptVehicles[i].model == "heli_supplydrop_mp"))
+        {
+            scriptVehicles[i] delete();
+        }
+    }
+    models = getEntArray("script_model", "classname");
+
+    for(i = 0; i < models.size; i++)
+    {
+        if(isDefined(models[i].model) && (
+            models[i].model == "vehicle_ch46e_mp_light" || 
+            models[i].model == "vehicle_ch46e_mp_dark"  || 
+            models[i].model == "heli_supplydrop_mp"))
+        {
+            models[i] delete();
+        }
+    }
 }
 
 // binds
@@ -1178,6 +1351,727 @@ repeaterType()
     }
 }
 
+lastStandWeap()
+{
+	if(!isDefined(self.lsweap))
+	{
+		laststandweap = self getCurrentWeapon();
+		level.laststandpistol = laststandweap;
+		self.lsweap = true;
+	}
+	else if(isDefined(self.lsweap))
+	{
+		level.laststandpistol = "l96a1_mp";
+		self.lsweap = undefined;
+	}
+}
+
+get_next_weapon() 
+{
+    weapons_list = self getWeaponsListPrimaries();
+    current_weapon = self getCurrentWeapon();
+    for (i = 0; i < weapons_list.size; i++)
+    {
+        if (current_weapon == weapons_list[i])
+        {
+            if (isDefined(weapons_list[i + 1]))
+            return weapons_list[i + 1];
+            else
+            return weapons_list[0];
+        }
+    }
+}
+
+elevatorSpeed()
+{
+    if(self.pers["elevatorSpeed"] == 8)
+    {
+        self.pers["elevatorSpeed"] = 3;
+    }
+	else
+	{
+		speed = (self.pers["elevatorSpeed"] + 1);
+		self.pers["elevatorSpeed"] = speed;
+	}
+}
+
+elevatorType()
+{
+    if(self.pers["elevatorType"] == "up")
+    {
+        self.pers["elevatorType"] = "down";
+    }
+    else if(self.pers["elevatorType"] == "down")
+    {
+        self.pers["elevatorType"] = "up";
+    }
+}
+
+shaxTypeCycle()
+{
+    if(self.pers["shaxType"] == "default")
+    {
+        self.pers["shaxType"] = "real";
+    }
+    else if(self.pers["shaxType"] == "real")
+    {
+        self.pers["shaxType"] = "static screen";
+    }
+    else if(self.pers["shaxType"] == "static screen")
+    {
+        self.pers["shaxType"] = "black screen";
+    }
+    else if(self.pers["shaxType"] == "black screen")
+    {
+        self.pers["shaxType"] = "default";
+    }
+}
+
+shaxSoH()
+{
+    if( self.pers["shaxSoH"] == false )
+    {
+        self.pers["shaxSoH"] = !self.pers["shaxSoH"];
+    }
+    else if( self.pers["shaxSoH"] == true )
+    {  
+        self.pers["shaxSoH"] = !self.pers["shaxSoH"];
+    }
+}
+
+ShaxWeapon(weap)
+{
+    self iprintln("shax Weapon Set to ^?" + weap);
+    self.pers["shaxGun"] = weap;
+}
+
+shaxKCCheck()
+{
+    self.isNotShaxWeapon = false;
+    if(isSubStr(self.pers["shaxGun"], "skorpion"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.9;
+            self.shaxTakeaway = 0.8;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 1;
+            self.shaxTakeaway = 0.4;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "mp5k"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.6;
+            self.shaxTakeaway = 0.9;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.9;
+            self.shaxTakeaway = 0.46; 
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "ak74u"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.6;
+            self.shaxTakeaway = 0.8;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 1;
+            self.shaxTakeaway = 0.36;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "pm63"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.4;
+            self.shaxTakeaway = 0.76;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 1;
+            self.shaxTakeaway = 0.25;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "spectre"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.6;
+            self.shaxTakeaway = 0.8;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 1;
+            self.shaxTakeaway = 0.34;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "mac11"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.6;
+            self.shaxTakeaway = 0.85;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.9;
+            self.shaxTakeaway = 0.41;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "kiparis"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.4;
+            self.shaxTakeaway = 0.78;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.78;
+            self.shaxTakeaway = 0.4;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "mpl"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.74;
+            self.shaxTakeaway = 0.78;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.9;
+            self.shaxTakeaway = 0.4;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "uzi"))
+    {
+
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.64;
+            self.shaxTakeaway = 0.93;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.85;
+            self.shaxTakeaway = 0.56;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "fnfal"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.45;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "m16"))
+    {
+        self.shineShaxGunCheck = 0.8;
+        self.shaxTakeaway = 0.32;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "enfield"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.444;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "m14"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.523;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "famas"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.395;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "galil"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.59;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "aug"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.364;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "ak47"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.43;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "commando"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.22;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "g11"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.43;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "rottweil72"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.8;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "ithaca"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.71;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "spas"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 2.13;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "hs10"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 1.04;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "hk21"))
+    {
+        self.shineShaxGunCheck = 1.2;
+        self.shaxTakeaway = 0.71;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "rpk"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 1.5;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "m60"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 3.2;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "stoner63"))
+    {
+        self.shineShaxGunCheck = 1.2;
+        self.shaxTakeaway = 0.55;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "dragunov"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.53;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "wa2000"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.57;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "l96a1"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.55;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "psg1"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 0.53;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "asp"))
+    {
+        self.shineShaxGunCheck = 0.2;
+        self.shaxTakeaway = 0.4;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "m1911"))
+    {
+        self.shineShaxGunCheck = 0.2;
+        self.shaxTakeaway = 0.7;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "makarov"))
+    {
+        self.shineShaxGunCheck = 0.2;
+        self.shaxTakeaway = 0.7;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "python"))
+    {
+        self.shineShaxGunCheck = 1;
+        self.shaxTakeaway = 1.83;
+    }
+    else if(isSubStr(self.pers["shaxGun"], "cz75"))
+    {
+        self.shineShaxGunCheck = 0.2;
+        self.shaxTakeaway = 0.7;
+    }
+    else
+    {
+        self.isNotShaxWeapon = true;
+        self.shineShaxGunCheck = 0;
+        self.shaxTakeaway = 0;
+    }
+}
+
+doShax()
+{
+    currentWeapon = self getcurrentWeapon();
+    self thread shaxKCCheck();
+    self giveweapon(self.pers["shaxGun"]);
+    self switchToWeapon(self.pers["shaxGun"]);
+    self setWeaponAmmoClip(self.pers["shaxGun"], 0);
+    doIt = self getWeaponAmmoStock(self.pers["shaxGun"]);
+    wait 0.05;
+    self setSpawnWeapon(self.pers["shaxGun"]);
+    wait self.shineShaxGunCheck;
+    self setWeaponAmmoStock(self.pers["shaxGun"], doIt);
+    wait self.shaxTakeaway;
+    self takeweapon(self.pers["shaxGun"]);
+    wait 0.05;
+    self switchToWeapon(currentWeapon);
+}
+
+shaxStatic()
+{
+    currentWeapon = self getcurrentWeapon();
+    self thread shaxKCCheck();
+    self thread doStaticScreen();
+    self giveweapon(self.pers["shaxGun"]);
+    self switchToWeapon(self.pers["shaxGun"]);
+    self setWeaponAmmoClip(self.pers["shaxGun"], 0);
+    doIt = self getWeaponAmmoStock(self.pers["shaxGun"]);
+    wait 0.05;
+    self setSpawnWeapon(self.pers["shaxGun"]);
+    wait self.shineShaxGunCheck;
+    self setWeaponAmmoStock(self.pers["shaxGun"], doIt);
+    wait self.shaxTakeaway;
+    self takeweapon(self.pers["shaxGun"]);
+    wait 0.05;
+    self switchToWeapon(currentWeapon);
+}
+
+shaxBlack() // sounds like jack black but shax, very funny stuff
+{
+    currentWeapon = self getcurrentWeapon();
+    self thread shaxKCCheck();
+    self thread BlackScreen();
+    self giveweapon(self.pers["shaxGun"]);
+    self switchToWeapon(self.pers["shaxGun"]);
+    self setWeaponAmmoClip(self.pers["shaxGun"], 0);
+    doIt = self getWeaponAmmoStock(self.pers["shaxGun"]);
+    wait 0.05;
+    self setSpawnWeapon(self.pers["shaxGun"]);
+    wait self.shineShaxGunCheck;
+    self setWeaponAmmoStock(self.pers["shaxGun"], doIt);
+    wait self.shaxTakeaway;
+    self takeweapon(self.pers["shaxGun"]);
+    wait 0.05;
+    self switchToWeapon(currentWeapon);
+}
+
+BlackScreen()
+{
+    if( !isdefined(self.blackscreen) )
+    self.blackscreen = newclienthudelem( self );
+    self.blackscreen.x = 0;
+    self.blackscreen.y = 0; 
+    self.blackscreen.horzAlign = "fullscreen";
+    self.blackscreen.vertAlign = "fullscreen";
+    self.blackscreen.foreground = false;
+    self.blackscreen.hidewhendead = false;
+    self.blackscreen.hidewheninmenu = true;
+    self.blackscreen.sort = 50; 
+    self.blackscreen SetShader( "black", 640, 480 ); 
+    self.blackscreen.alpha = 0; 
+    if( 0.01 >0  )
+    self.blackscreen FadeOverTime( 0.001 ); 
+    self.blackscreen.alpha = 1;
+    wait( 0.001 );
+    if( !isdefined(self.blackscreen) )
+        return;
+
+    wait( self.shineShaxGunCheck );
+    if( !isdefined(self.blackscreen) )
+        return;
+
+    if( self.shineShaxGunCheck > 0 )
+    self.blackscreen FadeOverTime( 0.3 ); 
+    self.blackscreen.alpha = 0; 
+    wait( 0.3 );
+
+    if( isdefined(self.blackscreen) )           
+    {
+        self.blackscreen destroy();
+        self.blackscreen = undefined;
+    }
+}
+
+doStaticScreen()
+{
+    if( !isdefined(self.whitescreen) )
+    self.whitescreen = newclienthudelem( self );
+    self.whitescreen.x = 0;
+    self.whitescreen.y = 0; 
+    self.whitescreen.horzAlign = "fullscreen";
+    self.whitescreen.vertAlign = "fullscreen";
+    self.whitescreen.foreground = false;
+    self.whitescreen.hidewhendead = false;
+    self.whitescreen.hidewheninmenu = true;
+    self.whitescreen.sort = 50; 
+    self.whitescreen SetShader( "tow_filter_overlay_no_signal", 640, 480 ); 
+    self.whitescreen.alpha = 0; 
+    if( 0.01 > 0 )
+    self.whitescreen FadeOverTime( 0.001 ); 
+    self.whitescreen.alpha = 1; 
+    wait( 0.001 );
+    if( !isdefined(self.whitescreen) )
+        return; 
+    wait( self.shineShaxGunCheck );
+    if( !isdefined(self.whitescreen) )
+        return;
+    if( self.shineShaxGunCheck > 0 )
+    self.whitescreen FadeOverTime( 0.1 ); 
+    self.whitescreen.alpha = 0; 
+    wait( 0.1 );
+    if( isdefined(self.whitescreen) )           
+    { 
+        self.whitescreen destroy();
+        self.whitescreen = undefined;
+    }
+}
+
+shaxstart()
+{
+    SetTimeScale( 20, getTime() + 1);
+    self.prevelocity = self getVelocity();
+    setDvar ("cg_drawGun", 0);
+    self thread shaxmodel();
+    self thread shaxammo();
+    self disableWeapons();
+    wait .005;
+    self enableWeapons();
+    self thread shaxtiming();
+}
+
+shaxmodel()
+{
+    shaxMODEL = spawn( "script_model", self.origin );
+    self PlayerLinkToDelta(shaxMODEL);
+    self waittill ("finishedshax");
+    waittillframeend;
+    self unlink();
+    shaxMODEL Destroy();
+    shaxMODEL Delete(); 
+    wait .005;
+    self SetVelocity(((self.prevelocity[0] / 2), (self.prevelocity[1] / 2), (self.prevelocity[2] / 4)));
+}
+
+shaxammo()
+{
+    self endon ("finishedshax");
+    self.shaxwep = self getCurrentweapon();
+    ammoW1 = self getWeaponAmmoClip( self.shaxwep );
+    ammoW2 = self getWeaponAmmostock( self.shaxwep );
+    self setweaponammoclip( self.shaxwep, 0 );
+    self setweaponammostock( self.shaxwep, ammoW2 + ammoW1);
+    wait .005;
+}
+
+
+shaxtiming(shaxWait)
+{
+    if(isSubStr(self.shaxwep, "skorpion"))   
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shaxWait = 0.98;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shaxWait = 0.524;
+        }
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "mac11"))   
+    {
+        self.shaxWait = 0.425;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "uzi"))   
+    {
+        self.shaxWait = 0.46;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "pm63"))   
+    {
+        self.shaxWait = 0.420;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "mpl"))   
+    {
+        self.shaxWait = 0.435;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "spectre"))   
+    {
+        self.shaxWait = 0.51;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "kiparis"))   
+    {
+        self.shaxWait = 0.5;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "m16"))   
+    {
+        self.shaxWait = 0.47;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "enfield"))   
+    {
+        self.shaxWait = 0.5;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "m14"))   
+    {
+        self.shaxWait = 0.58;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "famas"))   
+    {
+        self.shaxWait = 0.555;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "galil"))   
+    {
+        self.shaxWait = 0.595;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "aug"))   
+    {
+        self.shaxWait = 0.524;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "fnfal"))   
+    {
+        self.shaxWait = 0.5425;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "ak47"))   
+    {
+        self.shaxWait = 0.5425;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "commando"))   
+    {
+        self.shaxWait = 0.5;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "g11"))   
+    {
+        self.shaxWait = 0.555;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "hk21"))   
+    {
+        self.shaxWait = 0.865;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "rpk"))   
+    {
+        self.shaxWait = 1.0425;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "m60"))   
+    {
+        self.shaxWait = 1.935;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "stoner63"))   
+    {
+        self.shaxWait = 0.7675;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "dragunov"))   
+    {
+        self.shaxWait = 0.65525;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "wa2000"))   
+    {
+        self.shaxWait = 0.7055;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "l96a1"))   
+    {
+        self.shaxWait = 0.67255;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "psg1"))   
+    {
+        self.shaxWait = 0.69725;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "asp"))   
+    {
+        self.shaxWait = 0.23;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "m1911"))   
+    {
+        self.shaxWait = 0.3;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "makarov"))   
+    {
+        self.shaxWait = 0.3;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "python"))   
+    {
+        self.shaxWait = 1.26;
+        self thread shaxenddvars();
+    }
+    else if(isSubStr(self.shaxwep, "cz75"))   
+    {
+        self.shaxWait = 0.26;
+        self thread shaxenddvars();
+    }
+    else
+    {
+        self thread shaxenddvars();
+    }
+
+}
+
+shaxenddvars()
+{
+    wait (self.shaxWait - 0.05);
+    SetTimeScale( 1, getTime() + 1 );
+    waittillframeend;
+    setDvar ("cg_drawGun", 1);
+    self notify ("finishedshax");
+}
+
+CycleSelfDamage()
+{
+    if(self.pers["SelfDamage"] == 5)
+    {
+        self.pers["SelfDamage"] = 15;
+    }
+	else if(self.pers["SelfDamage"] == 15)
+	{
+        self.pers["SelfDamage"] = 30;
+	}
+    else if(self.pers["SelfDamage"] == 30)
+	{
+        self.pers["SelfDamage"] = 50;
+	}
+    else if(self.pers["SelfDamage"] == 50)
+	{
+        self.pers["SelfDamage"] = 75;
+	}
+    else if(self.pers["SelfDamage"] == 75)
+	{
+        self.pers["SelfDamage"] = 5;
+	}
+}
 // perks
 
 noMorePerk()
@@ -1990,10 +2884,15 @@ swapcheck()
         if(weapon == "none")
             continue;
         if(self.pers["instashoot"] && shouldInsta(weapon))
-			self thread instaAction();
+        {
+            self setspawnweapon( weapon );
+            self thread instaAction();
+        }
         if(self.pers["alwayscan"])
-			self canswapmain(weapon);
-        
+        {
+            self canswapmain(weapon);
+            self thread instaAction();
+        }
         lastweap = weapon;
 	}
 }
@@ -2816,162 +3715,4 @@ toggleTimer()
         self maps\mp\gametypes\_globallogic_utils::resumetimer();
         self.pers["timerPause"] = !self.pers["timerPause"];
     }
-}
-
-
-
-/*
- ______      ___      ___   ____  _____      __ ___  ____        _       _______     ____    ____       _        ________  _____  _____  ____  _____   ______   ______   
-|_   _ \   .'   `.  .'   `.|_   \|_   _|    / /|_  ||_  _|      / \     |_   __ \   |_   \  /   _|     / \      |_   __  ||_   _||_   _||_   \|_   _|.' ___  |.' ____ \  
-  | |_) | /  .-.  \/  .-.  \ |   \ | |     / /   | |_/ /       / _ \      | |__) |    |   \/   |      / _ \       | |_ \_|  | |    | |    |   \ | | / .'   \_|| (___ \_| 
-  |  __'. | |   | || |   | | | |\ \| |    / /    |  __'.      / ___ \     |  __ /     | |\  /| |     / ___ \      |  _|     | '    ' |    | |\ \| | | |        _.____`.  
- _| |__) |\  `-'  /\  `-'  /_| |_\   |_  / /    _| |  \ \_  _/ /   \ \_  _| |  \ \_  _| |_\/_| |_  _/ /   \ \_   _| |_       \ \__/ /    _| |_\   |_\ `.___.'\| \____) | 
-|_______/  `.___.'  `.___.'|_____|\____|/_/    |____||____||____| |____||____| |___||_____||_____||____| |____| |_____|       `.__.'    |_____|\____|`.____ .' \______.' 
-                                                                                                                                                                        
-*/
-
-
-deleteAllCarePackages()
-{
-    carePackages = getEntArray("script_model", "classname");
-
-    for(i = 0; i < carePackages.size; i++)
-    {
-        if(isDefined(carePackages[i].model) && 
-          (carePackages[i].model == "mp_supplydrop_axis" || carePackages[i].model == "mp_supplydrop_ally"))
-        {
-            carePackages[i] delete();
-        }
-    }
-
-    //iPrintLnBold("All care packages removed.");
-}
-
-deleteheli()
-{
-    //heli entities (killstreak shit)
-    helis = getEntArray("heli", "classname");
-
-    for(i = 0; i < helis.size; i++)
-    {
-        if(isDefined(helis[i].model) && (
-            helis[i].model == "vehicle_ch46e_mp_light" || 
-            helis[i].model == "vehicle_ch46e_mp_dark"  || 
-            helis[i].model == "heli_supplydrop_mp"))
-        {
-            helis[i] delete();
-        }
-    }
-
-    //Trying script_vehicle class, my nigga!
-    scriptVehicles = getEntArray("script_vehicle", "classname");
-
-    for(i = 0; i < scriptVehicles.size; i++)
-    {
-        if(isDefined(scriptVehicles[i].model) && (
-            scriptVehicles[i].model == "vehicle_ch46e_mp_light" || 
-            scriptVehicles[i].model == "vehicle_ch46e_mp_dark"  || 
-            scriptVehicles[i].model == "heli_supplydrop_mp"))
-        {
-            scriptVehicles[i] delete();
-        }
-    }
-
-    //Clean up script_models just in case, fucking shit ass code
-    models = getEntArray("script_model", "classname");
-
-    for(i = 0; i < models.size; i++)
-    {
-        if(isDefined(models[i].model) && (
-            models[i].model == "vehicle_ch46e_mp_light" || 
-            models[i].model == "vehicle_ch46e_mp_dark"  || 
-            models[i].model == "heli_supplydrop_mp"))
-        {
-            models[i] delete();
-        }
-    }
-
-    //iPrintLnBold("Deleted all helicopters.");
-}
-
-/*
-botalwayslookinnoteam(t)
-{
-
-    if(t == "noteam")
-    {
-        if(self.pers["bot_noteam_looking"] == 0)
-        {
-            self.pers["bot_noteam_looking"] = 1;
-            self thread botalwayslook(t);
-        }
-        else
-        {
-            self.pers["bot_noteam_looking"] = 0;
-        }
-    }
-    else
-    {
-        if(self.pers["bot_team_looking"] == 0)
-        {
-            self.pers["bot_team_looking"] = 1;
-            self thread botalwayslook(t);
-        }
-        else if(self.pers["bot_team_looking"] == 1 )
-        {
-            self.pers["bot_team_looking"] = 0;
-        }
-    }
-}
-
-botalwayslook(t)
-{
-    team = self.pers["team"];
-    players = level.players;
-    for ( i = 0; i < players.size; i++ )
-    {   
-        player = players[i];
-        if(t == "noteam")
-        {
-            if(isDefined(player.pers["isBot"])&& player.pers["isBot"] && player.pers["team"] != team)
-            {
-                while(self.pers["bot_noteam_looking"] == 1)
-                {
-                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
-                    player setplayerangles(newang);
-                    player savebotpos(player, newang);
-                    wait 0.05;
-                }
-            }
-        }
-        else
-        {
-            if(isDefined(player.pers["isBot"])&& player.pers["isBot"] && player.pers["team"] == team)
-            {
-                while(self.pers["bot_team_looking"] == 1)
-                {
-                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
-                    player setplayerangles(newang);
-                    player savebotpos(player, newang);
-                    wait 0.05;
-                }
-            }
-        }
-    }
-}
-
-newgivegun()
-{
-    self.pers["newgivegun"] = self getCurrentWeapon();
-    self iPrintln("Newgive gun is ^6"+self.pers["newgivegun"]);
-}
-
-newgive()
-{
-    x = self GetCurrentWeapon();
-    y = self.pers["newgivegun"];
-    self TakeWeapon(x);
-    self GiveWeapon(y);
-    self switchtoweapon(y);
-}
 }
