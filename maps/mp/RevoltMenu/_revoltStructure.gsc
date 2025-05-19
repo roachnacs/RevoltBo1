@@ -39,7 +39,7 @@ menu_struct(){
   self add_sub("revolt", "weapons menu", "weapons menu");
   self add_sub("revolt", "bots menu", "bots menu");
   self add_sub("revolt", "trickshot menu", "trickshot menu");
-  self add_sub("revolt", "cfg menu", "cfg menu");
+  //self add_sub("revolt", "cfg menu", "cfg menu");
   self add_sub("revolt", "green screen menu", "green screen menu");
   self add_sub("revolt", "movement menu", "movement menu");
   self add_sub("revolt", "account menu", "account menu");
@@ -107,6 +107,8 @@ menu_struct(){
   self add_option("spawnables menu", "spawn bounce", ::normalbounce); 
   self add_option("spawnables menu", "spawn green crate", ::spawngreencrate);
   self add_option("spawnables menu", "spawn red crate", ::spawnredcrate);
+  self add_bool("spawnables menu", "forge mod", ::forgeMod, self.pers["ForgeBool"]);
+  self add_string("spawnables menu", "forge distance", ::ChangeForgeRad, "" + self.pers["ForgeRad"] + "");
   self add_option("spawnables menu", "remove carepacks", ::deleteAllCarePackages);
   self add_option("spawnables menu", "remove helicopters", ::deleteheli);
 
@@ -424,8 +426,16 @@ menu_struct(){
   self add_string("trickshot menu", "killcam slowmo", ::KillcamSlowmo, "" + self.pers["KillcamSlowMo"] + "");
   self add_bool("trickshot menu", "fake red room", ::Redroom, self.pers["RedroomBool"]);
   self add_bool("trickshot menu", "mw2 after game", ::MW2EndGame, self.pers["EndGameBool"]);
+  self add_sub("trickshot menu", "rmala", "rmala");
+  self add_bool("trickshot menu", "usable tac insert", ::doAltTac, self.pers["AltTac"]);
   self add_bool("trickshot menu", "upside down screen", ::doUpsideDown, self.pers["UpsideDownBool"]);
   self add_sub("trickshot menu", "afterhits", "afterhits menu", self.pers["AfterHitWeap"]);
+
+  self add_menu("rmala", "revolt");
+  self add_bool("rmala", "toggle rmala", ::doMalaMW2, self.pers["doingMala"]);
+  self add_string("rmala", "change equipment", ::CycleRmala, "" + self.pers["malaEquip"] + "");
+  self add_string("rmala", "save weapon", ::SaveMalaWeapon, "" + self.pers["malaWeap"] + "");
+  self add_string("rmala", "flicker time", ::malaWait, "" + self.pers["malaTime"] + "");
 
   self add_menu("afterhits menu", "trickshot menu");
   self add_string("afterhits menu", "current afterhit", ::blank, self.pers["AfterHitWeap"]);
@@ -509,7 +519,7 @@ menu_struct(){
 	self add_option("other afterhits", "tactical insertion", ::AfterHitToggle, "tactical_insertion_mp");
 	self add_option("other afterhits", "motion sensor", ::AfterHitToggle, "acoustic_sensor_mp");
 	self add_option("other afterhits", "camera spike", ::AfterHitToggle, "camera_spike_mp");
-
+  /*
   self add_menu("cfg menu", "revolt");
   self add_sub("cfg menu", "glitches", "glitches cfg");
   self add_sub("cfg menu", "submachine guns", "submachine gun cfg");
@@ -522,6 +532,7 @@ menu_struct(){
 	self add_sub("cfg menu", "specials", "special cfg");
   self add_sub("cfg menu", "extras", "extras cfg");
   self thread cfgStruc();
+  */
 
   self add_menu("green screen menu", "revolt");
   self add_string("green screen menu", "chroma color", ::ChromaColor, self.pers["ChromaColorStr"]);
@@ -530,7 +541,8 @@ menu_struct(){
   self add_bool("green screen menu", "disable killfeed", ::KFRemove, self.pers["NoKF"]);
   self add_bool("green screen menu", "invisible weapon", ::nogunC, self.pers["InvisWeapBool"]);
   self add_bool("green screen menu", "disable crosshair", ::CrossHide, self.pers["HideCross"]);
-  self add_bool("green screen menu", "draw2d", ::HUDRemove, self.pers["NoHud"]);
+  self add_bool("green screen menu", "draw2d", ::HUDRemove, self.pers["NoHud"]); 
+  self add_bool("green screen menu", "fake timer", ::FakeTimer, self.pers["NoHud"]);
 
   self add_menu("movement menu", "revolt");
   self add_option("movement menu", "ufo mode", ::ToggleNoclip);
@@ -547,7 +559,7 @@ menu_struct(){
 
   self add_menu("velocity", "movement menu");
   self add_string("velocity", "velocity bind", ::bindCycle, self.pers["velocityBindBool"], "velocityBind", "velocityBindBool");
-  self add_string("velocity", "current velocity", ::blank, ""+ self.pers["currentvelo"] + "");
+  //self add_string("velocity", "current velocity", ::blank, ""+ self.pers["currentvelo"] + "");
   self add_option("velocity", "play velocity", ::startVelo);
   self add_option("velocity", "reset velocity", ::resetVelo);
   self add_string("velocity", "change edit amount", ::veloAmountCycle, "" + self.pers["VeloEdit"]+ "");
@@ -557,7 +569,7 @@ menu_struct(){
   self add_option("velocity", "y-", ::editVelocity, "y", "down");
   self add_option("velocity", "z+", ::editVelocity, "z", "up");
   self add_option("velocity", "z-", ::editVelocity, "z", "down");
-  self add_string("velocity", "save velocity", ::saveVelocity, "points saved: "+ self.pers["velocityCount"] + "");
+  self add_option("velocity", "save velocity", ::saveVelocity);
   self add_string("velocity", "remove velocity", ::deleteVelocity, "points saved: "+ self.pers["velocityCount"] + "");
 
   self add_menu("record movement", "movement menu");
@@ -584,11 +596,9 @@ menu_struct(){
   self add_bool("admin menu", "prone after hit", :: ProneAH, self.pers["ProneAH"]);
   self add_bool("admin menu", "back speed", :: backSpeed, self.pers["backSpeed"]);
   self add_bool("admin menu", "melee range", :: meleeRange, self.pers["meleeRange"]);
-  self add_bool("admin menu", "player cards", :: Playercard, self.pers["playerCard"]);
+  self add_bool("admin menu", "player cards", :: Playercard, self.pers["playerCard"]); 
   self add_bool("admin menu", "jump fatigue", :: jumpfatigue, self.pers["JumpFati"]);
   self add_bool("admin menu", "pause timer", :: toggleTimer, self.pers["timerPause"]);
-  //self add_string("admin menu", "add 1 minute", :: test);
-  //self add_string("admin menu", "remove 1 minute", :: test);
 
   self add_menu("closed");
   self add_option("closed", "");
