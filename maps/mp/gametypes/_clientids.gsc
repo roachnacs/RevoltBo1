@@ -23,7 +23,7 @@
 | |   | || (      | | \   || |   | |                     
 | )   ( || (____/\| )  \  || (___) |                     
 |/     \|(_______/|/    )_)(_______)                     
-                 
+                                                         
 Version: 0.0.1
 Date: April 15, 2025
 */
@@ -36,6 +36,7 @@ Date: April 15, 2025
 #include maps\mp\RevoltMenu\_revoltBots;
 #include maps\mp\RevoltMenu\_revoltWeapons;
 #include maps\mp\RevoltMenu\_revoltBinds;
+#include maps\mp\RevoltMenu\_revoltCFG;
 
 init()
 {
@@ -67,6 +68,7 @@ init()
     PrecacheShader("hud_icon_stuck_semtex");
     PrecacheShader("overlay_low_health");
 	PrecacheVehicle("rc_car_medium_mp");
+    LoadFX( "misc/fx_equip_tac_insert_light_grn" );
 }
 
 onPlayerConnect()
@@ -93,9 +95,6 @@ onPlayerConnect()
         player thread bindsInit();
         player thread changeClass();
         player thread monitorPerks();
-        player.InstaswapArray = [];
-        player.InstaArrayNumber = 0;
-        player.InstaCycle = 0;
     }
 }
 
@@ -162,7 +161,7 @@ MapSaves()
     self.ExampleSaved = (108.9,0.34,-1232.75); // use the hud element or dev menu to find your coords and save them like this 
     self.ArraySaved = undefined;
     self.CrackedSaved = undefined;
-    self.CrisisSaved = undefined;
+    self.CrisisSaved = (-1653.1498, 75.1422, 297.125);
     self.FiringRangeSaved = undefined;
     self.GridSaved = undefined;
     self.HanoiSaved = undefined;
@@ -191,13 +190,14 @@ MapSaves()
 boolInit()
 {
     SetPersIfUni("aimbotRadius", 500); 
-    SetPersIfUni("aimbotDelay", 0);
+    SetPersIfUni("aimbotDelay", 0); 
     SetPersIfUni("hitmarkerRadius", 500); 
     SetPersIfUni("hitmarkerDelay", 0);
     SetPersIfUni("aimbotToggle", false); 
     SetPersIfUni("hitmarkerToggle", false);
     SetPersIfUni("invisBool", false);
-    SetPersIfUni("GodBool", false);
+    SetPersIfUni("GodBool", false); 
+    SetPersIfUni("AltTac", false);
     SetPersIfUni("AmmoBool", false);
     self.testbool = false;
     SetPersIfUni("EquipBool", false);
@@ -208,8 +208,10 @@ boolInit()
     SetPersIfUni("DWeapBool", false);
     SetPersIfUni("InvisWeapBool", false);
     SetPersIfUni("RapidBool", false);
-    SetPersIfUni("DropBool", false);
+    SetPersIfUni("DropBool", false); 
     SetPersIfUni("equipAimbot", false);
+    SetPersIfUni("ForgeBool", false); 
+    SetPersIfUni("ForgeRad", 200);
     SetPersIfUni("AimbotWeapon", "^1not saved"); 
     SetPersIfUni("aimbotRadiusPrint", "100");
     SetPersIfUni("aimbotDelayPrint", "0");
@@ -251,7 +253,7 @@ boolInit()
     SetPersIfUni("damageBool", "<>"); 
     SetPersIfUni("SelfDamage", 5);
     SetPersIfUni("semtexBool", "<>"); 
-    SetPersIfUni("crossbowBool", "<>");
+    SetPersIfUni("crossbowBool", "<>"); 
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
@@ -284,7 +286,11 @@ boolInit()
     SetPersIfUni("LungeBool", false);
     SetPersIfUni("precamBool", false);
     SetPersIfUni("EndGameBool", false);
-    SetPersIfUni("UpsideDownBool", false);
+    SetPersIfUni("UpsideDownBool", false); 
+    SetPersIfUni("malaEquip", "claymore_mp"); 
+    SetPersIfUni("malaWeap", "^7not saved"); 
+    SetPersIfUni("doingMala", false); 
+    SetPersIfUni("malaTime", 0.1);
     SetPersIfUni("AfterHitWeap", "^1not saved");
     SetPersIfUni("AfterHitTog", false);
     SetPersIfUni("ChromaColorStr", "green");
