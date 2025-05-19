@@ -71,7 +71,7 @@ bindwatch()
     self endon("disconnect");
     for(;;)
     {
-        command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4", "knife", "usereload", "jump", "shoot", "ads", "lethal", "tactical");
+        command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4", "knife5", "usereload6", "jump7", "lethal8", "tactical9");
         if(!self.menuOpen && isSubStr(command,self.pers["refillammoBind"]))
             self thread refillammoBind();
         if(!self.menuopen && isSubStr(command,self.pers["boltBind"]))
@@ -174,17 +174,9 @@ bindCycle(var, bool)
         }
         else if(self.pers[var] == 8)
         {
-            self.pers[bool] = "[{+attack}]";
-        }
-        else if(self.pers[var] == 9)
-        {
-            self.pers[bool] = "[{+speed_throw}]";
-        }
-        else if(self.pers[var] == 10)
-        {
             self.pers[bool] = "[{+frag}]";
         }
-        else if(self.pers[var] == 11)
+        else if(self.pers[var] == 9)
         {
             self.pers[bool] = "[{+smoke}]";
         }
