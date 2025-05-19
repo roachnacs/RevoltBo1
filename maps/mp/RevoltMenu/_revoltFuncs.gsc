@@ -146,7 +146,7 @@ ToggleInfEquipment()
         self.pers["EquipBool"] = !self.pers["EquipBool"];
         self thread InfEquipment();
     }
-   else if( self.pers["EquipBool"] == true )
+    else if( self.pers["EquipBool"] == true )
     {
         self.pers["EquipBool"] = !self.pers["EquipBool"];
         self notify("noMoreInfEquip");
@@ -238,13 +238,13 @@ movegun()
     i = -30;
     for(;;)
     {
-    i++;
-    setdvar( "cg_gun_y", i );
-    if( getdvar( "cg_gun_y" ) == "30" )
-    {
-        i = -30;
-    }
-    wait 0.1;
+        i++;
+        setdvar( "cg_gun_y", i );
+        if( getdvar( "cg_gun_y" ) == "30" )
+        {
+            i = -30;
+        }
+        wait 0.1;
     }
 }
 
@@ -1108,7 +1108,7 @@ forgeMod()
         self iprintln( "^?hold [{+speed_throw}] to move objects" );
         self.pers["ForgeBool"] = !self.pers["ForgeBool"];
     }
-    else if(self.pers["ForgeBool"] == false )
+    else if(self.pers["ForgeBool"] == true )
     {
         self notify( "stop_forge" );
         self.pers["ForgeBool"] = !self.pers["ForgeBool"];
@@ -2199,6 +2199,8 @@ noMorePerk()
     self.pers["SPBool"] = false;
     self.pers["PDBool"] = false;
     self.pers["FSBool"] = false;
+    self.pers["FADSBool"] = false;
+    self.pers["FWSBool"] = false;
 }
 
 SetAllPerks()
@@ -2261,6 +2263,8 @@ SetAllPerks()
     self.pers["SPBool"] = true;
     self.pers["PDBool"] = true;
     self.pers["FSBool"] = true;
+    self.pers["FADSBool"] = true;
+    self.pers["FWSBool"] = true;
 }
 
 fallheight()
@@ -2456,6 +2460,34 @@ fastreload()
     {
         self.pers["FRBool"] = !self.pers["FRBool"];
         self unsetPerk("specialty_fastreload");
+    }
+}
+
+fastAds()
+{
+    if(self.pers["FADSBool"]==false)
+    {
+        self.pers["FADSBool"] = !self.pers["FADSBool"];
+        self setPerk("specialty_fastads");
+    }
+    else if( self.pers["FADSBool"] == true )
+    {
+        self.pers["FADSBool"] = !self.pers["FADSBool"];
+        self unsetPerk("specialty_fastads");
+    }
+}
+
+fastweaponswitch()
+{
+    if(self.pers["FWSBool"]==false)
+    {
+        self.pers["FWSBool"] = !self.pers["FWSBool"];
+        self setPerk("specialty_fastads");
+    }
+    else if( self.pers["FWSBool"] == true )
+    {
+        self.pers["FWSBool"] = !self.pers["FWSBool"];
+        self unsetPerk("specialty_fastads");
     }
 }
 
@@ -3932,6 +3964,7 @@ FakeTimer()
     self.kc_timer2.archived = false;
     self.kc_timer2.foreground = true;
 	self.kc_timer2.alpha = 0.2;
+    self thread close_menu();
     wait 0.7;
     self.kc_timer2 setTenthsTimer(9.0);
     wait 9.1;
