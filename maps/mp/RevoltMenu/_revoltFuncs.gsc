@@ -1100,6 +1100,70 @@ MapSavedLocation()
 
 //spawnables
 
+forgeMod()
+{
+    if(self.pers["ForgeBool"] == false )
+    {
+        self thread forgemodeon();
+        self iprintln( "^?hold [{+speed_throw}] to move objects" );
+        self.pers["ForgeBool"] = !self.pers["ForgeBool"];
+    }
+    else if(self.pers["ForgeBool"] == false )
+    {
+        self notify( "stop_forge" );
+        self.pers["ForgeBool"] = !self.pers["ForgeBool"];
+    }
+}
+
+ChangeForgeRad()
+{
+    if(self.pers["ForgeRad"] == 200)
+    {
+        self.pers["ForgeRad"] = 300;
+    }
+    else if(self.pers["ForgeRad"] == 300)
+    {
+        self.pers["ForgeRad"] = 400;
+    }
+    else if(self.pers["ForgeRad"] == 400)
+    {
+        self.pers["ForgeRad"] = 500;
+    }
+    else if(self.pers["ForgeRad"] == 500)
+    {
+        self.pers["ForgeRad"] = 50;
+    }
+    else if(self.pers["ForgeRad"] == 50)
+    {
+        self.pers["ForgeRad"] = 100;
+    }
+    else if(self.pers["ForgeRad"] == 100)
+    {
+        self.pers["ForgeRad"] = 200;
+    }
+}
+
+forgemodeon()
+{
+    self endon( "death" );
+    self endon( "stop_forge" );
+    for(;;)
+    {
+    while( self adsbuttonpressed() )
+    {
+        trace=bulletTrace(self GetTagOrigin("j_head"),self GetTagOrigin("j_head")+ anglesToForward(self GetPlayerAngles())* 1000000,true,self);
+        while( self adsbuttonpressed() )
+        {
+            trace[ "entity"] setorigin( self gettagorigin( "j_head" ) + anglestoforward( self getplayerangles() ) * self.pers["ForgeRad"] );
+            trace["entity"].origin=self GetTagOrigin("j_head")+ anglesToForward(self GetPlayerAngles())* self.pers["ForgeRad"];
+            wait 0.05;
+        }
+    }
+    wait 0.05;
+    }
+
+}
+
 spawngreencrate()
 {
     spawngreencrates = spawn( "script_model", self.origin );
@@ -1268,6 +1332,7 @@ deleteheli()
         }
     }
 }
+
 
 // binds
 
@@ -2791,6 +2856,19 @@ doEndGame()
     self freezecontrols(false);
 }
 
+doAltTac()
+{
+    if(self.pers["AltTac"] == false)
+    {
+        self.pers["AltTac"] = !self.pers["AltTac"];
+    }
+    else if(self.pers["AltTac"] == true)
+    {
+        self.pers["AltTac"] = !self.pers["AltTac"];
+        self notify( "Stop_AltTac" );
+    }
+}
+
 doUpsideDown()
 {
     if(self.pers["UpsideDownBool"] == false)
@@ -2802,6 +2880,117 @@ doUpsideDown()
     {
         self setPlayerAngles(self.angles+(0,0,0));
         self.pers["UpsideDownBool"] = !self.pers["UpsideDownBool"];
+    }
+}
+
+CycleRmala()
+{
+    self endon ("disconnect");
+    self endon ("game_ended");
+    if(self.pers["malaEquip"] == "claymore_mp")
+    {
+        self.pers["malaEquip"] = "tactical_insertion_mp";
+    }
+    else if(self.pers["malaEquip"] == "tactical_insertion_mp")
+    {
+        self.pers["malaEquip"] = "camera_spike_mp";
+    }
+    else if(self.pers["malaEquip"] == "camera_spike_mp")
+    {
+        self.pers["malaEquip"] = "scrambler_mp";
+    }
+    else if(self.pers["malaEquip"] == "scrambler_mp")
+    {
+        self.pers["malaEquip"] = "acoustic_sensor_mp";
+    }
+    else if(self.pers["malaEquip"] == "acoustic_sensor_mp")
+    {
+        self.pers["malaEquip"] = "satchel_charge_mp";
+    }
+    else if(self.pers["malaEquip"] == "satchel_charge_mp")
+    {
+        self.pers["malaEquip"] = "claymore_mp";
+    }
+    wait 0.005;
+}
+
+SaveMalaWeapon()
+{
+    self.pers["malaWeap"] = self getCurrentWeapon();
+}
+
+doMalaMW2()
+{
+    if(self.pers["doingMala"] == false)
+    {
+        self takeWeapon(self.pw);  
+        self takeWeapon(self.sw);  
+        self giveWeapon(self.CurRmalaWeapon);  
+        self switchToWeapon(self.CurRmalaWeapon);  
+        self.curMalaWeap=self.sw;
+        self thread malaMW2();
+        self.pers["doingMala"] = !self.pers["doingMala"];
+    }
+    else if(self.pers["doingMala"] == true)
+    {
+        self notify("stop_mala"); 
+        self.pers["doingMala"] = !self.pers["doingMala"];
+    }
+}
+
+malaWait()
+{
+    if(self.pers["malaTime"] == 0.1)
+    {
+        self.pers["malaTime"] = 0.2;
+    }
+    else if(self.pers["malaTime"] == 0.2)
+    {
+        self.pers["malaTime"] = 0.5;
+    }
+    else if(self.pers["malaTime"] == 0.5)
+    {
+        self.pers["malaTime"] = 1;
+    }
+    else if(self.pers["malaTime"] == 1)
+    {
+        self.pers["malaTime"] = 0.1;
+    }
+}
+
+malaMW2()
+{
+    self endon("disconnect");  
+    self endon("death");  
+    self endon("stop_mala");  
+    for(;;)
+    {
+        if(self changeSeatButtonPressed() && self getCurrentWeapon()== self.pers["malaEquip"] && self.menuisOpen == false)
+        {
+            self takeweapon(self.pers["malaEquip"]);
+            wait 0.1;
+            self giveWeapon(self.pers["malaEquip"]);  
+            self switchToWeapon(self.pers["malaEquip"]);  
+            if(self.pers["malaWeap"] == self.sw)
+            self.pers["malaWeap"] = self.pw;   
+            else  if(self.pers["malaWeap"] == self.pw)
+            self.pers["malaWeap"] = self.sw;  
+            wait 0.25;  
+        } 
+        else  if(self attackbuttonpressed()&& self getCurrentWeapon()== self.pers["malaEquip"] && self.menuisOpen == false)
+        {
+            forward=anglestoforward(self getplayerangles());
+            start=self geteye();  
+            end=vectorScale(forward,9999);
+            MagicBullet(self.pers["malaWeap"],start,bullettrace(start,start + end,false,undefined)["position"],self);
+            self takeWeapon(self.pers["malaEquip"]);
+            wait 0.01;
+            self setSpawnWeapon(self.pers["malaWeap"]);
+            wait self.pers["malaTime"];
+            self giveWeapon(self.pers["malaEquip"]);
+            self setSpawnWeapon(self.pers["malaEquip"]);
+        }
+    wait 0.05;
     }
 }
 
@@ -3216,9 +3405,19 @@ cycleSpeed()
     self iPrintLn("bolt speed: ^?"+self.pers["boltSpeed"]);
 }
 
+printVelocity()
+{
+    //createText(font, fontscale, align, relative, x, y, sort, color, alpha, text, glowAlpha, glowColor)
+    self.velotext Destroy();
+    self.velotext = createFontString("DEFAULT", 1.2);
+    self.velotext setPoint("RIGHT", "CENTER", 362, -144);
+    self.velotext setText("velocity: " + self.pers["currentvelo"] + " ");
+}
+
 startVelo()
 {
     self setVelocity(self.pers["currentvelo"]);
+    self thread printVelocity();
 }
 
 veloAmountCycle()
@@ -3248,6 +3447,10 @@ veloAmountCycle()
         self.pers["VeloEdit"] = 250;
     }
     else if(self.pers["VeloEdit"] == 250)
+    {
+        self.pers["VeloEdit"] = 0.1;
+    }
+    else if(self.pers["VeloEdit"] == 0.1)
     {
         self.pers["VeloEdit"] = 0.25;
     }
@@ -3286,7 +3489,7 @@ editVelocity(axis, up)
             current = self.pers["currentvelo"] - (0,0,self.pers["VeloEdit"]);
     }
     self.pers["currentvelo"] = current;
-    self.menutext[1] setText("Current ^1"+self.pers["currentvelo"]);
+    self thread printVelocity();
 }
 
 saveVelocity()
@@ -3311,6 +3514,7 @@ deleteVelocity()
 resetVelo()
 {
     self.pers["currentvelo"] = (0,0,0);
+    self thread printVelocity();
 }
 
 recordDaMovement()
@@ -3715,4 +3919,21 @@ toggleTimer()
         self maps\mp\gametypes\_globallogic_utils::resumetimer();
         self.pers["timerPause"] = !self.pers["timerPause"];
     }
+}
+
+
+
+
+// TESTING SHIT
+FakeTimer()
+{
+    self.kc_timer2 = createFontString( "extrabig", 3.0 );
+    self.kc_timer2 setPoint( "TOP", undefined, 0, 45 );
+    self.kc_timer2.archived = false;
+    self.kc_timer2.foreground = true;
+	self.kc_timer2.alpha = 0.2;
+    wait 0.7;
+    self.kc_timer2 setTenthsTimer(9.0);
+    wait 9.1;
+    self.kc_timer2 destroy();
 }
