@@ -30,9 +30,11 @@ buttons()
                 if(self.menu.parent[self.menu.current] == "exit")
                     self thread close_menu();
                 else
+                {
                     self _loadMenu(self.menu.parent[self.menu.current]);
-
-                
+                    if (isDefined(self.velotext))
+                        self.velotext Destroy();
+                }
                 wait .07;
             }
             if(command == "usereload"){
@@ -429,6 +431,7 @@ close_menu(){
     self notify("closed");
     self _loadMenu("closed");
     self.hud.title SetSafeText("");
+    
     self thread destroy_huds();
     self thread update_scroller();
 }
