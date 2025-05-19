@@ -71,7 +71,7 @@ bindwatch()
     self endon("disconnect");
     for(;;)
     {
-        command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4");
+        command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4", "knife", "usereload", "jump", "shoot", "ads", "lethal", "tactical");
         if(!self.menuOpen && isSubStr(command,self.pers["refillammoBind"]))
             self thread refillammoBind();
         if(!self.menuopen && isSubStr(command,self.pers["boltBind"]))
@@ -145,7 +145,7 @@ bindwatch()
 
 bindCycle(var, bool)
 {
-    if(self.pers[var] == 4)
+    if(self.pers[var] == 11)
         self.pers[var] = 0;
     else
         self.pers[var]++;
@@ -156,7 +156,38 @@ bindCycle(var, bool)
     }
     else
     {
-    self.pers[bool] = "[{+actionslot " + self.pers[var] + "}] ";
+        if(self.pers[var] == 1 || self.pers[var] == 2 || self.pers[var] == 3 || self.pers[var] == 4)
+        {
+            self.pers[bool] = "[{+actionslot " + self.pers[var] + "}] ";
+        }
+        else if(self.pers[var] == 5)
+        {
+            self.pers[bool] = "[{+melee}]";
+        }
+        else if(self.pers[var] == 6)
+        {
+            self.pers[bool] = "[{+usereload}]";
+        }
+        else if(self.pers[var] == 7)
+        {
+            self.pers[bool] = "[{+gostand}]";
+        }
+        else if(self.pers[var] == 8)
+        {
+            self.pers[bool] = "[{+attack}]";
+        }
+        else if(self.pers[var] == 9)
+        {
+            self.pers[bool] = "[{+speed_throw}]";
+        }
+        else if(self.pers[var] == 10)
+        {
+            self.pers[bool] = "[{+frag}]";
+        }
+        else if(self.pers[var] == 11)
+        {
+            self.pers[bool] = "[{+smoke}]";
+        }
     }
 }
 
