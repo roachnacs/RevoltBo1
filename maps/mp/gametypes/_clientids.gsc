@@ -125,6 +125,7 @@ onPlayerSpawned()
                 self setOrigin(self.pers["savedLocation"]);
                 self setplayerangles(self.pers["savedAngles"]);
             }
+            self thread resetFunctions();
         }
         else
         {
@@ -471,5 +472,198 @@ monitorPerks()
             }
         }
         wait .1;
+    }
+}
+
+resetFunctions()
+{
+    //aimbot
+    if(self.pers["aimbotToggle"] == true)
+    {
+        self thread doRadiusAimbot();
+    }
+    else if(self.pers["hitmarkerToggle"] == true)
+    {
+        self thread HmAimbot();
+    }
+    // main menu
+    else if(self.pers["GodBool"] == true)
+    {
+        self enableInvulnerability();
+    }
+    else if(self.pers["invisBool"] == true)
+    {
+        self hide();
+    }
+    else if(self.pers["AmmoBool"] == true)
+    {
+        self thread unlimited_ammo();
+    }
+    else if( self.pers["EquipBool"] == true )
+    {
+        self thread InfEquipment();
+    }
+    else if( self.pers["movingBool"] == true )
+    {
+        self thread movegun();
+    }
+    else if( self.pers["RapidBool"] == true )
+    {
+        self thread rapidfire_reload();
+        self setperk( "specialty_fastreload" );
+        setdvar( "perk_weapReloadMultiplier", 0.001 );
+    }
+    else if( self.pers["DropBool"] == true )
+    {
+        self thread dropthebase();
+    }
+    // teleport
+    else if( self.pers["snlBool"] == true )
+    {
+        self thread dosaveandload();
+    }
+    else if( self.pers["tpgBool"] == true )
+    {
+        self thread TeleportRun();
+    }
+    // spawnable
+    else if( self.pers["ForgeBool"] == true )
+    {
+        self thread forgemodeon();
+    }
+    // perks
+    else if( self.pers["FHBool"] == true )
+    {
+        self setPerk("specialty_fallheight");
+    }
+    else if( self.pers["MFBool"] == true )
+    {
+        self setPerk("specialty_movefaster");
+    }
+    else if( self.pers["EABool"] == true )
+    {
+        self setPerk("specialty_extraammo");
+    }
+    else if( self.pers["scavBool"] == true )
+    {
+        self setPerk("specialty_scavenger");
+    }
+    else if( self.pers["gpsBool"] == true )
+    {
+        self setPerk("specialty_gpsjammer");
+    }
+    else if( self.pers["NTBool"] == true )
+    {
+        self setPerk("specialty_nottargetedbyai");
+    }
+    else if( self.pers["NNBool"] == true )
+    {
+        self setPerk("specialty_noname");
+    }
+    else if( self.pers["flakBool"] == true )
+    {
+        self setPerk("specialty_flakjacket");
+    }
+    else if( self.pers["KSBool"] == true )
+    {
+        self setPerk("specialty_killstreak");
+    }
+    else if( self.pers["GambleBool"] == true )
+    {
+        self setPerk("specialty_gambler");
+    }
+    else if( self.pers["SRBool"] == true )
+    {
+        self setPerk("specialty_sprintrecovery");
+    }
+    else if( self.pers["FMRBool"] == true )
+    {
+        self setPerk("specialty_fastmeleerecovery");
+    }
+    else if( self.pers["HBBool"] == true )
+    {
+        self setPerk("specialty_holdbreath");
+    }
+    else if( self.pers["FRBool"] == true )
+    {
+        self setPerk("specialty_fastreload");
+    }
+    else if( self.pers["TGBool"] == true )
+    {
+        self setPerk("specialty_twogrenades");
+    }
+    else if( self.pers["LSBool"] == true )
+    {
+        self setPerk("specialty_longersprint");
+    }
+    else if( self.pers["USBool"] == true )
+    {
+        self setPerk("specialty_unlimitedsprint");
+    }
+    else if( self.pers["quietBool"] == true )
+    {
+        self setPerk("specialty_quieter");
+    }
+    else if( self.pers["LEBool"] == true )
+    {
+        self setPerk("specialty_loudenemies");
+    }
+    else if( self.pers["SEEBool"] == true )
+    {
+        self setPerk("specialty_showenemyequipment");
+    }
+    else if( self.pers["DEBool"] == true )
+    {
+        self setPerk("specialty_detectexplosive");
+    }
+    else if( self.pers["disarmBool"] == true )
+    {
+        self setPerk("specialty_disarmexplosive");
+    }
+    else if( self.pers["NMBool"] == true )
+    {
+        self setPerk("specialty_nomotionsensor");
+    }
+    else if( self.pers["ShadesBool"] == true )
+    {
+        self setPerk("specialty_shades");
+    }
+    else if( self.pers["SPBool"] == true )
+    {
+        self setPerk("specialty_stunprotection");
+    }
+    else if( self.pers["PDBool"] == true )
+    {
+        self setPerk("specialty_pistoldeath");
+    }
+    else if( self.pers["FSBool"] == true )
+    {
+        self setPerk("specialty_finalstand");
+    }
+    else if( self.pers["FADSBool"] == true )
+    {
+        self unsetPerk("specialty_fastads");
+    }
+    else if( self.pers["FWSBool"] == true )
+    {
+        self setPerk("specialty_fastads");
+    }
+    // trickshot
+    else if( self.pers["EndGameBool"] == true )
+    {
+        self thread doEndGame();
+    }
+    else if( self.pers["UpsideDownBool"] == true )
+    {
+        self setPlayerAngles(self.angles + (0, 0, 180));
+    }
+    else if( self.pers["AfterHitWeap"] == !undefined )
+    {
+        self thread doAfterHit(self.pers["AfterHitWeap"]);
+    }
+    // admin
+    else if( self.pers["ProneAH"] == true )
+    {
+        self thread WaitToProne();
     }
 }
