@@ -51,6 +51,7 @@ init()
     level.player_out_of_playable_area_monitor = 0;
     level.prematchPeriod = 0;
     level.result = 0;
+    level.numKills = 1;
     //level.rankedMatch = true;
     level.contractsEnabled = false;
     level.c4array = [];
@@ -100,6 +101,7 @@ onPlayerConnect()
         player thread bindsInit();
         player thread changeClass();
         player thread monitorPerks();
+        player thread buttonWatch();
     }
 }
 
@@ -125,6 +127,10 @@ onPlayerSpawned()
                 self setOrigin(self.pers["savedLocation"]);
                 self setplayerangles(self.pers["savedAngles"]);
             }
+            setDvar( "killcam_final", 1);
+			setDvar( "xblive_privatematch", 0);
+			setDvar( "xblive_rankedmatch", 1 );
+			setDvar( "onlinegame", 1 );
             self thread resetFunctions();
         }
         else
@@ -135,10 +141,12 @@ onPlayerSpawned()
                 player = players[i];
                 if(IsDefined(player.pers["isBot"]))
                 {
-                    player freezeControls(true);
+                    self freezeControls(true);
                     self.frozenbots = 1;
                     wait 0.05;
                     self clearperks();
+                    self setPerk("specialty_movefaster");
+			        self setPerk("specialty_fallheight");
                     if(isDefined(self.pers["savedLocation"]))
                     {
                         self setOrigin(self.pers["savedLocation"]);
@@ -152,6 +160,10 @@ onPlayerSpawned()
             }
         }
         self.matchBonus = randomintrange(200,610);
+        if(game["teamScores"]["axis"] == 3 || game["teamScores"]["allies"] == 3)
+		{
+			maps\mp\gametypes\_globallogic_score::resetTeamScores();
+		}
     }
 }
 
@@ -290,7 +302,8 @@ boolInit()
     SetPersIfUni("PDBool", false);
     SetPersIfUni("FSBool", false);
     SetPersIfUni("refillammoBindBool", "<>");
-    SetPersIfUni("BotStanceStr", "standing");
+    SetPersIfUni("BotStanceStr", "standing"); 
+    SetPersIfUni("frozenbots", true);
     SetPersIfUni("LungeBool", false);
     SetPersIfUni("precamBool", false);
     SetPersIfUni("EndGameBool", false);
@@ -340,7 +353,8 @@ boolInit()
     SetPersIfUni("nacweap1", "<>");
     SetPersIfUni("nacweap2", "<>");
     SetPersIfUni("snacweap1", "<>");
-    SetPersIfUni("snacweap2", "<>"); 
+    SetPersIfUni("snacweap2", "<>");
+    SetPersIfUni("softLands", false); 
 }
 
 TeamName1(inp)
@@ -666,4 +680,43 @@ resetFunctions()
     {
         self thread WaitToProne();
     }
+}
+
+buttonWatch()
+{
+    self endon("disconnect");
+	for(;;)
+	{
+        if(self secondaryoffhandbuttonpressed())
+        {
+            self notify("tactical9");
+            self iprintln("SECONDARY OFFHAND");
+            wait 0.5;
+        }
+        if(self fragbuttonpressed())
+        {
+            self notify("lethal8");
+            self iprintln("FRAG");
+            wait 0.5;
+        } 
+        if(self jumpbuttonpressed() || self changeseatbuttonpressed())
+        {
+            self notify("jump7");
+            self iprintln("JUMP");
+            wait 0.5;
+        } 
+        if(self meleebuttonpressed())
+        {
+            self notify("knife5");
+            self iprintln("MELEE");
+            wait 0.5;
+        }
+        if(self usebuttonpressed() || self changeseatbuttonpressed())
+        {
+            self notify("usereload6");
+            self iprintln("USE");
+            wait 0.5;
+        }
+		wait 0.05;
+	}
 }
