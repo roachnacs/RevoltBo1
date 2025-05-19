@@ -51,7 +51,7 @@ init()
     level.player_out_of_playable_area_monitor = 0;
     level.prematchPeriod = 0;
     level.result = 0;
-    level.rankedMatch = true;
+    //level.rankedMatch = true;
     level.contractsEnabled = false;
     level.c4array = [];
     level.claymorearray = [];
@@ -87,6 +87,11 @@ onPlayerConnect()
         player notifyOnPlayerCommand("knife", "+melee_zoom");
         player notifyOnPlayerCommand("usereload", "+usereload");
         player notifyOnPlayerCommand("usereload", "+reload");
+        player notifyOnPlayerCommand("jump", "+gostand");
+        player notifyOnPlayerCommand("shoot", "+attack");
+        player notifyOnPlayerCommand("ads", "+speed_throw");
+        player notifyOnPlayerCommand("lethal", "+frag");
+        player notifyOnPlayerCommand("tactical", "+smoke");
         player.pers["SavingandLoading"] = true;
         if(!isDefined(player.pers["first"]))
             player.pers["first"] = 1;
@@ -267,7 +272,9 @@ boolInit()
     SetPersIfUni("SRBool", false);
     SetPersIfUni("FMRBool", false);
     SetPersIfUni("HBBool", false);
-    SetPersIfUni("FRBool", false);
+    SetPersIfUni("FWSBool", false);
+    SetPersIfUni("FRBool", false); 
+    SetPersIfUni("FADSBool", false); 
     SetPersIfUni("TGBool", false);
     SetPersIfUni("LSBool", false);
     SetPersIfUni("USBool", false);
