@@ -923,7 +923,6 @@ doCrossbow()
     PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
 }
 
-
 /*
  ______      ___      ___   ____  _____      __ ___  ____        _       _______     ____    ____       _        ______   _____  ____  _____  ______     ________  _____  _____  ____  _____   ______   ______   
 |_   _ \   .'   `.  .'   `.|_   \|_   _|    / /|_  ||_  _|      / \     |_   __ \   |_   \  /   _|     / \      |_   _ \ |_   _||_   \|_   _||_   _ `.  |_   __  ||_   _||_   _||_   \|_   _|.' ___  |.' ____ \  
@@ -932,32 +931,7 @@ doCrossbow()
  _| |__) |\  `-'  /\  `-'  /_| |_\   |_  / /    _| |  \ \_  _/ /   \ \_  _| |  \ \_  _| |_\/_| |_  _/ /   \ \_   _| |__) |_| |_  _| |_\   |_  _| |_.' /  _| |_       \ \__/ /    _| |_\   |_\ `.___.'\| \____) | 
 |_______/  `.___.'  `.___.'|_____|\____|/_/    |____||____||____| |____||____| |___||_____||_____||____| |____| |_______/|_____||_____|\____||______.'  |_____|       `.__.'    |_____|\____|`.____ .' \______.' 
                                                                                                                                                                                                                  
-                                                                                                                                                                                                                 
-
-
-realcowboy()
-{
-                x = self getCurrentWeapon();
-                stock = self getWeaponAmmoStock(x);
-                clip = self getWeaponAmmoClip(x);
-	         self setperk("specialty_fastreload");
-             setDvar("perk_weapReloadMultiplier",0.001);
-             self takeWeapon(x);
-             self giveWeapon("pythondw_mp");
-             self switchToWeapon("pythondw_mp");
-             wait 0.1;
-             self setWeaponAmmoClip("pythondw_mp",999);
-             self setWeaponAmmoStock("pythondw_mp",999);
-             cmdexec("weapprev;wait 2;weapnext;wait 3;+usereload;wait 2;+attack;wait 700;-usereload;-attack;");
-             self setWeaponAmmoClip("pythondw_mp",999);
-             self setWeaponAmmoStock("pythondw_mp",999);
-             wait 5;
-             self giveWeapon(x);
-             self takeWeapon("pythondw_mp");
-             self switchToWeapon(x);
-             setDvar("perk_weapReloadMultiplier",0.5);
-}
-
+                                                                                                                                                                                                                
 flash()
 {
     self thread maps\mp\_flashgrenades::applyFlash(1, 1);
@@ -1324,4 +1298,4 @@ whatsmypers2()
     self iPrintln("Your pers is: ^6"+self.pers["HELP ME"]);
 }
 
-USES DIFFERENT ELEMS/BULLSHIT */
+*/
