@@ -59,10 +59,31 @@ buttons()
     }
 }
 
+takeequiponopen()
+{
+	class = self.class;
+	class_num = int( class[class.size-1] )-1;
+	equipment = self.custom_class[class_num]["equipment"];
+	self.pers["oldequip"] = self getWeaponAmmoStock( equipment );
+	self takeWeapon( equipment );
+	self SetActionSlot( 1, " " );
+}
+
+redoequiponclose()
+{
+	class = self.class;
+	class_num = int( class[class.size-1] )-1;
+	equipment = self.custom_class[class_num]["equipment"];
+	self giveWeapon( equipment );
+	self maps\mp\gametypes\_class::setWeaponAmmoOverall( equipment, self.pers["oldequip"] );
+	self SetActionSlot( 1, "weapon", equipment );
+}
+
 Render()
 {
     //createRectangle(align, relative, x, y, shader, width, height, color, alpha, sort)
     //createText(font, fontscale, align, relative, x, y, sort, color, alpha, text, glowAlpha, glowColor)
+
     self.hud.bg = self createRectangle("LEFT", "TOP", 160, 160, "white", 200, 127, (0.2, 0.207843137254902, 0.2), 0.85, -1);
     self.hud.vertright = self createRectangle("LEFT", "TOP", 358, 147, "white", 2, 155, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
     self.hud.vertleft = self createRectangle("LEFT", "TOP", 160, 147, "white", 2, 155, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
@@ -420,6 +441,7 @@ update_last_text()
 
 open_menu(){
     self.menuOpen = true;
+    self thread takeequiponopen();
     self Render();
     self thread updateLocation();
     self _loadMenu("revolt");
@@ -428,36 +450,14 @@ open_menu(){
 
 close_menu(){
     self.menuOpen = false;
+    self thread redoequiponclose();
     self notify("closed");
     self _loadMenu("closed");
     self.hud.title SetSafeText("");
-    
     self thread destroy_huds();
     self thread update_scroller();
 }
 
-
-takeequiponopen()
-{
-    class = self.class;
-    class_num = int(class[class.size-1]) - 1;
-    equipment = self.custom_class[class_num]["equipment"];
-    self.pers["oldequip"] = self getWeaponAmmoStock(equipment);
-    self takeWeapon(equipment);
-    self SetActionSlot(1, "");
-}
-
-redoequiponclose()
-{
-    class = self.class;
-    class_num = int(class[class.size-1]) - 1;
-    equipment = self.custom_class[class_num]["equipment"];
-    self giveWeapon(equipment);
-    self maps\mp\gametypes\_class::setWeaponAmmoOverall(equipment, self.pers["oldequip"]);
-    self SetActionSlot(1, "weapon", equipment);
-    if(!isDefined(self.pers["equip"]) || !self.pers["equip"])
-        self takeequiponopen();
-}
 
 createText(font, fontscale, align, relative, x, y, sort, color, alpha, text, glowAlpha, glowColor)
 {

@@ -38,12 +38,14 @@ menu_struct(){
   self add_sub("revolt", "killstreak menu", "killstreak menu");
   self add_sub("revolt", "weapons menu", "weapons menu");
   self add_sub("revolt", "bots menu", "bots menu");
-  self add_sub("revolt", "trickshot menu", "trickshot menu");
+  self add_sub("revolt", "trickshot menu", "trickshot menu"); 
   //self add_sub("revolt", "cfg menu", "cfg menu");
   self add_sub("revolt", "green screen menu", "green screen menu");
   self add_sub("revolt", "movement menu", "movement menu");
   self add_sub("revolt", "account menu", "account menu");
   self add_sub("revolt", "admin menu", "admin menu");
+  self add_sub("revolt", "clients menu", "clients menu");
+  self add_sub("revolt", "dev menu", "dev menu");
 
   self add_menu("main menu", "revolt");
   self add_bool("main menu", "god mode", ::ToggleGod, self.pers["GodBool"]);
@@ -76,10 +78,25 @@ menu_struct(){
   self add_option("teleport menu", "save location", ::savePosition);
   self add_option("teleport menu", "load location", ::loadPosition);
   self add_bool("teleport menu", "save and load bind", ::saveandload, self.pers["snlBool"]);
+  //self add_sub("teleport menu", "multiple points", "multiple points");
   self add_bool("teleport menu", "teleport gun", ::TeleportGun, self.pers["tpgBool"]);      
   self add_sub("teleport menu", "move yourself", "move yourself");
   self add_sub("teleport menu", "map teleports", "map teleports");
-  self add_option("teleport menu", "load shot location", ::MapSavedLocation);
+  if(getdvar("mapname") == "mp_outskirts") // remove this from release
+  {
+    self add_option("teleport menu", "load shot location 1", ::RoachSavedSpots, 1);
+    self add_option("teleport menu", "load shot location 2", ::RoachSavedSpots, 2);
+  }
+  else
+  {
+    self add_option("teleport menu", "load shot location", ::MapSavedLocation);
+  }
+  
+  self add_menu("multiple points", "teleport menu");
+  self add_option("multiple points", "multiple points", ::savepoint);
+  self add_option("multiple points", "save point", ::savepos);
+  self add_option("multiple points", "load point", ::loadpos);
+  self add_option("multiple points", "load point on spawn", ::carePackageStall);
 
   self add_menu("move yourself", "teleport menu");
   self add_option("move yourself", "move north", ::selfMove, "n");
@@ -133,6 +150,7 @@ menu_struct(){
   self add_string("binds menu", "drop weapon", ::bindCycle, self.pers["dropWeapBool"], "dropWeapBind", "dropWeapBool");
   self add_string("binds menu", "prone", ::bindCycle, self.pers["proneBool"], "proneBind", "proneBool");
   self add_sub("binds menu", "elevator", "elevator", self.pers["elevatorBool"]);
+  self add_sub("binds menu", "fake carepackage", "fake carepackage", self.pers["elevatorBool"]);
   self add_string("binds menu", "wall breach", ::bindCycle, self.pers["wallBreachBool"], "wallBreachBind", "wallBreachBool");
   self add_string("binds menu", "black screen", ::bindCycle, self.pers["blackScreenBool"], "blackScreenBind", "blackScreenBool");
   self add_string("binds menu", "static screen", ::bindCycle, self.pers["whiteScreenBool"], "whiteScreenBind", "whiteScreenBool");
@@ -143,6 +161,30 @@ menu_struct(){
   self add_sub("binds menu", "knockback", "knockback", self.pers["nacModBool"]); // NOT DONE
   self add_string("binds menu", "semtex stuck", ::bindCycle, self.pers["semtexBool"], "semtexBind", "semtexBool");
   self add_string("binds menu", "crossbow stuck", ::bindCycle, self.pers["crossbowBool"], "crossbowBind", "crossbowBool");
+  self add_sub("binds menu", "kill bot", "kill bot", self.pers["killBotBool"]);
+  self add_string("binds menu", "underbarrel yy", ::bindCycle, self.pers["underbarrelBool"], "underbarrelBind", "underbarrelBool");
+  self add_sub("binds menu", "give sniper", "give sniper", self.pers["giveSniperBool"]);
+  self add_string("binds menu", "connection interrupted", ::bindCycle, self.pers["conInterBool"], "doConInter", "conInterBool");
+  self add_sub("binds menu", "misc canswaps", "misc canswaps", self.pers["streakCanBool"]);
+  self add_string("binds menu", "flash", ::bindCycle, self.pers["flashBool"], "flashBind", "flashBool");
+  self add_string("binds menu", "third eye", ::bindCycle, self.pers["thirdEyeBool"], "thirdEyeBind", "thirdEyeBool");
+
+  self add_menu("fake carepackage", "binds menu");
+  self add_string("fake carepackage", "fake carepackage", ::bindCycle, self.pers["killBotBool"], "killBotBind", "killBotBool"); // not done
+  self add_string("fake carepackage", "carepackage type", ::killbot_weapon, "" + self.pers["killBotWeap"] + ""); // not done
+  self add_string("fake carepackage", "carepackage streak", ::killbot_weapon, "" + self.pers["killBotWeap"] + ""); // not done
+
+  self add_menu("misc canswaps", "binds menu");
+  self add_string("misc canswaps", "misc canswaps", ::bindCycle, self.pers["streakCanBool"], "dostreakCan", "streakCanBool");
+  self add_string("misc canswaps", "change canswap", ::CycleStreakCanswap, "" + self.pers["streakCanswap"] + "");
+
+  self add_menu("give sniper", "binds menu");
+  self add_string("give sniper", "give sniper", ::bindCycle, self.pers["giveSniperBool"], "giveSniperBind", "giveSniperBool");
+  self add_string("give sniper", "change sniper", ::cycleGiveSniper, "" + self.pers["GiveSniper"] + "");
+
+  self add_menu("kill bot", "binds menu");
+  self add_string("kill bot", "kill bot", ::bindCycle, self.pers["killBotBool"], "killBotBind", "killBotBool");
+  self add_string("kill bot", "kill bot weapon", ::killbot_weapon, "" + self.pers["killBotWeap"] + "");
 
   self add_menu("change class", "binds menu");
   self add_string("change class", "change class type", ::changeClassType, "" + self.pers["CCType"] + "");
@@ -247,6 +289,12 @@ menu_struct(){
   self add_option("perks menu", "set all perks", ::SetAllPerks);
   self add_bool("perks menu", "specialty_fallheight", ::fallheight, self.pers["FHBool"]);
   self add_bool("perks menu", "specialty_movefaster", ::movefaster, self.pers["MFBool"]);
+  self add_bool("perks menu", "specialty_sprintrecovery", ::sprintrecovery, self.pers["SRBool"]);
+  self add_bool("perks menu", "specialty_fastmeleerecovery", ::fastmelee, self.pers["FMRBool"]);
+  self add_bool("perks menu", "specialty_fastads", ::fastAds, self.pers["FADSBool"]);
+  self add_bool("perks menu", "specialty_fastreload", ::fastreload, self.pers["FRBool"]);
+  self add_bool("perks menu", "specialty_holdbreath", ::holdbreath, self.pers["HBBool"]);
+  self add_bool("perks menu", "specialty_fastweaponswitch", ::fastweaponswitch, self.pers["FWSBool"]);
   self add_bool("perks menu", "specialty_extraammo", ::extraammo, self.pers["EABool"]);
   self add_bool("perks menu", "specialty_scavenger", ::scavenger, self.pers["scavBool"]);
   self add_bool("perks menu", "specialty_gpsjammer", ::gpsjammer, self.pers["gpsBool"]);
@@ -255,10 +303,6 @@ menu_struct(){
   self add_bool("perks menu", "specialty_flakjacket", ::flakjacket, self.pers["flakBool"]);
   self add_bool("perks menu", "specialty_killstreak", ::killstreak, self.pers["KSBool"]);
   self add_bool("perks menu", "specialty_gambler", ::gambler, self.pers["GambleBool"]);
-  self add_bool("perks menu", "specialty_sprintrecovery", ::sprintrecovery, self.pers["SRBool"]);
-  self add_bool("perks menu", "specialty_fastmeleerecovery", ::fastmelee, self.pers["FMRBool"]);
-  self add_bool("perks menu", "specialty_holdbreath", ::holdbreath, self.pers["HBBool"]);
-  self add_bool("perks menu", "specialty_fastreload", ::fastreload, self.pers["FRBool"]);
   self add_bool("perks menu", "specialty_twogrenades", ::twogrenades, self.pers["TGBool"]);
   self add_bool("perks menu", "specialty_longersprint", ::longersprint, self.pers["LSBool"]);
   self add_bool("perks menu", "specialty_unlimitedsprint", ::unlimitedsprint, self.pers["USBool"]);
@@ -274,21 +318,22 @@ menu_struct(){
   self add_bool("perks menu", "specialty_finalstand", ::finalstand, self.pers["FSBool"]);
 
   self add_menu("killstreak menu", "revolt");
-  self add_option("killstreak menu", "radar_mp", ::doKillstreak, "radar_mp");
-  self add_option("killstreak menu", "rcbomb_mp", ::doKillstreak, "rcbomb_mp");
-  self add_option("killstreak menu", "counteruav_mp", ::doKillstreak, "counteruav_mp");
-  self add_option("killstreak menu", "auto_tow_mp", ::doKillstreak, "auto_tow_mp");
-  self add_option("killstreak menu", "supply_drop_mp", ::doKillstreak, "supply_drop_mp");
-  self add_option("killstreak menu", "napalm_mp", ::doKillstreak, "napalm_mp");
-  self add_option("killstreak menu", "autoturret_mp", ::doKillstreak, "autoturret_mp");
-  self add_option("killstreak menu", "mortar_mp", ::doKillstreak, "mortar_mp");
-  self add_option("killstreak menu", "helicopter_comlink_mp", ::doKillstreak, "helicopter_comlink_mp");
-  self add_option("killstreak menu", "m220_tow_mp", ::doKillstreak, "m220_tow_mp");
-  self add_option("killstreak menu", "airstrike_mp", ::doKillstreak, "airstrike_mp");
-  self add_option("killstreak menu", "helicopter_gunner_mp", ::doKillstreak, "helicopter_gunner_mp");
-  self add_option("killstreak menu", "dogs_mp", ::doKillstreak, "dogs_mp");
-  self add_option("killstreak menu", "helicopter_player_firstperson_mp", ::doKillstreak, "helicopter_player_firstperson_mp");
-  self add_option("killstreak menu", "m202_flash_mp", ::doKillstreak, "m202_flash_mp");
+  self add_option("killstreak menu", "spy plane", ::doKillstreak, "radar_mp");
+  self add_option("killstreak menu", "rc-xde", ::doKillstreak, "rcbomb_mp");
+  self add_option("killstreak menu", "counter-spy plane", ::doKillstreak, "counteruav_mp");
+  self add_option("killstreak menu", "sam turret", ::doKillstreak, "auto_tow_mp");
+  self add_option("killstreak menu", "care package", ::doKillstreak, "supply_drop_mp");
+  self add_option("killstreak menu", "napalm strike", ::doKillstreak, "napalm_mp");
+  self add_option("killstreak menu", "sentry gun", ::doKillstreak, "autoturret_mp");
+  self add_option("killstreak menu", "mortar strike", ::doKillstreak, "mortar_mp");
+  self add_option("killstreak menu", "attack helicopter", ::doKillstreak, "helicopter_comlink_mp");
+  self add_option("killstreak menu", "valkyrie rockets", ::doKillstreak, "m220_tow_mp");
+  self add_option("killstreak menu", "rolling thunder", ::doKillstreak, "airstrike_mp");
+  self add_option("killstreak menu", "chopper gunner ", ::doKillstreak, "helicopter_gunner_mp");
+  self add_option("killstreak menu", "attack dogs", ::doKillstreak, "dogs_mp");
+  self add_option("killstreak menu", "gunship", ::doKillstreak, "helicopter_player_firstperson_mp");
+  self add_option("killstreak menu", "fortune", ::doKillstreak, "m202_flash_mp");
+  self add_option("killstreak menu", "death machine", ::doKillstreak, "minigun_mp");
 
   self add_menu("weapons menu", "revolt");
   self add_option("weapons menu", "take current weapon", ::takecurrentweapon);
@@ -406,12 +451,11 @@ menu_struct(){
   self add_menu("bots menu", "revolt");
   self add_option("bots menu", "spawn enemy bot", ::spawnEnemyBot);
   self add_option("bots menu", "spawn friendly bot", ::spawnFriendlyBot);
-  self add_option("bots menu", "freeze all bots", ::freezeAllBots);
+  self add_bool("bots menu", "freeze all bots", ::freezeAllBots, self.pers["frozenbots"]);
   self add_option("bots menu", "teleport bots", ::TeleportAllBots);
   self add_option("bots menu", "save bot location", ::BotSpawns);
   self add_option("bots menu", "make bots look at you", ::MakeAllBotsLookAtYou);
   self add_string("bots menu", "change bots stance", ::BotChangeStance, self.pers["BotStanceStr"]);
-  self add_option("bots menu", "^1change bots appearance", ::test);
   self add_option("bots menu", "kick all bots", ::kickAllBots); 
   self add_option("bots menu", "bot location", ::GetBotLocation);
 
@@ -421,12 +465,11 @@ menu_struct(){
   self add_bool("trickshot menu", "always knife lunge", ::KnifeLunge, self.pers["LungeBool"]);
   self add_bool("trickshot menu", "precam animations", ::precamOTS, self.pers["precamBool"]);
   self add_bool("trickshot menu", "killcam timer", ::ToggTimer, self.pers["HideTimer"]);
-  //self add_string("trickshot menu", "killcam opacity", ::ToggOpac, "" + self.pers["KillcamOp"] + "");
   self add_string("trickshot menu", "killcam length", ::killcamLength, "" + self.pers["killcamTime"] + "");
   self add_string("trickshot menu", "killcam slowmo", ::KillcamSlowmo, "" + self.pers["KillcamSlowMo"] + "");
   self add_bool("trickshot menu", "fake red room", ::Redroom, self.pers["RedroomBool"]);
   self add_bool("trickshot menu", "mw2 after game", ::MW2EndGame, self.pers["EndGameBool"]);
-  self add_sub("trickshot menu", "rmala", "rmala");
+  self add_sub("trickshot menu", "rmala", "rmala" , self.pers["doingMala"]);
   self add_bool("trickshot menu", "usable tac insert", ::doAltTac, self.pers["AltTac"]);
   self add_bool("trickshot menu", "upside down screen", ::doUpsideDown, self.pers["UpsideDownBool"]);
   self add_sub("trickshot menu", "afterhits", "afterhits menu", self.pers["AfterHitWeap"]);
@@ -559,7 +602,6 @@ menu_struct(){
 
   self add_menu("velocity", "movement menu");
   self add_string("velocity", "velocity bind", ::bindCycle, self.pers["velocityBindBool"], "velocityBind", "velocityBindBool");
-  //self add_string("velocity", "current velocity", ::blank, ""+ self.pers["currentvelo"] + "");
   self add_option("velocity", "play velocity", ::startVelo);
   self add_option("velocity", "reset velocity", ::resetVelo);
   self add_string("velocity", "change edit amount", ::veloAmountCycle, "" + self.pers["VeloEdit"]+ "");
@@ -599,6 +641,31 @@ menu_struct(){
   self add_bool("admin menu", "player cards", :: Playercard, self.pers["playerCard"]); 
   self add_bool("admin menu", "jump fatigue", :: jumpfatigue, self.pers["JumpFati"]);
   self add_bool("admin menu", "pause timer", :: toggleTimer, self.pers["timerPause"]);
+  self add_sub("admin menu", "edit rounds", "edit rounds");
+
+  self add_menu("edit rounds", "admin menu");
+  self add_option("edit rounds", "reset rounds", ::ResetRounds);
+  self add_option("edit rounds", "set axis rounds", ::OneAxisRound);
+  self add_option("edit rounds", "set allied rounds", ::OneAlliesRound);
+  self add_option("edit rounds", "make last round", ::makeLastRound);
+
+  self add_menu("dev menu", "revolt");
+  self add_string("dev menu", "TEST", :: softlands);
+
+  self add_menu("clients menu", "revolt");
+  self endon("Closed");
+	self endon("disconnect");
+	for(;;)
+	{
+    for(i=0;i<level.players.size;i++)
+    {
+      self add_option("clients menu", "^5[" + level.players[i].team + "]^7 " + level.players[i].name);
+
+      self add_menu("^5[" + level.players[i].team + "]^7 " + level.players[i].name, "clients menu");
+      self add_option("^5[" + level.players[i].team + "]^7 " + level.players[i].name, "TEST");
+    }
+    wait 0.7;
+	}
 
   self add_menu("closed");
   self add_option("closed", "");

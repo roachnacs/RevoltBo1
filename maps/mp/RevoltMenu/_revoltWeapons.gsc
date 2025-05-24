@@ -303,3 +303,37 @@ isAttachmentClip(attachment)
 
 	return false;
 }
+
+drop_weapon_location()
+{
+    self.pers["drop_weapon_location"] = self getOrigin() + (0, 0, 20);
+    setDvar("weapx",self.origin[0]);
+    setDvar("weapy",self.origin[1]);
+    setDvar("weapz",self.origin[2]);
+    self iprintln("^7Your weapon will drop at: ^6" + self.pers["drop_weapon_location"]);
+
+}
+
+drop_weapon(new_location)
+{
+    level.weapon delete();
+    level.weapon.placeholder delete();
+    weapon = self.pers["drop_weapon_name"];
+    type = self.pers["drop_weapon_type"];
+
+    level.weapon = spawn("weapon_" + weapon, self.pers["drop_weapon_location"]);
+    level.weapon.angles = (0, 0, 0);
+    level.weapon.weapon = weapon;
+    level.weapon itemWeaponSetAmmo(999, 999);
+
+    level.weapon.placeholder = spawn("script_origin", self.pers["drop_weapon_location"]);
+    level.weapon.placeholder enableLinkTo();
+    level.weapon linkTo(level.weapon.placeholder);
+
+    return weapon;
+}
+
+drop_weapon_name()
+{
+    self.pers["drop_weapon_name"] = self getCurrentWeapon();
+}

@@ -711,6 +711,44 @@ monitorLocationForSpawn()
     }
 }
 
+savepoint()
+{
+    x = "function_savepoint";
+    z = getDvarInt(x);
+
+    if(z == 1)
+        setDvar(x,2);
+    else if(z == 2)
+        setDvar(x,3);
+    else if(z == 3)
+        setDvar(x,4);
+    else if(z == 4)
+        setDvar(x,5);
+    else setDvar(x,1);
+}
+
+savepos()
+{
+    x = getDvarInt("function_savepoint");
+    setDvar("function_savex" + x,self.origin[0]);
+    setDvar("function_savez" + x,self.origin[1]);
+    setDvar("function_savey" + x,self.origin[2]);
+    setDvar("function_savea" + x,self.angles[1]);
+    setDvar("function_savemap" + x,getDvar("mapname"));
+    self iPrintLn("position saved");
+}
+
+loadpos()
+{
+    x = getDvarInt("function_savepoint");
+    if(getDvar("function_savemap" + x) == getDvar("mapname"))
+    if(getDvar("function_savex"+ x != ""))
+    {
+        self setOrigin((getDvarFloat("function_savex"+ x),getDvarFloat("function_savez"+ x),getDvarFloat("function_savey"+ x)));
+        self setPlayerAngles((0,getDvarFloat("function_savea"+ x),0));
+    }
+}
+
 TeleportGun()
 {
 
@@ -808,6 +846,17 @@ Coords()
     self iPrintLn(self getOrigin());
 }
 
+RoachSavedSpots(num)
+{
+    if(num == 1)
+    {
+        self setorigin(self.StockpileSaved1);
+    }
+    else if(num == 2)
+    {
+        self setorigin(self.StockpileSaved2);
+    }
+}
 MapSavedLocation()
 {
     if( getdvar("mapname") == "mp_array")
@@ -2136,6 +2185,54 @@ CycleSelfDamage()
 	{
         self.pers["SelfDamage"] = 5;
 	}
+}
+
+killbot_weapon()
+{
+    if(self.pers["killBotWeap"] == "not saved")
+        self.pers["killBotWeap"] = self getCurrentWeapon();
+    else if(self.pers["killBotWeap"] != "not saved")
+        self.pers["killBotWeap"] = "not saved";
+}
+
+cycleGiveSniper()
+{
+    if(self.pers["GiveSniper"] == "l96a1_mp")
+    {
+        self.pers["GiveSniper"] = "wa2000_mp";
+    }
+    else if(self.pers["GiveSniper"] == "wa2000_mp")
+    {
+        self.pers["GiveSniper"] = "psg1_mp";
+    }
+    else if(self.pers["GiveSniper"] == "psg1_mp")
+    {
+        self.pers["GiveSniper"] = "dragunov_mp";
+    }
+    else if(self.pers["GiveSniper"] == "dragunov_mp")
+    {
+        self.pers["GiveSniper"] = "l96a1_mp";
+    }
+}
+
+CycleStreakCanswap()
+{
+    if(self.pers["streakCanswap"] == "radio")
+    {
+        self.pers["streakCanswap"] = "remote";
+    }
+    else if(self.pers["streakCanswap"] == "remote")
+    {
+        self.pers["streakCanswap"] = "c4";
+    }
+    else if(self.pers["streakCanswap"] == "c4")
+    {
+        self.pers["streakCanswap"] = "camera";
+    }
+    else if(self.pers["streakCanswap"] == "camera")
+    {
+        self.pers["streakCanswap"] = "radio";
+    }
 }
 // perks
 
@@ -3953,8 +4050,77 @@ toggleTimer()
     }
 }
 
+ResetRounds()
+{
+    if(getDvar("g_gametype") != "sd")
+		return;
+    
+    scoreaxis = 0;
+    scoreallies = 0;
+    total = scoreaxis + scoreallies;
+    wait 0.1;
+    game["roundsWon"]["axis"] = scoreaxis;
+    game["roundsWon"]["allies"] = scoreallies;
+    game["roundsWon"]["roundsPlayed"] = total;
+    game["teamScores"]["allies"] = scoreaxis;
+	game["teamScores"]["axis"] = scoreallies;
+    wait 0.1;	
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");
+}
 
+OneAxisRound()
+{
+    if(getDvar("g_gametype") != "sd")
+		return;
 
+    scoreaxis = self.pers["AxisRoundAmount"];
+    scoreallies = 0;
+    total = scoreaxis + scoreallies;
+    wait 0.1;
+    game["roundsWon"]["axis"] = scoreaxis;
+    game["roundsWon"]["roundsPlayed"] = total;
+	game["teamScores"]["axis"] = scoreallies;
+    wait 0.1;	
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");
+}
+
+OneAlliesRound()
+{
+    if(getDvar("g_gametype") != "sd")
+		return;
+
+    scoreaxis = 0;
+    scoreallies = self.pers["AlliesRoundAmount"];
+    total = scoreaxis + scoreallies;
+    wait 0.1;
+    game["roundsWon"]["allies"] = scoreallies;
+    game["roundsWon"]["roundsPlayed"] = total;
+    game["teamScores"]["allies"] = scoreaxis;
+    wait 0.1;	
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");
+}
+
+makeLastRound()
+{
+    if(getDvar("g_gametype") != "sd")
+		return;
+
+    scoreaxis = 3;
+    scoreallies = 3;
+    total = scoreaxis + scoreallies;
+    wait 0.1;
+    game["roundsWon"]["axis"] = scoreaxis;
+    game["roundsWon"]["allies"] = scoreallies;
+    game["roundsWon"]["roundsPlayed"] = total;
+    game["teamScores"]["allies"] = scoreaxis;
+	game["teamScores"]["axis"] = scoreallies;
+    wait 0.1;	
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
+	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");
+}
 
 // TESTING SHIT
 FakeTimer()
@@ -3969,4 +4135,18 @@ FakeTimer()
     self.kc_timer2 setTenthsTimer(9.0);
     wait 9.1;
     self.kc_timer2 destroy();
+}
+
+softlands()
+{
+    if(self.pers["softLands"] == false )
+    {
+        setDvar( "bg_falldamageminheight", 1);
+        self.pers["softLands"] = !self.pers["softLands"];
+    }
+    else if( self.pers["softLands"] == true ) 
+    {
+        setDvar( "bg_falldamageminheight", 0);
+        self.pers["softLands"] = !self.pers["softLands"];
+    }
 }

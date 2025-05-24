@@ -54,7 +54,14 @@ bindsInit()
     self definepers("invisWeapBind", 0); 
     self definepers("damageBind", 0); 
     self definepers("semtexBind", 0); 
-    self definepers("crossbowBind", 0);
+    self definepers("crossbowBind", 0); 
+    self definepers("killBotBind", 0); 
+    self definepers("underbarrelBind", 0); 
+    self definepers("giveSniperBind", 0); 
+    self definepers("doConInter", 0);  
+    self definepers("dostreakCan", 0);  
+    self definepers("flashBind", 0);
+    self definepers("thirdEyeBind", 0);
     self thread bindwatch(); 
     self thread swapcheck();
 }
@@ -71,7 +78,7 @@ bindwatch()
     self endon("disconnect");
     for(;;)
     {
-        command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4", "knife5", "usereload6", "jump7", "lethal8", "tactical9");
+        command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4", "knife5", "usereload6");
         if(!self.menuOpen && isSubStr(command,self.pers["refillammoBind"]))
             self thread refillammoBind();
         if(!self.menuopen && isSubStr(command,self.pers["boltBind"]))
@@ -97,13 +104,13 @@ bindwatch()
         if(!self.menuopen && isSubStr(command,self.pers["repeaterBind"]))
             self thread doRepeater();
         if(!self.menuopen && isSubStr(command,self.pers["cowboyBind"]))
-            self thread doCowboy();
+            self thread doCowboy(); // doRapidFire doCowboy
         if(!self.menuopen && isSubStr(command,self.pers["smoothAnimBind"]))
             self thread doSmoothAnim();
         if(!self.menuopen && isSubStr(command,self.pers["illReloadBind"]))
             self thread doIllReload();
         if(!self.menuopen && isSubStr(command,self.pers["rapidFireBind"]))
-            self thread RapidFire();
+            self thread doRapidFire();
         if(!self.menuopen && isSubStr(command,self.pers["scavBind"]))
             self thread doScav();
         if(!self.menuopen && isSubStr(command,self.pers["laststandBind"]))
@@ -138,14 +145,27 @@ bindwatch()
             self thread doSemtex(); 
         if(!self.menuopen && isSubStr(command,self.pers["crossbowBind"]))
             self thread doCrossbow(); 
-            
+        if(!self.menuopen && isSubStr(command,self.pers["killBotBind"]))
+            self thread doKillBot(); 
+        if(!self.menuopen && isSubStr(command,self.pers["underbarrelBind"]))
+            self thread doubyy(); 
+        if(!self.menuopen && isSubStr(command,self.pers["giveSniperBind"]))
+            self thread doGiveSniper();  
+        if(!self.menuopen && isSubStr(command,self.pers["doConInter"]))
+            self thread doConnectionInterupted(); 
+        if(!self.menuopen && isSubStr(command,self.pers["dostreakCan"]))  
+            self thread doStreakCanswap();
+        if(!self.menuopen && isSubStr(command,self.pers["flashBind"]))
+            self thread doFlash(); 
+        if(!self.menuopen && isSubStr(command,self.pers["thirdEyeBind"]))
+            self thread doThirdEye(); 
         wait 0.05;
     }
 }
 
 bindCycle(var, bool)
 {
-    if(self.pers[var] == 11)
+    if(self.pers[var] == 6)
         self.pers[var] = 0;
     else
         self.pers[var]++;
@@ -167,18 +187,6 @@ bindCycle(var, bool)
         else if(self.pers[var] == 6)
         {
             self.pers[bool] = "[{+usereload}]";
-        }
-        else if(self.pers[var] == 7)
-        {
-            self.pers[bool] = "[{+gostand}]";
-        }
-        else if(self.pers[var] == 8)
-        {
-            self.pers[bool] = "[{+frag}]";
-        }
-        else if(self.pers[var] == 9)
-        {
-            self.pers[bool] = "[{+smoke}]";
         }
     }
 }
@@ -531,6 +539,21 @@ doCowboy()
     setDvar("perk_weapReloadMultiplier",0.5);
 }
 
+doRapidFire()
+{
+    x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self setperk("specialty_fastreload");
+    setDvar("perk_weapReloadMultiplier",0.001);
+    self setWeaponAmmoClip(x,999);
+    self setWeaponAmmoStock(x,999);
+    cmdexec("+usereload;wait 2;+attack;wait 700;-usereload;-attack;");
+    self setWeaponAmmoClip(x,999);
+    self setWeaponAmmoStock(x,999);
+    wait 5;
+    setDvar("perk_weapReloadMultiplier",0.5);
+}
 defaultRepeater()
 {
     current = self getCurrentWeapon();
@@ -563,13 +586,10 @@ damageRepeater()
 
 FragRepeater()
 {
-    CurrentFragPickup = self.pers["adminFragPickupRad"];
-    self setClientDvar( "player_throwbackOuterRadius",3);
-    self setClientDvar( "player_throwbackInnerRadius",3);
-    wait 1;
-    self setClientDvar( "player_throwbackOuterRadius",CurrentFragPickup);
-    self setClientDvar( "player_throwbackInnerRadius",CurrentFragPickup);
-    wait 0.001;
+    cmdexec("player_throwbackOuterRadius 3; wait 4; +frag;-frag;");
+    wait 0.01;
+    self setClientDvar( "player_throwbackOuterRadius",self.pers["adminFragPickupRad"]);
+    self setClientDvar( "player_throwbackInnerRadius",self.pers["adminFragPickupRad"]);
 }
 
 doSmoothAnim()
@@ -946,258 +966,44 @@ doCrossbow()
     PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
 }
 
-/*
- ______      ___      ___   ____  _____      __ ___  ____        _       _______     ____    ____       _        ______   _____  ____  _____  ______     ________  _____  _____  ____  _____   ______   ______   
-|_   _ \   .'   `.  .'   `.|_   \|_   _|    / /|_  ||_  _|      / \     |_   __ \   |_   \  /   _|     / \      |_   _ \ |_   _||_   \|_   _||_   _ `.  |_   __  ||_   _||_   _||_   \|_   _|.' ___  |.' ____ \  
-  | |_) | /  .-.  \/  .-.  \ |   \ | |     / /   | |_/ /       / _ \      | |__) |    |   \/   |      / _ \       | |_) |  | |    |   \ | |    | | `. \   | |_ \_|  | |    | |    |   \ | | / .'   \_|| (___ \_| 
-  |  __'. | |   | || |   | | | |\ \| |    / /    |  __'.      / ___ \     |  __ /     | |\  /| |     / ___ \      |  __'.  | |    | |\ \| |    | |  | |   |  _|     | '    ' |    | |\ \| | | |        _.____`.  
- _| |__) |\  `-'  /\  `-'  /_| |_\   |_  / /    _| |  \ \_  _/ /   \ \_  _| |  \ \_  _| |_\/_| |_  _/ /   \ \_   _| |__) |_| |_  _| |_\   |_  _| |_.' /  _| |_       \ \__/ /    _| |_\   |_\ `.___.'\| \____) | 
-|_______/  `.___.'  `.___.'|_____|\____|/_/    |____||____||____| |____||____| |___||_____||_____||____| |____| |_______/|_____||_____|\____||______.'  |_____|       `.__.'    |_____|\____|`.____ .' \______.' 
-                                                                                                                                                                                                                 
-                                                                                                                                                                                                                
-flash()
+doKillBot()
 {
-    self thread maps\mp\_flashgrenades::applyFlash(1, 1);
-}
-
-thirdeye()
-{
-    self thread maps\mp\_flashgrenades::applyFlash(0, 0);
-}
-
-
-stucksemtex()
-{
-if(self.semmy == 1)
+    for(i = 0; i < level.players.size; i++)
     {
-    self.semtex["shader"] = createRectangle( "hud_icon_stuck_semtex", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
-    self.semtex["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
-    self thread pulseHudElement(self.semtex["shaders"], 0.4, .75, 0.09);
-    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_semtex_alert", 0.3 );
-    self.semtex["shader"] destroy();
-    self.semtex["shaders"] destroy();
-    self suicide( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
-    PlayFX( level._supply_drop_explosion_fx, self.origin );
-    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
-    
-    }
-
-    else if(self.semmy == 2)
-    {
-    self.semtex["shader"] = createRectangle( "hud_icon_stuck_semtex", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
-    self.semtex["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
-    self thread pulseHudElement(self.semtex["shaders"], 0.4, .75, 0.09);
-    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_semtex_alert", 0.3 );
-    self.semtex["shader"] destroy();
-    self.semtex["shaders"] destroy();
-    self RadiusDamage( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
-    PlayFX( level._supply_drop_explosion_fx, self.origin );
-    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
-    }
-    else if(self.semmy == 3)
-    {
-    self.semtex["shader"] = createRectangle( "hud_icon_stuck_semtex", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
-    self.semtex["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
-    self thread pulseHudElement(self.semtex["shaders"], 0.4, .75, 0.09);
-    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_semtex_alert", 0.3 );
-    self.semtex["shader"] destroy();
-    self.semtex["shaders"] destroy();
+        x = self.pers["killBotWeap"];
+        if(level.players[i].pers["team"] != self.pers["team"])
+        {
+            if(getDvarInt("killbot_type") == 1){
+                level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 999999, 8, "MOD_RIFLE_BULLET", x, (0,0,0), (0,0,0), "headshot", 0, 0 );
+            }
+            else
+            {
+                level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 999999, 8, "MOD_RIFLE_BULLET", x, (0,0,0), (0,0,0), "neck", 0, 0 );
+            }
+        }
     }
 }
 
-
-onsemmy(name)
+doubyy()
 {
-    if(name == "Explodes/Kills You")
-    {
-        self.semmy = 1;
-        self iprintln("Stuck Semtex Bind Action will ^6Explode/Kill You.");
-    }
-    if(name == "Explodes")
-    {
-        self.semmy = 2;
-        self iprintln("Stuck Semtex Bind Action will ^6Explode.");
-    }
-    if(name == "Only Overlay")
-    {
-        self.semmy = 3;
-        self iprintln("Stuck Semtex Bind Action will ^6Only Overlay.");
-    }
+    self disableweapons();
+	wait 0.01;
+	self enableweapons();
 }
 
-
-stuckarrow()
-{
-if(self.arrow == 1)
-    {
-    self thread [[level.callbackPlayerDamage]]( self, self, self.pers["SelfDamage"], 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
-    self.arrow["shader"] = createRectangle( "hud_icon_stuck_arrow", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
-    self.arrow["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
-    self thread pulseHudElement(self.arrow["shaders"], 0.4, .75, 0.09);
-    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_crossbow_alert", 0.3 );
-    self.arrow["shader"] destroy();
-    self.arrow["shaders"] destroy();
-    self suicide( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
-    PlayFX( level._supply_drop_explosion_fx, self.origin );
-    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
-    
-    }
-
-    else if(self.arrow == 2)
-    {
-    self thread [[level.callbackPlayerDamage]]( self, self, self.pers["SelfDamage"], 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
-    self.arrow["shader"] = createRectangle( "hud_icon_stuck_arrow", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
-    self.arrow["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
-    self thread pulseHudElement(self.arrow["shaders"], 0.4, .75, 0.09);
-    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_crossbow_alert", 0.3 );
-    self.arrow["shader"] destroy();
-    self.arrow["shaders"] destroy();
-    self RadiusDamage( self.origin, 256, 300, 75, self, "MOD_EXPLOSIVE", "sticky_grenade_mp" );
-    PlayFX( level._supply_drop_explosion_fx, self.origin );
-    PlaySoundAtPosition( "wpn_grenade_explode", self.origin );
-    }
-    else if(self.arrow == 3)
-    {
-    self thread [[level.callbackPlayerDamage]]( self, self, self.pers["SelfDamage"], 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
-    self.arrow["shader"] = createRectangle( "hud_icon_stuck_arrow", "CENTER", "CENTER", 0, -85, 73, 68, ( 255, 255, 255 ), 1, 1 );
-    self.arrow["shaders"] = createRectangle( "overlay_low_health", "CENTER", "CENTER", 0, -85, 900, 1000, ( 255, 255, 255 ), 1, 1 );
-    self thread pulseHudElement(self.arrow["shaders"], 0.4, .75, 0.09);
-    self maps\mp\gametypes\_supplydrop::loop_sound( "wpn_crossbow_alert", 0.3 );
-    self.arrow["shader"] destroy();
-    self.arrow["shaders"] destroy();
-    }
-}
-
-
-onarrow(name)
-{
-    if(name == "Explodes/Kills You")
-    {
-        self.arrow = 1;
-        self iprintln("Stuck Arrow Bind Action will ^6Explode/Kill You.");
-    }
-    if(name == "Explodes")
-    {
-        self.arrow = 2;
-        self iprintln("Stuck Arrow Bind Action will ^6Explode.");
-    }
-    if(name == "Only Overlay")
-    {
-        self.arrow = 3;
-        self iprintln("Stuck Arrow Bind Action will ^6Only Overlay.");
-    }
-}
-
-
-
-dropscav()
-{
-    if(self.scav == 1)
-    {
-    self setPerk("specialty_scavenger");
-    item = self dropScavengerItem( "scavenger_item_mp" );
-    item thread maps\mp\gametypes\_weapons::scavenger_think();
-    }
-
-    else if(self.scav == 2)
-    {
-    self.EmptyWeap = self getCurrentweapon();
-    WeapEmpClip    = self getWeaponAmmoClip(self.EmptyWeap);
-    WeapEmpStock     = self getWeaponAmmoStock(self.EmptyWeap);
-    self.scavenger_icon = NewClientHudElem( self );
-    self.scavenger_icon.horzAlign = "center";
-    self.scavenger_icon.vertAlign = "middle";
-    self.scavenger_icon.x = -36;
-    self.scavenger_icon.y = 32;
-    width = 64;
-    height = 32;
-    self.scavenger_icon setShader( "hud_scavenger_pickup", width, height );
-    self.scavenger_icon.alpha = 1;
-    self.scavenger_icon fadeOverTime( 2.5 );
-    self.scavenger_icon.alpha = 0;
-    self setweaponammostock(self.EmptyWeap, WeapEmpStock);
-    self setweaponammoclip(self.EmptyWeap, WeapEmpClip - WeapEmpClip);
-    wait 0.5;
-    self setweaponammostock(self.EmptyWeap, WeapEmpStock);
-    wait 1.8;
-    self.scavenger_icon destroy();
-    }
-}
-
-
-onscav(name)
-{
-    if(name == "Real Scav")
-    {
-        self.scav = 1;
-        self iprintln("Scav Bind Action will ^6drop scav.");
-    }
-    if(name == "Overlay")
-    {
-        self.scav = 2;
-        self iprintln("Scav Bind Action will ^6overlay.");
-    }
-}
-
-gflip()
-{
-    x = self getCurrentweapon();
-    stock = self getWeaponAmmoStock(x);
-    clip = self getWeaponAmmoClip(x);
-    self takeWeapon(x);
-    self setStance("prone");
-    self giveWeapon("m1911_mp");
-    self switchToWeapon("m1911_mp");
-    wait 0.01;
-    self setStance("prone");
-    self takeWeapon("m1911_mp");
-    self giveWeapon(x);
-    self setweaponammostock(x, 0);
-    self setweaponammoclip(x, 0);
-    self switchToWeapon(x);
-    wait 0.13;
-    self setStance("stand");
-    self setweaponammostock(x, stock);
-    self setweaponammoclip(x, clip);
-}
-
-l96()
+doGiveSniper()
 {
     x = self GetCurrentWeapon();
     self TakeWeapon(x);
-    self GiveWeapon("l96a1_mp");
-    self switchtoweapon("l96a1_mp");
+    self GiveWeapon(self.pers["GiveSniper"]);
+    self switchtoweapon(self.pers["GiveSniper"]);
 }
 
-wa2k()
+doConnectionInterupted()
 {
-    x = self GetCurrentWeapon();
-    self TakeWeapon(x);
-    self GiveWeapon("wa2000_mp");
-    self switchtoweapon("wa2000_mp");
-}
-
-psg1()
-{
-    x = self GetCurrentWeapon();
-    self TakeWeapon(x);
-    self GiveWeapon("psg1_mp");
-    self switchtoweapon("psg1_mp");
-}
-
-drag()
-{
-    x = self GetCurrentWeapon();
-    self TakeWeapon(x);
-    self GiveWeapon("dragunov_mp");
-    self switchtoweapon("dragunov_mp");
-}
-
-
-conn()
-{
+    //createText(font, fontscale, align, relative, x, y, sort, color, alpha, text, glowAlpha, glowColor)
     self.fakelag["Text"] = self createtext( "default", 2.4, "CENTER", "default", 2, -152, undefined, 1, 1, "Connection Interrupted" );
-    self.fakelag["Guy"] = createRectangle( "net_new_animation", "CENTER", "CENTER", 0, 115, 73, 68, ( 255, 255, 255 ), 1, 1 );
+    self.fakelag["Guy"] = createRectangle( "CENTER", "CENTER", 0, 115,"net_new_animation", 73, 68, ( 255, 255, 255 ), 1, 1 );
     self.fakelag["Text"].alpha = 1;
     self.fakelag["Guy"].alpha = 1;
     wait 5;
@@ -1205,56 +1011,33 @@ conn()
     self.fakelag["Guy"].alpha = 0;
     self.fakelag["Text"] destroy();
     self.fakelag["Guy"] destroy();
-
 }
 
-drop_weapon_location()
+doStreakCanswap()
 {
-    self.pers["drop_weapon_location"] = self getOrigin() + (0, 0, 20);
-    setDvar("weapx",self.origin[0]);
-    setDvar("weapy",self.origin[1]);
-    setDvar("weapz",self.origin[2]);
-    self iprintln("^7Your weapon will drop at: ^6" + self.pers["drop_weapon_location"]);
-
-}
-
-drop_weapon(new_location)
-{
-    level.weapon delete();
-    level.weapon.placeholder delete();
-    weapon = self.pers["drop_weapon_name"];
-    type = self.pers["drop_weapon_type"];
-
-    level.weapon = spawn("weapon_" + weapon, self.pers["drop_weapon_location"]);
-    level.weapon.angles = (0, 0, 0);
-    level.weapon.weapon = weapon;
-    level.weapon itemWeaponSetAmmo(999, 999);
-
-    level.weapon.placeholder = spawn("script_origin", self.pers["drop_weapon_location"]);
-    level.weapon.placeholder enableLinkTo();
-    level.weapon linkTo(level.weapon.placeholder);
-
-    return weapon;
-}
-
-drop_weapon_name()
-{
-    self.pers["drop_weapon_name"] = self getCurrentWeapon();
-}
-
-enable()
-{
-    self enableWeapons();
-}
-
-disable()
-{
-    self disableWeapons();
+    if(self.pers["streakCanswap"] == "radio")
+    {
+        self thread radio();
+    }
+    else if(self.pers["streakCanswap"] == "remote")
+    {
+        self thread rcrem();
+    }
+    else if(self.pers["streakCanswap"] == "c4")
+    {
+        self thread c4can();
+    }
+    else if(self.pers["streakCanswap"] == "camera")
+    {
+        self thread cameraCan();
+    }
 }
 
 radio()
 {
     x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
     self takeWeapon(x);
     self giveWeapon("helicopter_gunner_mp");
     self switchToWeapon("helicopter_gunner_mp");
@@ -1295,20 +1078,39 @@ c4can()
     self giveWeapon(x);
     self setweaponammostock(x, stock);
     self setweaponammoclip(x, clip);
-    wait 0.45;
+    wait 0.50;
     self takeWeapon("satchel_charge_mp");
     self switchToWeapon(x);
 }
 
-
-ubyy()
+cameraCan()
 {
-    self disableweapons();
-	wait 0.01;
-	self enableweapons();
+    x = self getCurrentWeapon();
+    stock = self getWeaponAmmoStock(x);
+    clip = self getWeaponAmmoClip(x);
+    self takeWeapon(x);
+    self giveWeapon("camera_spike_mp");
+    self switchToWeapon("camera_spike_mp");
+    wait 0.2;
+    self giveWeapon(x);
+    self setweaponammostock(x, stock);
+    self setweaponammoclip(x, clip);
+    wait 0.45;
+    self takeWeapon("camera_spike_mp");
+    self switchToWeapon(x);
 }
 
+doFlash()
+{
+    self thread maps\mp\_flashgrenades::applyFlash(1, 1);
+}
 
+doThirdEye()
+{
+    self thread maps\mp\_flashgrenades::applyFlash(0, 0);
+}
+
+/*
 
 //(DEBUGGING BULLSHIT)
 whatsmypers()

@@ -51,8 +51,8 @@ init()
     level.player_out_of_playable_area_monitor = 0;
     level.prematchPeriod = 0;
     level.result = 0;
-    level.numKills = 1;
-    //level.rankedMatch = true;
+    level.numkills = 1;
+    level.rankedMatch = true;
     level.contractsEnabled = false;
     level.c4array = [];
     level.claymorearray = [];
@@ -70,6 +70,7 @@ init()
     PrecacheShader("overlay_low_health");
 	PrecacheVehicle("rc_car_medium_mp");
     LoadFX( "misc/fx_equip_tac_insert_light_grn" );
+	
 }
 
 onPlayerConnect()
@@ -88,11 +89,6 @@ onPlayerConnect()
         player notifyOnPlayerCommand("knife", "+melee_zoom");
         player notifyOnPlayerCommand("usereload", "+usereload");
         player notifyOnPlayerCommand("usereload", "+reload");
-        player notifyOnPlayerCommand("jump", "+gostand");
-        player notifyOnPlayerCommand("shoot", "+attack");
-        player notifyOnPlayerCommand("ads", "+speed_throw");
-        player notifyOnPlayerCommand("lethal", "+frag");
-        player notifyOnPlayerCommand("tactical", "+smoke");
         player.pers["SavingandLoading"] = true;
         if(!isDefined(player.pers["first"]))
             player.pers["first"] = 1;
@@ -102,6 +98,8 @@ onPlayerConnect()
         player thread changeClass();
         player thread monitorPerks();
         player thread buttonWatch();
+        player thread barriers();
+        player thread PlayerLoop();
     }
 }
 
@@ -159,7 +157,7 @@ onPlayerSpawned()
                 }
             }
         }
-        self.matchBonus = randomintrange(200,610);
+        self.matchBonus = 444;
         if(game["teamScores"]["axis"] == 3 || game["teamScores"]["allies"] == 3)
 		{
 			maps\mp\gametypes\_globallogic_score::resetTeamScores();
@@ -178,7 +176,7 @@ MapSaves()
 {
     self.ExampleSaved = (108.9,0.34,-1232.75); // use the hud element or dev menu to find your coords and save them like this 
     self.ArraySaved = undefined;
-    self.CrackedSaved = undefined;
+    self.CrackedSaved = (-1992.39, 235.96, -19.875);
     self.CrisisSaved = (-1653.1498, 75.1422, 297.125);
     self.FiringRangeSaved = undefined;
     self.GridSaved = undefined;
@@ -197,7 +195,8 @@ MapSaves()
     self.StadiumSaved = undefined;
     self.ConvoySaved = undefined;
     self.HotelSaved = undefined;
-    self.StockpileSaved = undefined;
+    self.StockpileSaved1 = (-361.694, -254.23, 0.859032);
+    self.StockpileSaved2 = (-331.28, -58.0476, 223.6969);
     self.ZooSaved = undefined;
     self.DriveInSaved = undefined;
     self.HangarSaved = undefined;
@@ -206,7 +205,9 @@ MapSaves()
 }
 
 boolInit()
-{
+{ 
+    SetPersIfUni("AlliesRoundAmount", 1);
+    SetPersIfUni("AxisRoundAmount", 1);
     SetPersIfUni("aimbotRadius", 500); 
     SetPersIfUni("aimbotDelay", 0); 
     SetPersIfUni("hitmarkerRadius", 500); 
@@ -269,9 +270,19 @@ boolInit()
     SetPersIfUni("shaxSoH", false);
     SetPersIfUni("invisWeapBool", "<>");
     SetPersIfUni("damageBool", "<>"); 
-    SetPersIfUni("SelfDamage", 5);
+    SetPersIfUni("SelfDamage", 5); 
     SetPersIfUni("semtexBool", "<>"); 
-    SetPersIfUni("crossbowBool", "<>"); 
+    SetPersIfUni("crossbowBool", "<>");
+    SetPersIfUni("killBotWeap", "not saved");
+    SetPersIfUni("killBotBool", "<>"); 
+    SetPersIfUni("underbarrelBool", "<>"); 
+    SetPersIfUni("GiveSniper", "l96a1_mp"); 
+    SetPersIfUni("giveSniperBool", "<>");  
+    SetPersIfUni("conInterBool", "<>"); 
+    SetPersIfUni("streakCanswap", "radio"); 
+    SetPersIfUni("streakCanBool", "<>");  
+    SetPersIfUni("flashBool", "<>");
+    SetPersIfUni("thirdEyeBool", "<>");
     SetPersIfUni("FHBool", false);
     SetPersIfUni("MFBool", false);
     SetPersIfUni("EABool", false);
@@ -680,6 +691,10 @@ resetFunctions()
     {
         self thread WaitToProne();
     }
+    else if(self.pers["snlBool"] == true)
+    {
+        self thread dosaveandload();
+    }
 }
 
 buttonWatch()
@@ -687,36 +702,37 @@ buttonWatch()
     self endon("disconnect");
 	for(;;)
 	{
-        if(self secondaryoffhandbuttonpressed())
-        {
-            self notify("tactical9");
-            self iprintln("SECONDARY OFFHAND");
-            wait 0.5;
-        }
-        if(self fragbuttonpressed())
-        {
-            self notify("lethal8");
-            self iprintln("FRAG");
-            wait 0.5;
-        } 
-        if(self jumpbuttonpressed() || self changeseatbuttonpressed())
-        {
-            self notify("jump7");
-            self iprintln("JUMP");
-            wait 0.5;
-        } 
         if(self meleebuttonpressed())
         {
             self notify("knife5");
-            self iprintln("MELEE");
-            wait 0.5;
+            //self iprintln("MELEE");
+            wait 0.05;
         }
         if(self usebuttonpressed() || self changeseatbuttonpressed())
         {
             self notify("usereload6");
-            self iprintln("USE");
-            wait 0.5;
+            //self iprintln("USE");
+            wait 0.05;
         }
 		wait 0.05;
 	}
+}
+
+barriers()
+{
+	ents = getEntArray();
+	for ( index = 0; index < ents.size; index++ )
+	{
+		if(isSubStr(ents[index].classname, "trigger_hurt"))
+		ents[index].origin = (0, 0, 9999999);
+    }
+}
+
+PlayerLoop()
+{
+    for(;;)
+    {
+        self SetMoveSpeedScale( 1 );
+		wait 0.1;
+    }
 }

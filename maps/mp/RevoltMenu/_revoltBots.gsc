@@ -13,6 +13,7 @@ spawnEnemyBot()
     bot.pers["isBot"] = true;
     bot thread maps\mp\gametypes\_bot::bot_spawn_think(getOtherTeam(team));
     wait 0.2;
+    bot thread modelcfgtest();
     bot setRank(49,13);
 }
 
@@ -23,12 +24,13 @@ spawnFriendlyBot()
     bot.pers["isBot"] = true;
     bot thread maps\mp\gametypes\_bot::bot_spawn_think( team );
     wait 0.2;
+    bot thread modelcfgtest();
     bot setRank(49,13);
 }
 
 freezeAllBots()
 {
-    if(self.frozenbots == 0)
+    if(self.pers["frozenbots"] == false)
     {
         players = level.players;
         for ( i = 0; i < players.size; i++ )
@@ -38,12 +40,12 @@ freezeAllBots()
             {
                 player freezeControls(true);
             }
-            self.frozenbots = 1;
+            self.pers["frozenbots"] = !self.pers["frozenbots"];
             wait .025;
         }
         self iprintln("bots ^?Frozen");
     }
-    else
+    else if(self.pers["frozenbots"] == true)
     {
         players = level.players;
         for ( i = 0; i < players.size; i++ )
@@ -54,8 +56,7 @@ freezeAllBots()
                 player freezeControls(false);
             }
         }
-        self.frozenbots = 0;
-        self iprintln("bots ^?unfrozen");
+        self.pers["frozenbots"] = !self.pers["frozenbots"];
     }
 }
 
@@ -170,4 +171,32 @@ GetBotLocation()
             self iPrintLn("^1" + player getOrigin());
         }
     }
+}
+
+
+modelcfgtest()
+{
+    // Ensure team is defined; default to "allies" if undefined
+    if(!isDefined(self.pers["team"]) || (self.pers["team"] != "allies" && self.pers["team"] != "axis"))
+    {
+        self.pers["team"] = "allies";
+        self.team = "allies"; // Sync team properties
+    }
+    // Set body type
+    self.cac_body_type = "standard_mp";
+    // Apply faction-specific model adjustments
+    if(isDefined(game["cac_faction_allies"]) && game["cac_faction_allies"] == "cub_rebels" && self.pers["team"] == "allies")
+    {
+        self.cac_body_type = "standard_mp"; // Use a different model for cub_rebels
+    }
+    // Set head and hat
+    self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
+    self.cac_hat_type = "none";
+    // Calculate and apply render options (minimized for performance)
+    playerRenderOptions = self calcPlayerOptions(1, 1);
+    self SetPlayerRenderOptions(int(playerRenderOptions));
+    // Apply model
+    self maps\mp\gametypes\_armor::set_player_model();
+    // Keep print text as requested
+    self iprintln("changed");
 }
