@@ -509,7 +509,7 @@ HmAimbot()
                 {
                     if(isDefined(self.pers["hitmarkerDelay"]))
                     wait (self.pers["hitmarkerDelay"]);
-                    level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 2, 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+                    level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 1, 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
                 }
             }
             if(!isDefined(self.pers["aimbotweapon"]))
@@ -523,7 +523,7 @@ HmAimbot()
                 {
                     if(isDefined(self.pers["hitmarkerDelay"]))
                     wait (self.pers["hitmarkerDelay"]);
-                    level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 2, 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
+                    level.players[i] thread [[level.callbackPlayerDamage]]( self, self, 1, 8, "MOD_RIFLE_BULLET", self getCurrentWeapon(), (0,0,0), (0,0,0), "body", 0 );
                 }
             }
         }
@@ -659,8 +659,8 @@ saveandload()
 {
     if( self.pers["snlBool"] == false )
     {
-        self iprintln( "To Save: Crouch + [{+Actionslot 1}] + [{+speed_throw}]" );
-        self iprintln( "To Load: Crouch + [{+Actionslot 4}]" );
+        self iprintln( "To ^?Save: ^7Crouch + [{+Actionslot 1}] + [{+speed_throw}]" );
+        self iprintln( "To ^?Load: ^7Crouch + [{+Actionslot 4}]" );
         self thread dosaveandload();
         self.pers["snlBool"] = !self.pers["snlBool"];
     }
@@ -2769,6 +2769,60 @@ SetCPStreak(streak)
 {
     self.pers["CPStreak"] = streak;
 }
+
+
+
+Ammobindtype()
+{
+    if(self.pers["ABType"] == "refill")
+    {
+        self.pers["ABType"] = "empty mag";
+    }
+    else if(self.pers["ABType"] == "empty mag")
+    {
+        self.pers["ABType"] = "one bullet left";
+    }
+    else if(self.pers["ABType"] == "one bullet left")
+    {
+        self.pers["ABType"] = "take one bullet";
+    }
+    else if(self.pers["ABType"] == "take one bullet")
+    {
+        self.pers["ABType"] = "half";
+    }
+    else if(self.pers["ABType"] == "half")
+    {
+        self.pers["ABType"] = "unlimited";
+    }
+    else if(self.pers["ABType"] == "unlimited")
+    {
+        self.pers["ABType"] = "refill";
+    }
+}
+
+
+emptyammo()
+{
+  curWeap = self getcurrentweapon();
+  ammoW = self getWeaponAmmoStock(curWeap);
+  ammoCW = self getWeaponAmmoClip(curWeap);
+  self setweaponammostock( curWeap, ammoW );
+  self setweaponammoclip( curWeap, 0 ); 
+}
+
+halfammo()
+{
+  curWeap = self getcurrentweapon();
+  ammoW = self getWeaponAmmoStock(curWeap);
+  ammoCW = self getWeaponAmmoClip(curWeap);
+  halfClip = int(ammoCW / 2);
+  self setWeaponAmmoClip(curWeap, halfClip);
+}
+
+
+
+
+
 // perks
 
 noMorePerk()
@@ -3352,12 +3406,41 @@ maxequipment()
     self givemaxammo( lethal );
 }
 
+repongive()
+{
+    if( self.pers["repongive"] == false )
+    {
+        self.givegunops = 1;
+        self.pers["repongive"] = !self.pers["repongive"];
+    }
+    else if( self.pers["repongive"] == true )
+    {  
+        self.givegunops = 0;
+        self.pers["repongive"] = !self.pers["repongive"];
+    }
+}
+
+
+
 GivePlayerWeapon(weapon)
 {
+    if(self.givegunops == 0)
+    {
     currentWeapon = self getcurrentweapon();
     self giveWeapon(weapon);
     self switchToWeapon(weapon);
     self giveMaxAmmo(weapon);
+    }
+
+    else if(self.givegunops == 1)
+    {
+    currentWeapon = self getcurrentweapon();
+    self takeweapon(currentWeapon);
+    self giveWeapon(weapon);
+    self switchToWeapon(weapon);
+    self giveMaxAmmo(weapon);
+    }
+
 }
 
 AltAmmo1()

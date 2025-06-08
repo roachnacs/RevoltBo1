@@ -1195,7 +1195,7 @@ useHoldThinkLoop(player)
 	while(player useButtonPressed())
 	{
 		timedOut += 0.05;
-		self.curProgress +=(10 * self.useRate);
+		self.curProgress +=(50 * self.useRate);
 		self.useRate=1;
 		if(self.curProgress>=self.useTime)
 		{

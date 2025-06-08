@@ -353,3 +353,155 @@ kickPlayer(player)
 {
     kick( player getEntityNumber());
 }
+
+/*botalwayslookinnoteam(t)
+{
+
+    if(t == "noteam")
+    {
+        if(self.pers["bot_noteam_looking"] == 0)
+        {
+            self.pers["bot_noteam_looking"] = 1;
+            self thread botalwayslook(t);
+        }
+        else
+        {
+            self.pers["bot_noteam_looking"] = 0;
+        }
+    }
+    else if (t == "team")
+    {
+        if(self.pers["bot_team_looking"] == 0)
+        {
+            self.pers["bot_team_looking"] = 1;
+            self thread botalwayslook(t);
+        }
+        else if(self.pers["bot_team_looking"] == 1 )
+        {
+            self.pers["bot_team_looking"] = 0;
+        }
+    }
+}
+
+ToggleGod()
+{   
+    if( self.pers["GodBool"] == false )
+    {
+        self enableInvulnerability();
+        self.pers["GodBool"] = !self.pers["GodBool"];
+    }
+    else if( self.pers["GodBool"] == true )
+    {  
+        self disableInvulnerability();
+        self.pers["GodBool"] = !self.pers["GodBool"];
+    }
+}
+*/
+
+/*botLookAtEnemies()
+{
+    if (self.pers["bot_noteam_looking"] == false)
+    {
+        self.pers["bot_noteam_looking"] = !self.pers["bot_noteam_looking"];
+        team = self.pers["team"];
+        players = level.players;
+        
+        for (i = 0; i < players.size; i++)
+        {
+            player = players[i];
+            if (isDefined(player.pers["isBot"]) && player.pers["isBot"] && player.pers["team"] != team)
+            {
+                while (self.pers["bot_noteam_looking"] == 1)
+                {
+                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
+                    player setplayerangles(newang);
+                    player savebotpos(player, newang);
+                    wait 0.05;
+                }
+            }
+        }
+    }
+    else if ( self.pers["bot_noteam_looking"] == true)
+    {
+        self.pers["bot_noteam_looking"] = !self.pers["bot_noteam_looking"];
+    }
+}
+
+botLookAtFriendlies()
+{
+    if (self.pers["bot_team_looking"] == 0)
+    {
+        self.pers["bot_team_looking"] = 1;
+        team = self.pers["team"];
+        players = level.players;
+        
+        for (i = 0; i < players.size; i++)
+        {
+            player = players[i];
+            if (isDefined(player.pers["isBot"]) && player.pers["isBot"] && player.pers["team"] == team)
+            {
+                while (self.pers["bot_team_looking"] == 1)
+                {
+                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
+                    player setplayerangles(newang);
+                    player savebotpos(player, newang);
+                    wait 0.05;
+                }
+            }
+        }
+    }
+    else
+    {
+        self.pers["bot_team_looking"] = 0;
+    }
+}
+
+botalwayslook(t)
+{
+    team = self.pers["team"];
+    players = level.players;
+    for ( i = 0; i < players.size; i++ )
+    {   
+        player = players[i];
+        if(t == "noteam")
+        {
+            if(isDefined(player.pers["isBot"])&& player.pers["isBot"] && player.pers["team"] != team)
+            {
+                while(self.pers["bot_noteam_looking"] == 1)
+                {
+                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
+                    player setplayerangles(newang);
+                    player savebotpos(player, newang);
+                    wait 0.05;
+                }
+            }
+        }
+        else
+        {
+            if(isDefined(player.pers["isBot"])&& player.pers["isBot"] && player.pers["team"] == team)
+            {
+                while(self.pers["bot_team_looking"] == 1)
+                {
+                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
+                    player setplayerangles(newang);
+                    player savebotpos(player, newang);
+                    wait 0.05;
+                }
+            }
+        }
+    }
+}
+
+savebotpos(player, angles, both)
+{
+    if(!isDefined(angles))
+        player.pers["botLocation"] = player getOrigin(); 
+    else if(isDefined(angles))
+        player.pers["location_angles"] = angles;
+    else
+    {
+        player.pers["location_angles"] = angles;
+        player.pers["botLocation"] = player getOrigin(); 
+
+    }    
+} */

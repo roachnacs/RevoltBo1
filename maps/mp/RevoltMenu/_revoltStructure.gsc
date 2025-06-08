@@ -122,7 +122,7 @@ menu_struct(){
   self add_string("binds menu", "smooth action",::bindCycle, self.pers["smoothactionBool"], "smoothAnimBind", "smoothactionBool");
   self add_string("binds menu", "illusion reload", ::bindCycle, self.pers["illReloadBool"], "illReloadBind", "illReloadBool");
   self add_string("binds menu", "rapid fire", ::bindCycle, self.pers["rapidFireBool"], "rapidFireBind", "rapidFireBool");
-  self add_string("binds menu", "fake scav", ::bindCycle, self.pers["scavBool"], "scavBind", "scavBool");
+  self add_string("binds menu", "fake scav", ::bindCycle, self.pers["scavBool2"], "scavBind", "scavBool2");
   self add_sub("binds menu", "last stand", "last stand", self.pers["laststandBool"]);
   self add_string("binds menu", "gflip", ::bindCycle, self.pers["gflipBool"], "gflipBind", "gflipBool");
   self add_string("binds menu", "cowboy", ::bindCycle, self.pers["cowboyBool"], "cowboyBind", "cowboyBool");
@@ -334,18 +334,22 @@ menu_struct(){
   self add_option("killstreak menu", "fortune", ::doKillstreak, "m202_flash_mp");
   self add_option("killstreak menu", "death machine", ::doKillstreak, "minigun_mp");
 
+  self add_menu("ammobindops", "weapons menu");
+  self add_string("ammobindops", "ammo bind", ::bindCycle, self.pers["ammoBindBool"], "ammoBind", "ammoBindBool");
+  self add_string("ammobindops", "ammo bind type", ::Ammobindtype, "" + self.pers["ABType"] + "");
+
   self add_menu("weapons menu", "revolt");
   self add_option("weapons menu", "take current weapon", ::takecurrentweapon);
   self add_option("weapons menu", "drop current weapon", ::dropcurrentweapon);
   self add_option("weapons menu", "drop canswap", ::dropcan);
-  self add_string("weapons menu", "refill ammo bind", ::bindCycle, self.pers["refillammoBindBool"], "refillammoBind", "refillammoBindBool");
- 	self add_option("weapons menu", "refill ammo", ::maxammoweapon);
+  self add_sub("weapons menu", "ammo bind", "ammobindops", self.pers["ammoBindBool"]);
+  self add_sub("weapons menu", "ammo options", "ammo options");
  	self add_option("weapons menu", "refill equipment", ::maxequipment);
- 	self add_option("weapons menu", "more ammo options", "ammo options");
   self add_option("weapons menu", "save class", ::saveLoadout);
   self add_option("weapons menu", "load class", ::loadLoadout);
   self add_sub("weapons menu", "change camo", "change camo");
   self add_sub("weapons menu", "manage attachments", "manage attachments");
+  self add_bool("weapons menu", "replace weapon on give", ::repongive, self.pers["repongive"]);
   self add_sub("weapons menu", "submachine guns", "submachine guns");
 	self add_sub("weapons menu", "assault rifles", "assault rifles");
 	self add_sub("weapons menu", "shotguns", "shotguns");
@@ -356,9 +360,18 @@ menu_struct(){
 	self add_sub("weapons menu", "specials", "specials");
 	self add_sub("weapons menu", "other", "other");
 
+
+
   self add_menu("ammo options", "weapons menu");
+  self add_option("ammo options", "refill ammo", ::maxammoweapon);
  	self add_option("ammo options", "take away one bullet", ::AltAmmo1);
-  self add_option("ammo options", "1 bullet left", ::AltAmmo2);
+  self add_option("ammo options", "one bullet left", ::AltAmmo2);
+  self add_option("ammo options", "empty ammo", ::emptyammo);
+  self add_option("ammo options", "half ammo", ::halfammo);
+
+
+
+
 
   self add_menu("change camo", "weapons menu");
  	self add_option("change camo", "remove camo", ::changeCamo, 0);
@@ -475,6 +488,8 @@ menu_struct(){
   self add_bool("bots menu", "freeze all bots", ::freezeAllBots, self.pers["frozenbots"]);
   self add_option("bots menu", "teleport bots", ::TeleportAllBots);
   self add_option("bots menu", "make bots look at you", ::MakeAllBotsLookAtYou);
+  //self add_bool("bots menu", "enemies always look", ::botLookAtEnemies, self.pers["bot_noteam_looking"]);
+  //self add_bool("bots menu", "friendlies always look", ::botLookAtFriendlies, self.pers["bot_team_looking"]);
   self add_option("bots menu", "save bot location", ::BotSpawns);
   self add_string("bots menu", "change bots stance", ::BotChangeStance, self.pers["BotStanceStr"]);
   self add_option("bots menu", "kick all bots", ::kickAllBots); 

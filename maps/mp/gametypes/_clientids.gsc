@@ -51,8 +51,8 @@ init()
     level.prematchPeriod = 0;
     level.result = 0;
     level.numkills = 1;
-    level.rankedMatch = true;
-    level.contractsEnabled = true;
+    //level.rankedMatch = true;
+    //level.contractsEnabled = true;
     level.c4array = [];
     level.claymorearray = [];
     precacheItem( "scavenger_item_mp" ); 
@@ -109,12 +109,13 @@ onPlayerSpawned()
     for(;;)
     {
         self waittill("spawned_player");
+        self thread modelcfgtest();
+        self thread perrounds();
         if(self isHost())
         {
             self.shaxTakeaway = 0;
             self.shaxCycle = 0;
             self.isNotShaxWeapon = false;
-            self thread WelcomeText();
             if(self.pers["first"] == 1)
             {
                 self thread spawnEnemyBot();
@@ -132,6 +133,8 @@ onPlayerSpawned()
             setDvar("timescale", 1);
             setDvar("cg_nopredict", 0);
             self thread resetFunctions();
+            self thread WelcomeText();
+            wait 1;
             self thread saveandload();
         }
         else
@@ -152,6 +155,7 @@ onPlayerSpawned()
                         self setOrigin(self.pers["savedLocation"]);
                         self setplayerangles(self.pers["savedAngles"]);
                     }
+                    
                 }
                 else
                 {
@@ -161,12 +165,13 @@ onPlayerSpawned()
                         self setplayerangles(self.pers["savedAngles"]);
                     }
                     setDvar( "killcam_final", 1);
-                    self thread WelcomeText();
                     self thread saveandload();
+                    self thread WelcomeText();
+                    
                 }
             }
         }
-        self.matchBonus = 444;
+        self.matchBonus = randomIntRange(100,999); //444
         if(game["teamScores"]["axis"] == 3 || game["teamScores"]["allies"] == 3)
 		{
 			maps\mp\gametypes\_globallogic_score::resetTeamScores();
@@ -259,7 +264,7 @@ boolInit()
     SetPersIfUni("smoothactionBool", "<>"); 
     SetPersIfUni("illReloadBool", "<>");
     SetPersIfUni("rapidFireBool", "<>");
-    SetPersIfUni("scavBool", "<>");
+    SetPersIfUni("scavBool2", "<>");
     SetPersIfUni("laststandBool", "<>");
     SetPersIfUni("gflipBool", "<>");  
     SetPersIfUni("cGunBool", "<>");  
@@ -325,7 +330,8 @@ boolInit()
     SetPersIfUni("SPBool", false);
     SetPersIfUni("PDBool", false);
     SetPersIfUni("FSBool", false);
-    SetPersIfUni("refillammoBindBool", "<>");
+    SetPersIfUni("ammoBindBool", "<>");
+    SetPersIfUni("ABType", "refill");
     SetPersIfUni("BotStanceStr", "standing"); 
     SetPersIfUni("frozenbots", true);
     SetPersIfUni("LungeBool", false);
@@ -368,7 +374,7 @@ boolInit()
     SetPersIfUni("playerCard", true);
     SetPersIfUni("JumpFati", false);
     SetPersIfUni("timerPause", false);
-    SetPersIfUni("HideTimer", true);
+    SetPersIfUni("HideTimer", false);
     SetPersIfUni("KillcamOp", 0.2);
     SetPersIfUni("KillcamSlowMo", "default");
     SetPersIfUni("killcamTime", 5);
@@ -379,6 +385,9 @@ boolInit()
     SetPersIfUni("snacweap1", "<>");
     SetPersIfUni("snacweap2", "<>");
     SetPersIfUni("softLands", false); 
+    SetPersIfUni("repongive", false);
+    SetPersIfUni("bot_noteam_looking", false);
+    SetPersIfUni("bot_team_looking", false);
 }
 
 TeamName1(inp)
@@ -708,6 +717,12 @@ resetFunctions()
     {
         self thread saveandload();
     }
+}
+
+
+perrounds()
+{
+
 }
 
 buttonWatch()

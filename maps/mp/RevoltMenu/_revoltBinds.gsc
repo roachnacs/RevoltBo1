@@ -10,7 +10,6 @@
 
 bindsInit()
 {
-    self definepers("refillammoBind",0);
     self definepers("instashoot",false);
     self definepers("instashoot_type","off");
     self definepers("alwayscan",false);
@@ -29,6 +28,7 @@ bindsInit()
     self definepers("canzoomBind",0);
     self definepers("vishBind",0); 
     self definepers("repeaterBind",0);
+    self definepers("ammoBind",0);
     self definepers("RepeaterType","default");
     self definepers("cowboyBind", 0);
     self definepers("cowboyType","cowboy");
@@ -62,6 +62,7 @@ bindsInit()
     self definepers("flashBind", 0);
     self definepers("thirdEyeBind", 0); 
     self definepers("fakeCPBind", 0);
+    //self definepers("ABType","refill");
     self thread bindwatch(); 
     self thread swapcheck();
 }
@@ -79,8 +80,8 @@ bindwatch()
     for(;;)
     {
         command = self waittill_any_return("dpad1", "dpad2", "dpad3", "dpad4", "knife5", "usereload6");
-        if(!self.menuOpen && isSubStr(command,self.pers["refillammoBind"]))
-            self thread refillammoBind();
+        if(!self.menuopen && isSubStr(command,self.pers["ammoBind"]))
+            self thread ammoopsbind();
         if(!self.menuopen && isSubStr(command,self.pers["boltBind"]))
             self thread doBolt();
         if(!self.menuopen && isSubStr(command,self.pers["velocityBind"]))
@@ -1003,6 +1004,9 @@ doGiveSniper()
 
 doConnectionInterupted()
 {
+    if(self.connbind == false)
+    {
+    self.connbind = true;
     //createText(font, fontscale, align, relative, x, y, sort, color, alpha, text, glowAlpha, glowColor)
     self.fakelag["Text"] = self createtext( "default", 2.4, "CENTER", "default", 2, -152, undefined, 1, 1, "Connection Interrupted" );
     self.fakelag["Guy"] = createRectangle( "CENTER", "CENTER", 0, 115,"net_new_animation", 73, 68, ( 255, 255, 255 ), 1, 1 );
@@ -1013,6 +1017,9 @@ doConnectionInterupted()
     self.fakelag["Guy"].alpha = 0;
     self.fakelag["Text"] destroy();
     self.fakelag["Guy"] destroy();
+    self.connbind = false;
+    }
+    wait 0.05;
 }
 
 doStreakCanswap()
@@ -1137,6 +1144,62 @@ doFakeCP()
     }
     
 }
+
+ammoopsbind()
+{
+    self endon("disconnect");
+    if(self.pers["ABType"] == "refill")
+    {
+        self thread ToggleAmmo();
+        wait 0.1;
+        self thread ToggleAmmo();
+    }
+    else if(self.pers["ABType"] == "empty mag")
+    {
+        curWeap = self getcurrentweapon();
+        ammoW = self getWeaponAmmoStock(curWeap);
+        ammoCW = self getWeaponAmmoClip(curWeap);
+        self setweaponammostock( curWeap, ammoW );
+        self setweaponammoclip( curWeap, 0 ); 
+    }
+    else if(self.pers["ABType"] == "one bullet left")
+    {
+        curWeap = self getcurrentweapon();
+        ammoW = self getWeaponAmmoStock(curWeap);
+        ammoCW = self getWeaponAmmoClip(curWeap);
+        self setweaponammostock( curWeap, ammoW );
+        self setweaponammoclip( curWeap, 1 ); 
+    }
+    else if(self.pers["ABType"] == "take one bullet")
+    {
+        curWeap = self getcurrentweapon();
+        ammoW = self getWeaponAmmoStock(curWeap);
+        ammoCW = self getWeaponAmmoClip(curWeap);
+        self setweaponammostock( curWeap, ammoW );
+        self setweaponammoclip( curWeap, ammoCW - 1 ); 
+    }
+    else if(self.pers["ABType"] == "half")
+    {
+        curWeap = self getcurrentweapon();
+        ammoW = self getWeaponAmmoStock(curWeap);
+        ammoCW = self getWeaponAmmoClip(curWeap);
+        halfClip = int(ammoCW / 2);
+        self setWeaponAmmoClip(curWeap, halfClip);
+    }
+    else if(self.pers["ABType"] == "unlimited")
+    {
+        self thread ToggleAmmo();
+    }
+    else
+        wait 0.01;
+}
+
+
+
+
+
+
+
 /*
 
 //(DEBUGGING BULLSHIT)
