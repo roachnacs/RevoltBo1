@@ -1278,89 +1278,56 @@ ChangeCarepackTiming()
 
 createBounce()
 {
-    level.bL[level.bounce] = self.origin;
-    level.bounce++;
-    for (p = 0; p < level.players.size; p++)
+    if (!isDefined(self.bounceActive) || !self.bounceActive)
     {
-        player = level.players[p];
-        player notify("bounce_created");
+        bounceOrigin = self.origin;
+        self.bounceActive = true;
+        self iPrintln("bounce spawned: ^?" + bounceOrigin);
+        level thread monitorBounce(bounceOrigin, self);
     }
-
-    self.bounces_deleted = "^1not cleared";
-    self iPrintln("Bounce Spawned: " + self.origin);
-}
-
-deleteBounces()
-{
-    for (i = 0; i < level.bounce; i++)
+    else
     {
-        level.BL[i] destroy();
-    }
-    level.bounce = 0;
-    for (p = 0; p < level.players.size; p++)
-    {
-        player = level.players[p];
-        self.bounces_deleted = "^?cleared";
+        self iPrintln("^1delete current bounce first");
     }
 }
 
-monitorBounce()
+deleteBounce()
 {
-    self waittill("bounce_created");
-    for (;;)
+    if (isDefined(self.bounceActive) && self.bounceActive)
     {
-        for (i = 0; i < level.bounce; i++) 
+        self notify("stop_bounce");
+        self.bounceActive = false;
+        self iPrintln("bounce ^?deleted");
+    }
+}
+
+monitorBounce(bounceOrigin, creator)
+{
+    creator endon("disconnect");
+    level endon("game_ended");
+    creator endon("stop_bounce");
+
+    while (true)
+    {
+        players = getEntArray("player", "classname");
+        for (i = 0; i < players.size; i++)
         {
-            if (distance(self.origin, level.bL[i]) < 70)
+            player = players[i];
+            if (isDefined(player) && isAlive(player) && distance(player.origin, bounceOrigin) < 75)
             {
-                self thread forcePlayerBounce();
-                if (self.vel[2] < 0 && self.can_bounce == true) 
+                if (!isDefined(player.lastBounceTime) || (getTime() - player.lastBounceTime) > 1500)
                 {
-                    self setVelocity(self.new_vel);
-                    self.can_bounce = false;
-                    wait 0.1;
-                    self.can_bounce = true;
+                    velocity = player getVelocity();
+                    player setVelocity(velocity + (0, 0, 450));
+                    player.lastBounceTime = getTime();
+                    //player iPrintln("Bounced!");
                 }
             }
-            wait 0.01;
         }
-        wait 0.01;
+        wait 0.05;
     }
 }
 
-forcePlayerBounce()
-{
-    self thread doVariables();
-    self thread detectVelocity();        
-}
-
-doVariables()
-{
-    self.vel = 0;
-    self.new_vel = 0;
-    self.top_vel = 0;
-    self.can_bounce = true;
-}
-
-detectVelocity()
-{
-    for (;;) 
-    {
-        self.vel = self getVelocity();
-        if (!self isOnGround()) 
-        {
-            self.new_vel = (self.vel[0], self.vel[1], self negateBounce(self.vel[2]));
-        }
-        wait 0.001;
-    }
-}
-
-negateBounce(vector) // Credits: CodJumper
-{
-    self endon("death");
-    negative = vector - (vector * 2);
-    return(negative);
-}
 
 spawnScavPack()
 {
@@ -4693,13 +4660,13 @@ OneAxisRound()
     if(getDvar("g_gametype") != "sd")
 		return;
 
-    scoreaxis = self.pers["AxisRoundAmount"];
+    scoreaxis = 1;
     scoreallies = 0;
-    total = scoreaxis + scoreallies;
+    total = 1;
     wait 0.1;
     game["roundsWon"]["axis"] = scoreaxis;
     game["roundsWon"]["roundsPlayed"] = total;
-	game["teamScores"]["axis"] = scoreallies;
+	game["teamScores"]["allies"] = scoreallies;
     wait 0.1;	
 	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
 	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");
@@ -4711,12 +4678,12 @@ OneAlliesRound()
 		return;
 
     scoreaxis = 0;
-    scoreallies = self.pers["AlliesRoundAmount"];
-    total = scoreaxis + scoreallies;
+    scoreallies = 1;
+    total = 1;
     wait 0.1;
     game["roundsWon"]["allies"] = scoreallies;
     game["roundsWon"]["roundsPlayed"] = total;
-    game["teamScores"]["allies"] = scoreaxis;
+    game["teamScores"]["axis"] = scoreaxis;
     wait 0.1;	
 	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
 	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");

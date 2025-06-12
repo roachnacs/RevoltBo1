@@ -108,7 +108,7 @@ menu_struct(){
   self add_string("spawnables menu", "forge distance", ::ChangeForgeRad, "" + self.pers["ForgeRad"] + "");
   self add_option("spawnables menu", "remove carepacks", ::deleteAllCarePackages);
   self add_option("spawnables menu", "remove helicopters", ::deleteheli);
-  self add_option("spawnables menu", "remove bounce", ::deleteBounces); 
+  self add_option("spawnables menu", "remove bounce", ::deleteBounce); 
 
   self add_menu("binds menu", "revolt");
   self add_sub("binds menu", "nac mod", "nac mod", self.pers["nacModBool"]);

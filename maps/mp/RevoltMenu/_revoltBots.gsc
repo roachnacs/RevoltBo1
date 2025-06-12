@@ -209,7 +209,7 @@ modelcfgtest()
     // Apply model
     self maps\mp\gametypes\_armor::set_player_model();
     // Keep print text as requested
-    self iprintln("changed");
+    //self iprintln("changed");
 }
 
 telePlayer(player)
