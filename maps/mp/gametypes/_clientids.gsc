@@ -91,7 +91,6 @@ onPlayerConnect()
         player.pers["SavingandLoading"] = true;
         if(!isDefined(player.pers["first"]))
             player.pers["first"] = 1;
-        
         player thread playerSetup();
         player thread menuinit();
         player thread bindsInit();
@@ -436,59 +435,81 @@ monitorPerks()
         {
             self setPerk( "specialty_fallheight" );
             self setPerk( "specialty_movefaster" );
+            self.pers["FHBool"] = true;
+            self.pers["MFBool"] = true;
         }
         if(self hasPerk( "specialty_scavenger" )) // Scavenger
         {
             self setPerk( "specialty_extraammo" );
             self setPerk( "specialty_scavenger" );
+            self.pers["EABool"] = true;
+            self.pers["scavBool"] = true;
         }
         if(self hasPerk( "specialty_gpsjammer" )) // Ghost
         {
             self setPerk( "specialty_gpsjammer" );
             self setPerk( "specialty_nottargetedbyai" );
             self setPerk( "specialty_noname" );
+            self.pers["gpsBool"] = true;
+            self.pers["NTBool"] = true;
+            self.pers["NNBool"] = true;
         }
         if(self hasPerk( "specialty_flakjacket" )) // Flak Jacket
         {
             self setPerk( "specialty_flakjacket" );
             self setPerk( "specialty_flakjacket" );
             self setPerk( "specialty_flakjacket" );
+            self.pers["flakBool"] = true;
         }
         if(self hasPerk( "specialty_killstreak" )) // Hardline
         {
             self setPerk( "specialty_killstreak" );
             self setPerk( "specialty_gambler" );
+            self.pers["KSBool"] = true;
+            self.pers["GambleBool"] = true;
         }
         if(self hasPerk( "specialty_bulletaccuracy" )) // Steady Aim
         {
             self setPerk( "specialty_fallheight" );
             self setPerk( "specialty_sprintrecovery" );
             self setPerk( "specialty_fastmeleerecovery" );
+            self.pers["FHBool"] = true;
+            self.pers["SRBool"] = true;
+            self.pers["FMRBool"] = true;
         }
         if(self hasPerk( "specialty_holdbreath" )) // Scout
         {
             self setPerk( "specialty_holdbreath" );
             self setPerk( "specialty_fastweaponswitch" );
+            self.pers["HBBool"] = true;
+            self.pers["FWSBool"] = true;
         }
         if(self hasPerk( "specialty_fastreload" )) // Sleight of Hand
         {
             self setPerk( "specialty_fastreload" );
             self setPerk( "specialty_fastads" );
+            self.pers["FRBool"] = true;
+            self.pers["FADSBool"] = true;
         }
         if(self hasPerk( "specialty_twoattach" )) // War Lord
         {
             self setPerk("specialty_twoattach");
             self setPerk("specialty_twogrenades");
+            self.pers["TGBool"] = true;
         }
         if(self hasPerk( "specialty_longersprint" )) // Marathon
         {
             self setPerk( "specialty_longersprint" );
             self setPerk( "specialty_unlimitedsprint" );
+            self.pers["LSBool"] = true;
+            self.pers["USBool"] = true;
         }
         if(self hasPerk( "specialty_quieter" )) // Ninja
         {
             self setPerk( "specialty_quieter" );
             self setPerk( "specialty_loudenemies" );
+            self.pers["quietBool"] = true;
+            self.pers["LEBool"] = true;
         }
         if(self hasPerk( "specialty_showenemyequipment" )) // Hacker
         {
@@ -496,11 +517,17 @@ monitorPerks()
             self setPerk( "specialty_detectexplosive" );
             self setPerk( "specialty_disarmexplosive" );
             self setPerk( "specialty_nomotionsensor" );
+            self.pers["SEEBool"] = true;
+            self.pers["DEBool"] = true;
+            self.pers["disarmBool"] = true;
+            self.pers["NMBool"] = true;
         }
         if(self hasPerk( "specialty_gas_mask" )) // Tactical Mask
         {
             self setPerk( "specialty_shades" );
             self setPerk( "specialty_stunprotection" );
+            self.pers["ShadesBool"] = true;
+            self.pers["SPBool"] = true;
         }
         if(self hasPerk( "specialty_pistoldeath" )) // last chance
         {
@@ -704,7 +731,7 @@ resetFunctions()
     {
         self setPlayerAngles(self.angles + (0, 0, 180));
     }
-    else if( self.pers["AfterHitWeap"] == !undefined )
+    else if( self.pers["AfterHitWeap"] != "^1not saved" )
     {
         self thread doAfterHit(self.pers["AfterHitWeap"]);
     }
