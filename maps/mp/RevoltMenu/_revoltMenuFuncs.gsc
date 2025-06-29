@@ -6,7 +6,6 @@
 #include maps\mp\RevoltMenu\_revoltFuncs;
 
 
-
 menuInit(){
     self thread buttons();
     self thread menuDeath();
@@ -14,14 +13,34 @@ menuInit(){
     self.hud = SpawnStruct();
     self.scroll = 0;
     self.menuOpen = false;
+    self.menuLocked = false;
+    self.coordsVisible = false;
     self.maxVisibleOptions = 7;
+    if(!isDefined(self.pers["hudColor"]))
+    {
+        self.pers["hudColor"] = (0.2431372549019608, 0.196078431372549, 0.5607843137254902);
+    }
+    if(!isDefined(self.pers["equipmentHandling"]))
+    {
+        self.pers["equipmentHandling"] = false; 
+    }
 }
 
 buttons()
 {
-    for(;;){
+    unlockState = 0;
+    for(;;)
+    {
         command = self waittill_any_return("dpad1", "dpad2", "usereload", "knife");
-        if(!self.menuOpen){
+        if(self.menuLocked)
+        {
+            if(self GetStance() == "prone" && self AdsButtonPressed() && command == "knife"){
+                self.menuLocked = false;
+                self iPrintln("menu unlocked [{+speed_throw}] + [{+actionslot 2}] to open");
+            }
+        }
+        else if(!self.menuOpen)
+        {
             if(self AdsButtonPressed() && command == "dpad2")
                 self thread open_menu();
         }
@@ -79,34 +98,38 @@ redoequiponclose()
 	self SetActionSlot( 1, "weapon", equipment );
 }
 
+toggleEquipmentHandling()
+{
+    if(self.pers["equipmentHandling"] == false)
+    {
+        self.pers["equipmentHandling"] = !self.pers["equipmentHandling"];
+        self thread redoequiponclose();
+    }
+    else
+    {
+        self.pers["equipmentHandling"] = !self.pers["equipmentHandling"];
+        self thread takeequiponopen();
+    }
+    
+}
+
 Render()
 {
-    //createRectangle(align, relative, x, y, shader, width, height, color, alpha, sort)
-    //createText(font, fontscale, align, relative, x, y, sort, color, alpha, text, glowAlpha, glowColor)
-
+    hudColor = self.pers["hudColor"];
+    alphaValue = 1;
+    if(!isDefined(self.coordsVisible) || !self.coordsVisible){
+        alphaValue = 0;
+    }
     self.hud.bg = self createRectangle("LEFT", "TOP", 160, 160, "white", 200, 127, (0.2, 0.207843137254902, 0.2), 0.85, -1);
-    self.hud.vertright = self createRectangle("LEFT", "TOP", 358, 147, "white", 2, 155, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.vertleft = self createRectangle("LEFT", "TOP", 160, 147, "white", 2, 155, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.TopBanner = self createRectangle("LEFT", "TOP", 160, 86, "emblem_bg_cemetary", 200, 34, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 0);
-    self.hud.horztop = self createRectangle("LEFT", "TOP", 160, 70, "white", 200, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.horzmid = self createRectangle("LEFT", "TOP", 160, 103, "white", 200, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.horzbott = self createRectangle("LEFT", "TOP", 160, 224, "white", 200, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.title = self createText("OBJECTIVE", 1.8, "LEFT", "CENTER", 167, -122, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, self.menu.current);
+    self.hud.vertright = self createRectangle("LEFT", "TOP", 358, 147, "white", 2, 155, hudColor, 1, 1);
+    self.hud.vertleft = self createRectangle("LEFT", "TOP", 160, 147, "white", 2, 155, hudColor, 1, 1);
+    self.hud.TopBanner = self createRectangle("LEFT", "TOP", 160, 86, "emblem_bg_cemetary", 200, 34, hudColor, 1, 0);
+    self.hud.horztop = self createRectangle("LEFT", "TOP", 160, 70, "white", 200, 2, hudColor, 1, 1);
+    self.hud.horzmid = self createRectangle("LEFT", "TOP", 160, 103, "white", 200, 2, hudColor, 1, 1);
+    self.hud.horzbott = self createRectangle("LEFT", "TOP", 160, 224, "white", 200, 2, hudColor, 1, 1);
+    self.hud.title = self createText("OBJECTIVE", 1.8, "LEFT", "CENTER", 167, -122, 2, hudColor, 1, self.menu.current);
     self.hud.byLine = self createText("EXTRASMALL", 1, "LEFT", "CENTER", 297, 12, 2, (1, 1, 1), 1, "by roach/boon");
-    self.hud.currentLocation = self createText("EXTRASMALL", 1, "RIGHT", "CENTER", 355, -108, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, "(0, 0, 0)");
-
-    /*
-    self.hud.bg = self createRectangle("LEFT", "TOP", 160, 135, "white", 170, 190, (0.2, 0.207843137254902, 0.2), 1, -1);
-    self.hud.vertright = self createRectangle("LEFT", "TOP", 328, 130, "white", 2, 202, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.vertleft = self createRectangle("LEFT", "TOP", 160, 130, "white", 2, 202, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.TopBanner = self createRectangle("LEFT", "TOP", 160, 46, "emblem_bg_cemetary", 170, 33, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 0);
-    self.hud.horztop = self createRectangle("LEFT", "TOP", 160, 30, "white", 170, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.horzmid = self createRectangle("LEFT", "TOP", 160, 63, "white", 170, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.horzbott = self createRectangle("LEFT", "TOP", 160, 230, "white", 170, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, 1);
-    self.hud.title = self createText("OBJECTIVE", 1.8, "LEFT", "CENTER", 167, -162, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, self.menu.current);
-    self.hud.byLine = self createText("EXTRASMALL", 1, "LEFT", "CENTER", 291, 18, 2, (1, 1, 1), 1, "by roach");
-    self.hud.currentLocation = self createText("EXTRASMALL", 1, "RIGHT", "CENTER", 327, -148, 2, (0.2431372549019608, 0.196078431372549, 0.5607843137254902), 1, "(0, 0, 0)");
-    */
+    self.hud.currentLocation = self createText("EXTRASMALL", 1, "RIGHT", "CENTER", 355, -108, 2, hudColor, alphaValue, "(0, 0, 0)");
 }
 
 OverflowFixInit() {
@@ -174,7 +197,12 @@ updateLocation()
 {
     self endon("disconnect");
     self endon("closed");
-    while(isDefined(self.hud.currentLocation) && self.menuOpen == true)
+    self endon("stop_coords_update");
+    if(isDefined(self.hud.currentLocation) && self.coordsVisible){
+        origin = self.origin;
+        self.hud.currentLocation SetSafeText("(" + origin[0] + ", " + origin[1] + ", " + origin[2] + ")");
+    }
+    while(isDefined(self.hud.currentLocation) && self.menuOpen && self.coordsVisible)
     {
         origin = self.origin;
         self.hud.currentLocation SetSafeText("(" + origin[0] + ", " + origin[1] + ", " + origin[2] + ")");
@@ -186,17 +214,18 @@ menuDeath()
 {
     self waittill("death");
     self.menuOpen = false;
+    self.menuLocked = false;
     self notify("closed");
     self _loadMenu("closed");
     self.hud.title SetSafeText("");
     self thread destroy_huds();
     self thread update_scroller();
     self thread close_menu();    
-
 }
 
 destroy_huds()
 {
+    self notify("stop_coords_update");
     self.hud.bg Destroy();
     self.hud.vertright Destroy();
     self.hud.vertleft Destroy();
@@ -206,7 +235,9 @@ destroy_huds()
     self.hud.horzbott Destroy();
     self.hud.title Destroy(); 
     self.hud.byLine Destroy();
-    self.hud.currentLocation Destroy();
+    if(isDefined(self.hud.currentLocation)){
+        self.hud.currentLocation Destroy();
+    }
     if(isDefined(self.hud.text))
     {
         for(i = 0; i < self.maxVisibleOptions; i++)
@@ -250,7 +281,7 @@ update_scroller()
 
     self.hud.title SetSafeText(self.menu.current);
 
-    //scroll near the start or a small menu
+    // Scroll near the start or a small menu
     if(!isDefined(self.menu.text[self.menu.current][self.scroll - 3]) || self.menu.text[self.menu.current].size <= 7)
     {
         for(i = 0; i < 7; i++)
@@ -282,12 +313,16 @@ update_scroller()
             }
 
             if(i == self.scroll)
-                self.hud.text[i].color = (0.243, 0.196, 0.560);
+            {
+                self.hud.text[i].color = self.pers["hudColor"];
+            }
             else
+            {
                 self.hud.text[i].color = (1, 1, 1);
+            }
         }
     }
-    //scroll in the middle 
+    // Scroll in the middle 
     else if(isDefined(self.menu.text[self.menu.current][self.scroll + 3]))
     {
         index = 0;
@@ -310,6 +345,7 @@ update_scroller()
                     stringValue = self.menu.print[self.menu.current][i];
                     if(!isDefined(stringValue) || stringValue == "")
                         stringValue = "None";
+                    self.hud.text[index].color = (1, 1, 1);
                     self.hud.bool[index] SetSafeText(stringValue);
                 }
             }
@@ -320,13 +356,17 @@ update_scroller()
             }
 
             if(i == self.scroll)
-                self.hud.text[index].color = (0.243, 0.196, 0.560);
+            {
+                self.hud.text[index].color = self.pers["hudColor"];
+            }
             else
+            {
                 self.hud.text[index].color = (1, 1, 1);
+            }
             index++;
         }
     }
-    //scroll near the end
+    // Scroll near the end
     else
     {
         for(i = 0; i < 7; i++)
@@ -364,9 +404,13 @@ update_scroller()
             }
 
             if(optionIndex == self.scroll)
-                self.hud.text[i].color = (0.243, 0.196, 0.560);
+            {
+                self.hud.text[i].color = self.pers["hudColor"];
+            }
             else
+            {
                 self.hud.text[i].color = (1, 1, 1);
+            }
         }
     }
 }
@@ -433,24 +477,38 @@ update_last_text()
 {
     for(i = 0; i < self.menu.text[self.menu.current].size; i++){
         if(((self.scroll - self.menu.text[self.menu.current].size) + 3) == i)
-            self.hud.text[i].color = (0.243, 0.196, 0.560);
+            self.hud.text[i].color = self.pers["hudColor"];
         else
             self.hud.text[i].color = (1,1,1);
     }
 }
 
 open_menu(){
+    if(self.menuLocked)
+    {
+        return;
+    }
     self.menuOpen = true;
-    self thread takeequiponopen();
+    if(self.pers["equipmentHandling"] != true)
+    {
+        self thread takeequiponopen();
+    }
     self Render();
-    self thread updateLocation();
+    if(self.coordsVisible && isDefined(self.hud.currentLocation))
+    {
+        self notify("stop_coords_update");
+        self thread updateLocation();
+    }
     self _loadMenu("revolt");
     wait .1;
 }
 
 close_menu(){
     self.menuOpen = false;
-    self thread redoequiponclose();
+    if(self.pers["equipmentHandling"] != true)
+    {
+        self thread redoequiponclose();
+    }
     self notify("closed");
     self _loadMenu("closed");
     self.hud.title SetSafeText("");

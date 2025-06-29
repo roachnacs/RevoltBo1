@@ -9,19 +9,6 @@
 #include maps\mp\RevoltMenu\_revoltBinds;
 #include maps\mp\RevoltMenu\_revoltTeleportStruc;
 
-/*
-TODO LIST
-1. Fix the aimbot toggle
-2. do spawn helicopter
-3. do spawn rcxd
-4. do spawn dog
-5. change bots appearance
-6. Fix afterhits
-7. Do cfg
-8. add 1 minute
-9. remove 1 minute
-*/
-
 structure(){
 	self thread menu_struct();
 }
@@ -44,6 +31,7 @@ menu_struct(){
   self add_sub("revolt", "account menu", "account menu");
   self add_sub("revolt", "admin menu", "admin menu");
   self add_sub("revolt", "clients menu", "clients menu");
+  self add_sub("revolt", "menu options", "menu options");
 
   self add_menu("main menu", "revolt");
   self add_bool("main menu", "god mode", ::ToggleGod, self.pers["GodBool"]);
@@ -172,7 +160,7 @@ menu_struct(){
 
   self add_menu("carepackage streak", "fake carepackage");
   self add_option("carepackage streak", "spy plane", ::SetCPStreak, "radar_mp");
-  self add_option("carepackage streak", "rc-xde", ::SetCPStreak, "rcbomb_mp");
+  self add_option("carepackage streak", "rc-xd", ::SetCPStreak, "rcbomb_mp");
   self add_option("carepackage streak", "counter-spy plane", ::SetCPStreak, "counteruav_mp");
   self add_option("carepackage streak", "sam turret", ::SetCPStreak, "auto_tow_mp");
   self add_option("carepackage streak", "care package", ::SetCPStreak, "supply_drop_mp");
@@ -216,8 +204,8 @@ menu_struct(){
 
   self add_menu("instaswap", "binds menu");
   self add_string("instaswap", "instaswap", ::bindCycle, self.pers["instaBindBool"], "instaBind", "instaBindBool");
-  self add_option("instaswap", "save weapon", ::InstaWeap);
-  self add_option("instaswap", "reset weapons", ::ResetInstaArray);
+  self add_string("instaswap", "save weapon 1", ::InstaWeap1, "" + self.pers["instaweap1"] + "");
+  self add_string("instaswap", "save weapon 2", ::InstaWeap2, "" + self.pers["instaweap2"] + "");
 
   self add_menu("repeater", "binds menu");
   self add_string("repeater", "repeater", ::bindCycle, self.pers["repeaterBindBool"], "repeaterBind", "repeaterBindBool");
@@ -333,7 +321,7 @@ menu_struct(){
 
   self add_menu("killstreak menu", "revolt");
   self add_option("killstreak menu", "spy plane", ::doKillstreak, "radar_mp");
-  self add_option("killstreak menu", "rc-xde", ::doKillstreak, "rcbomb_mp");
+  self add_option("killstreak menu", "rc-xd", ::doKillstreak, "rcbomb_mp");
   self add_option("killstreak menu", "counter-spy plane", ::doKillstreak, "counteruav_mp");
   self add_option("killstreak menu", "sam turret", ::doKillstreak, "auto_tow_mp");
   self add_option("killstreak menu", "care package", ::doKillstreak, "supply_drop_mp");
@@ -531,7 +519,7 @@ menu_struct(){
   self add_string("trickshot menu", "killcam slowmo", ::KillcamSlowmo, "" + self.pers["KillcamSlowMo"] + "");
   self add_bool("trickshot menu", "fake red room", ::Redroom, self.pers["RedroomBool"]);
   self add_bool("trickshot menu", "mw2 after game", ::MW2EndGame, self.pers["EndGameBool"]);
-  self add_sub("trickshot menu", "rmala", "rmala" , self.pers["doingMala"]);
+  self add_sub("trickshot menu", "rmala", "rmala");
   self add_bool("trickshot menu", "usable tac insert", ::doAltTac, self.pers["AltTac"]);
   self add_bool("trickshot menu", "upside down screen", ::doUpsideDown, self.pers["UpsideDownBool"]);
   self add_sub("trickshot menu", "afterhits", "afterhits menu", self.pers["AfterHitWeap"]);
@@ -781,62 +769,70 @@ menu_struct(){
 
   self add_menu("edit rounds", "admin menu");
   self add_bool("edit rounds", "reset rounds", ::ResetRoundTog, self.pers["ResetRoundBool"]);
-  self add_option("edit rounds", "set axis rounds", ::OneAxisRound);
-  self add_option("edit rounds", "set allied rounds", ::OneAlliesRound);
+  self add_option("edit rounds", "reset axis rounds", ::OneAxisRound);
+  self add_option("edit rounds", "reset allied rounds", ::OneAlliesRound);
   self add_option("edit rounds", "make last round", ::makeLastRound);
 
-self add_menu("clients menu", "revolt");
-self endon("Closed");
-self endon("disconnect");
+  self add_menu("clients menu", "revolt");
+  self endon("Closed");
+  self endon("disconnect");
 
-allies = [];
-axis = [];
+  allies = [];
+  axis = [];
 
-//sort players into teams
-for(i = 0; i < level.players.size; i++)
-{
+  //sort players into teams
+  for(i = 0; i < level.players.size; i++)
+  {
     if(level.players[i].team == "allies")
-        allies[allies.size] = level.players[i];
+      allies[allies.size] = level.players[i];
     else if(level.players[i].team == "axis")
-        axis[axis.size] = level.players[i];
-}
+      axis[axis.size] = level.players[i];
+  }
 
-//add allies to the menu first
-for(i = 0; i < allies.size; i++)
-{
-  self add_option("clients menu", "^?[Allies]^7 " + allies[i].name, ::_loadmenu, "^?[Allies]^7 " + allies[i].name);
-  self add_menu("^?[Allies]^7 " + allies[i].name, "clients menu");
-  self add_option("^?[Allies]^7 " + allies[i].name, "revive player", ::revivePlayer, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "freeze player", ::freezeClient, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "teleport player", ::telePlayer, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "save player spawn", ::SpawnSavePlayer, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "change stance", ::CyclePlayerStance, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "move player north", ::movePlayerN, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "move player south", ::movePlayerS, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "move player east", ::movePlayerE, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "move player west", ::movePlayerW, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "kill player", ::killPlayer, allies[i]);
-  self add_option("^?[Allies]^7 " + allies[i].name, "kick player", ::kickPlayer, allies[i]);
-}
+  //add allies to the menu first
+  for(i = 0; i < allies.size; i++)
+  {
+    self add_option("clients menu", "^?[Allies]^7 " + allies[i].name, ::_loadmenu, "^?[Allies]^7 " + allies[i].name);
+    self add_menu("^?[Allies]^7 " + allies[i].name, "clients menu");
+    self add_option("^?[Allies]^7 " + allies[i].name, "revive player", ::revivePlayer, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "freeze player", ::freezeClient, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "teleport player", ::telePlayer, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "save player spawn", ::SpawnSavePlayer, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "change stance", ::CyclePlayerStance, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "move player north", ::movePlayerN, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "move player south", ::movePlayerS, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "move player east", ::movePlayerE, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "move player west", ::movePlayerW, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "kill player", ::killPlayer, allies[i]);
+    self add_option("^?[Allies]^7 " + allies[i].name, "kick player", ::kickPlayer, allies[i]);
+  }
 
-//add axis to the menu second
-for(i = 0; i < axis.size; i++)
-{
-  self add_option("clients menu", "^?[Axis]^7 " + axis[i].name, ::_loadmenu, "^?[Axis]^7 " + axis[i].name);
-  self add_menu("^?[Axis]^7 " + axis[i].name, "clients menu");
-  self add_option("^?[Axis]^7 " + axis[i].name, "revive player", ::revivePlayer, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "freeze player", ::freezeClient, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "teleport player", ::telePlayer, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "save player spawn", ::SpawnSavePlayer, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "change stance", ::CyclePlayerStance, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "move player north", ::movePlayerN, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "move player south", ::movePlayerS, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "move player east", ::movePlayerE, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "move player west", ::movePlayerW, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "kill player", ::killPlayer, axis[i]);
-  self add_option("^?[Axis]^7 " + axis[i].name, "kick player", ::kickPlayer, axis[i]);
+  //add axis to the menu second
+  for(i = 0; i < axis.size; i++)
+  {
+    self add_option("clients menu", "^?[Axis]^7 " + axis[i].name, ::_loadmenu, "^?[Axis]^7 " + axis[i].name);
+    self add_menu("^?[Axis]^7 " + axis[i].name, "clients menu");
+    self add_option("^?[Axis]^7 " + axis[i].name, "revive player", ::revivePlayer, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "freeze player", ::freezeClient, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "teleport player", ::telePlayer, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "save player spawn", ::SpawnSavePlayer, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "change stance", ::CyclePlayerStance, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "move player north", ::movePlayerN, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "move player south", ::movePlayerS, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "move player east", ::movePlayerE, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "move player west", ::movePlayerW, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "kill player", ::killPlayer, axis[i]);
+    self add_option("^?[Axis]^7 " + axis[i].name, "kick player", ::kickPlayer, axis[i]);
 
-}
+  }
+
+  self add_menu("menu options", "revolt");
+  self add_option("menu options", "lock menu", ::lockMenu);
+  self add_option("menu options", "display coords", ::toggleCoords);
+  self add_option("menu options", "print coords", ::Coords);
+  self add_option("menu options", "print velocity", ::printSavedVelocities);
+  self add_option("menu options", "change color", ::changeHudColor);
+  self add_bool("menu options", "equipment in menu", ::toggleEquipmentHandling, self.pers["equipmentHandling"]);
 
   self add_menu("closed");
   self add_option("closed", "");

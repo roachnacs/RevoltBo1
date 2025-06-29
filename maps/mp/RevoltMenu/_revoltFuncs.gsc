@@ -77,7 +77,7 @@ noclip()
         if(self meleebuttonpressed() && self.ufomode == 1)
         {
             self enableweapons();
-            self iprintln("ufo ^1off");
+            self iprintln("ufo off");
             self unlink();
             self.noclipobj delete();
             self.ufomode = 0;
@@ -121,6 +121,7 @@ unlimited_ammo()
 {
     self endon("stop_unlimitedammo");
     self endon("death");
+    self iPrintLn("AMMO");
     for(;;)
     {
         currentWeapon = self getcurrentweapon();
@@ -408,14 +409,14 @@ doRadiusAimbot()
 
 AimbotWeapon()
 {
-    if(self.pers["AimbotWeapon"] == "^1not saved")
+    if(self.pers["AimbotWeapon"] == "not saved")
     {
         self.SavedAimWeap = self getCurrentWeapon();
         self.pers["AimbotWeapon"] = self.SavedAimWeap;
     }
-    else if (self.pers["AimbotWeapon"] != "^1not saved")
+    else if (self.pers["AimbotWeapon"] != "not saved")
     {
-        self.pers["AimbotWeapon"] = "^1not saved";
+        self.pers["AimbotWeapon"] = "not saved";
     }
 }
 
@@ -539,14 +540,14 @@ HmAimbot()
 
 hitmarkerWeapon()
 {
-    if(self.pers["hitmarkerWeapon"] == "^1not saved")
+    if(self.pers["hitmarkerWeapon"] == "not saved")
     {
         self.SavedAimWeap = self getCurrentWeapon();
         self.pers["hitmarkerWeapon"] = self.SavedAimWeap;
     }
-    else if (self.pers["hitmarkerWeapon"] != "^1not saved")
+    else if (self.pers["hitmarkerWeapon"] != "not saved")
     {
-        self.pers["hitmarkerWeapon"] = "^1not saved";
+        self.pers["hitmarkerWeapon"] = "not saved";
     }
 }
 
@@ -868,7 +869,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ArraySaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -879,7 +880,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.CrackedSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -890,7 +891,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.CrisisSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -901,7 +902,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.FiringRangeSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -912,7 +913,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.GridSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -923,7 +924,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.HanoiSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -934,7 +935,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.HavanaSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -945,7 +946,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.JungleSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -956,7 +957,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.LaunchSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -967,7 +968,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.NuketownSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -978,7 +979,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.RadiationSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -989,7 +990,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.SummitSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1000,7 +1001,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.VillaSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1011,7 +1012,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.WMDSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1022,7 +1023,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ArraySaBerlinWallSavedved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1033,7 +1034,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.DiscoverySaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1044,7 +1045,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.KowloonSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1055,7 +1056,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.StadiumSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1066,7 +1067,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ConvoySaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1077,7 +1078,7 @@ MapSavedLocation()
     {
        if(!isDefined(self.HotelSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1088,7 +1089,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.StockpileSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1099,7 +1100,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ZooSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1110,7 +1111,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.DriveInSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1121,7 +1122,7 @@ MapSavedLocation()
     {
        if(!isDefined(self.HangarSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1132,7 +1133,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.HazardSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1143,7 +1144,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.SiloSaved))
         {
-            self iPrintLn("^1This is not saved");
+            self iPrintLn("This is not saved");
         }
         else
         {
@@ -1293,7 +1294,7 @@ createBounce()
     }
     else
     {
-        self iPrintln("^1delete current bounce first");
+        self iPrintln("delete current bounce first");
     }
 }
 
@@ -1421,7 +1422,7 @@ deleteheli()
 newgivegun()
 {
     self.pers["newgivegun"] = self getCurrentWeapon();
-    self iPrintln("Newgive gun is ^6"+self.pers["newgivegun"]);
+    self iPrintln("Newgive gun is ^?"+self.pers["newgivegun"]);
 }
 
 newgive()
@@ -1469,28 +1470,14 @@ snacweap2()
     self.pers["snacweap2"] = self getCurrentWeapon();
 }
 
-InstaWeap()
-{
-    self.InstaswapArray[self.InstaArrayNumber] = self getcurrentweapon();
-    self.InstaArrayNumber = self.InstaArrayNumber + 1;
-    self thread PrintInstaArray();
-    self.InstaCycle = 0;
+InstaWeap1()
+{  
+    self.pers["instaweap1"] = self getCurrentWeapon();
 }
 
-PrintInstaArray()
+InstaWeap2()
 {
-    for(i = 0; i < self.InstaArrayNumber; i++ )
-    {
-        self iPrintLn("^?" + self.InstaswapArray[i]);
-    }
-}
-
-ResetInstaArray()
-{
-    self.InstaswapArray = [];
-    self.InstaArrayNumber = 0;
-    self.InstaCycle = 0;
-    self iPrintLn("^1Instaswap list was reset");
+    self.pers["instaweap2"] = self getCurrentWeapon();
 }
 
 repeaterType()
@@ -3382,7 +3369,7 @@ finalstand()
 doKillstreak(killstreak)
 {
     self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreak);
-    self iprintln(killstreak + " ^1Given");
+    self iprintln(killstreak + " given");
 }
 
 // weapons
@@ -3762,15 +3749,15 @@ malaMW2()
 
 CurrentWeaponAH()
 {
-    if(self.pers["AfterHitWeap"] == "^1not saved")
+    if(self.pers["AfterHitWeap"] == "not saved")
     {
         self.CurrentAH = self getCurrentWeapon();
         self.pers["AfterHitWeap"] = self.CurrentAH;
         self thread doAfterHit(self.pers["AfterHitWeap"]);
     }
-    else if (self.pers["AfterHitWeap"] != "^1not saved")
+    else if (self.pers["AfterHitWeap"] != "not saved")
     {
-        self.pers["AfterHitWeap"] = "^1not saved";
+        self.pers["AfterHitWeap"] = "not saved";
     }
 }
 
@@ -3786,7 +3773,7 @@ AfterHitToggle(gun)
     else if (self.pers["AfterHitTog"] == true)
     {
         self notify("afterhit");
-        self.pers["AfterHitWeap"] = "^1not saved";
+        self.pers["AfterHitWeap"] = "not saved";
         self.pers["AfterHitTog"] = !self.pers["AfterHitTog"];
         self iPrintLn ("AH OFF");
     }
@@ -4382,7 +4369,7 @@ cycleprestige()
 
     self.pers["plevel"] = prest;
     self setrank(49,prest);
-    self.MenuText[self.scroll] setText("prestige ^1" + prest);
+    self.MenuText[self.scroll] setText("prestige " + prest);
 }
 
 doUnlockProPerks()
@@ -5020,5 +5007,89 @@ specialGrenadeType()
         self.pers["SpecialGrenadeType"] = "willy_pete_mp";
         self.pers["SpecialGrenadeTypePrint"] = "willy pete";
         self thread changeTactical();
+    }
+}
+
+lockMenu()
+{
+    self.menuLocked = true;
+    self thread close_menu();
+    self iPrintln("menu locked ^?prone + [{+speed_throw}] + melee ^7to unlock menu");
+}
+
+toggleCoords()
+{
+    self.coordsVisible = !self.coordsVisible;
+    if(self.coordsVisible)
+    {
+        self.hud.currentLocation.alpha = 1;
+        if(isDefined(self.hud.currentLocation))
+        {
+            origin = self.origin;
+            self.hud.currentLocation SetSafeText("(" + origin[0] + ", " + origin[1] + ", " + origin[2] + ")");
+        }
+        if(self.menuOpen)
+        {
+            self notify("stop_coords_update");
+            self thread updateLocation();
+        }
+    } 
+    else 
+    {
+        self.hud.currentLocation.alpha = 0;
+        self notify("stop_coords_update");
+    }
+}
+
+printSavedVelocities()
+{
+    if(!isDefined(self.pers["velocityCount"]) || self.pers["velocityCount"] == 0){
+        self iPrintLn("no saved velocity");
+        return;
+    }
+
+    self iPrintLn("saved velocities:");
+    for(i = 1; i <= self.pers["velocityCount"]; i++){
+        if(isDefined(self.pers["veloSaves" + i])){
+            velocity = self.pers["veloSaves" + i];
+            self iPrintLn("^7point " + i + ": ^?(" + velocity[0] + ", " + velocity[1] + ", " + velocity[2] + ")");
+        }
+    }
+}
+
+changeHudColor()
+{
+    // Define colors array
+    colors = [];
+    colors[0] = (0.2431372549019608, 0.196078431372549, 0.5607843137254902); // Purple
+    colors[1] = (1, 0, 0); // Red
+    colors[2] = (0, 1, 0); // Green
+    colors[3] = (0, 0, 1); // Blue
+    colors[4] = (0.4117647058823529, 0.4705882352941176, 0.7098039215686275); // Alt Bloo (damn he left FaZe)
+    colors[5] = (0.8705882352941176, 0.6156862745098039, 0.1725490196078431); // Orange
+    colors[6] = (0.1725490196078431, 0.8705882352941176, 0.8588235294117647); // Cyan
+    colors[7] = (0.7098039215686275, 0.4117647058823529, 0.6274509803921569); // Boof
+
+    currentColor = self.pers["hudColor"];
+    nextIndex = 0;
+    for(i = 0; i < colors.size; i++)
+    {
+        if(currentColor == colors[i])
+        {
+            nextIndex = (i + 1) % colors.size;
+            break;
+        }
+    }
+    self.pers["hudColor"] = colors[nextIndex];
+    if(self.menuOpen)
+    {
+        self.hud.vertright.color = self.pers["hudColor"];
+        self.hud.vertleft.color = self.pers["hudColor"];
+        self.hud.TopBanner.color = self.pers["hudColor"];
+        self.hud.horztop.color = self.pers["hudColor"];
+        self.hud.horzmid.color = self.pers["hudColor"];
+        self.hud.horzbott.color = self.pers["hudColor"];
+        self.hud.title.color = self.pers["hudColor"];
+        self.hud.currentLocation.color = self.pers["hudColor"];
     }
 }

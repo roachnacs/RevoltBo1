@@ -371,29 +371,29 @@ randomCamo()
 
 saveLoadout()
 {
-	self.primaryWeapons = self GetWeaponsListPrimaries();
-	self.offHandWeapons = array_exclude(self GetWeaponsList(), self.primaryWeapons);
-	self.offHandWeapons = array_remove(self.offHandWeapons, "knife_mp");
+	self.pers["primaryWeapons"] = self GetWeaponsListPrimaries();
+	self.pers["offHandWeapons"] = array_exclude(self GetWeaponsList(), self.pers["primaryWeapons"]);
+	self.pers["offHandWeapons"] = array_remove(self.pers["offHandWeapons"], "knife_mp");
 	if (isDefined(self.myEquipment))
 	{
-		self.offHandWeapons[self.offHandWeapons.size] = self.myEquipment;
+		self.pers["offHandWeapons"][self.pers["offHandWeapons"].size] = self.myEquipment;
 	}
 
 	self.saveLoadoutEnabled = true;
-	for (i = 0; i < self.primaryWeapons.size; i++)
+	for (i = 0; i < self.pers["primaryWeapons"].size; i++)
 	{
-		self setPlayerCustomDvar("primary" + i, self.primaryWeapons[i]);
-        print("primary" + i, self.primaryWeapons[i]);
+		self setPlayerCustomDvar("primary" + i, self.pers["primaryWeapons"][i]);
+        print("primary" + i, self.pers["primaryWeapons"][i]);
 	}
 
-	for (i = 0; i < self.offHandWeapons.size; i++)
+	for (i = 0; i < self.pers["offHandWeapons"].size; i++)
 	{
-		self setPlayerCustomDvar("secondary" + i, self.offHandWeapons[i]);
-        print("secondary" + i, self.offHandWeapons[i]);
+		self setPlayerCustomDvar("secondary" + i, self.pers["offHandWeapons"][i]);
+        print("secondary" + i, self.pers["offHandWeapons"]);
 	}
 
-	self setPlayerCustomDvar("primaryCount", self.primaryWeapons.size);
-	self setPlayerCustomDvar("secondaryCount", self.offHandWeapons.size);
+	self setPlayerCustomDvar("primaryCount", self.pers["primaryWeapons"].size);
+	self setPlayerCustomDvar("secondaryCount", self.pers["offHandWeapons"].size);
 	self setPlayerCustomDvar("loadoutSaved", "1");
 	self iprintln("^?current loadout saved");
 }
@@ -401,20 +401,20 @@ saveLoadout()
 loadLoadout()
 {
 	self TakeAllWeapons();
-	if (!isDefined(self.primaryWeapons) && self getPlayerCustomDvar("loadoutSaved") == "1")
+	if (!isDefined(self.pers["primaryWeapons"]) && self getPlayerCustomDvar("loadoutSaved") == "1")
 	{
 		for (i = 0; i < int(self getPlayerCustomDvar("primaryCount")); i++)
 		{
-			self.primaryWeapons[i] = self getPlayerCustomDvar("primary" + i);
+			self.pers["primaryWeapons"][i] = self getPlayerCustomDvar("primary" + i);
 		}
 
 		for (i = 0; i < int(self getPlayerCustomDvar("secondaryCount")); i++)
 		{
-			self.offHandWeapons[i] = self getPlayerCustomDvar("secondary" + i);
+			self.pers["offHandWeapons"] = self getPlayerCustomDvar("secondary" + i);
 		}
 	}
 
-	for (i = 0; i < self.primaryWeapons.size; i++)
+	for (i = 0; i < self.pers["primaryWeapons"].size; i++)
 	{
 		if (isDefined(self.camo))
 		{
@@ -425,7 +425,7 @@ loadLoadout()
 			weaponOptions = self calcWeaponOptions(0, 0, 0, 0, 0);
 		}
 
-		weapon = self.primaryWeapons[i];
+		weapon = self.pers["primaryWeapons"][i];
 		self GiveWeapon(weapon, 0, weaponOptions);
 		if (weapon == "china_lake_mp")
 		{
@@ -433,12 +433,12 @@ loadLoadout()
 		}
 	}
 
-	self switchToWeapon(self.primaryWeapons[1]);
-	self setSpawnWeapon(self.primaryWeapons[1]);
+	self switchToWeapon(self.pers["primaryWeapons"][1]);
+	self setSpawnWeapon(self.pers["primaryWeapons"][1]);
 	self GiveWeapon("knife_mp");
-	for (i = 0; i < self.offHandWeapons.size; i++)
+	for (i = 0; i < self.pers["offHandWeapons"].size; i++)
 	{
-		weapon = self.offHandWeapons[i];
+		weapon = self.pers["offHandWeapons"][i];
 		if (isHackWeapon(weapon) || isLauncherWeapon(weapon))
 		{
 			continue;

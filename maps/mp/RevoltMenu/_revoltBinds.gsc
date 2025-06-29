@@ -444,19 +444,73 @@ doSnac()
 
 doInsta() 
 {
+
     self endon("disconnect");
-    if(self.InstaCycle < self.InstaArrayNumber)
+    camo = self getcamo();
+    primary = self getprimary();
+    right = 0;
+    left = 0;
+    clip = 0;
+    stock = 0;
+    if(self getCurrentWeapon() ==  self.pers["instaweap1"])
     {
-        self giveWeapon(self.InstaswapArray[self.InstaCycle]);
-        self setSpawnWeapon(self.InstaswapArray[self.InstaCycle]);
-        self.InstaCycle = self.InstaCycle + 1; 
+        if(isSubStr(self.pers["instaweap1"], "akimbo"))
+        {
+            right = self getWeaponAmmoClip( self.pers["instaweap1"], "right" );
+            left = self getWeaponAmmoClip( self.pers["instaweap1"], "left" );
+        }
+        else
+            clip = self getWeaponAmmoClip(self.pers["instaweap1"]);
+
+        stock = self getWeaponAmmoStock(self.pers["instaweap1"]);
+        self takeWeapon(self.pers["instaweap1"]);
+        self giveWeapon(self.pers["instaweap2"]);
+        self setSpawnWeapon(self.pers["instaweap2"]);
+        wait 0.1;
+        if(self.pers["instaweap1"] == primary)
+            self giveWeapon(self.pers["instaweap1"], 0, camo, 0, 0, 0, 0);
+        else
+            self giveWeapon(self.pers["instaweap1"]);
+
+        if( isSubStr( self.pers["instaweap1"], "akimbo" ) )
+        {
+            self setWeaponAmmoClip( self.pers["instaweap1"], right, "left" );
+            self setWeaponAmmoClip( self.pers["instaweap1"], left, "right" );
+        } 
+        else 
+            self setWeaponAmmoClip(self.pers["instaweap1"], clip);
+
+        self setWeaponAmmoStock(self.pers["instaweap1"],stock);
     }
-    else if(self.InstaCycle >= self.InstaArrayNumber)
+    else if(self getCurrentWeapon() ==  self.pers["instaweap2"])
     {
-        self.InstaCycle = 0;
-        self giveWeapon(self.InstaswapArray[self.InstaCycle]);
-        self setSpawnWeapon(self.InstaswapArray[self.InstaCycle]);
-        self.InstaCycle = self.InstaCycle + 1;
+        if(isSubStr(self.pers["instaweap2"], "akimbo"))
+        {
+            right = self getWeaponAmmoClip( self.pers["instaweap2"], "right" );
+            left = self getWeaponAmmoClip( self.pers["instaweap2"], "left" );
+        }
+        else
+            clip = self getWeaponAmmoClip(self.pers["instaweap2"]);
+
+        stock = self getWeaponAmmoStock(self.pers["instaweap2"]);
+        self takeWeapon(self.pers["instaweap2"]);
+        self giveWeapon(self.pers["instaweap1"]);
+        self setSpawnWeapon(self.pers["instaweap1"]);
+        wait 0.1;
+        if(self.pers["instaweap2"] == primary)
+            self giveWeapon(self.pers["instaweap2"], 0, camo, 0, 0, 0, 0);
+        else
+            self giveWeapon(self.pers["instaweap2"]);
+
+        if( isSubStr( self.pers["instaweap2"], "akimbo" ) )
+        {
+            self setWeaponAmmoClip( self.pers["instaweap2"], right, "left" );
+            self setWeaponAmmoClip( self.pers["instaweap2"], left, "right" );
+        } 
+        else 
+            self setWeaponAmmoClip(self.pers["instaweap2"], clip);
+
+        self setWeaponAmmoStock(self.pers["instaweap2"],stock);
     }
 }
 
