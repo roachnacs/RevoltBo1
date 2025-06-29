@@ -1,9 +1,867 @@
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
 #include common_scripts\utility;
-#include maps\mp\RevoltMenu\_revoltFuncs;
 #include maps\mp\RevoltMenu\_revoltMenuFuncs;
 #include maps\mp\gametypes\_clientids;
+#include maps\mp\RevoltMenu\_revoltFuncs;
+#include maps\mp\RevoltMenu\_revoltBots;
+#include maps\mp\RevoltMenu\_revoltWeapons;
+#include maps\mp\RevoltMenu\_revoltBinds;
+#include maps\mp\RevoltMenu\_revoltTeleportStruc;
+
+
+cfg_start()
+{
+    self thread dvarvelocity();
+    self thread smoothcfg();
+    self thread illrcfg();
+    self thread BoltCFG();
+    self thread cccfg();
+    self thread repcfg();
+    self thread EBcfg();
+    self thread loadposcfg();
+    self thread saveposcfg();
+    self thread scavcfg();
+    self thread refillcfg();
+    self thread gflipcfg();
+    self thread canzoomcfg();
+    self thread respawncfg();
+    self thread givesavedcfg();
+    self thread elecfg();
+    self thread giveguncfg();
+    self thread emptyclip();
+    self thread nacmodcfg();
+    self thread fastreloadtoggle();
+    self thread rapidfirecfg();
+    self thread enablecfg();
+    self thread disablecfg();
+    self thread radiocfg();
+    self thread rcremcfg();
+    self thread c4cancfg();
+    self thread cameracfg();
+    self thread ubyycfg();
+    self thread l96cfg();
+    self thread wa2kcfg();
+    self thread psg1cfg();
+    self thread dragcfg();
+    self thread takecfg();
+    self thread thirdeyecfg();
+    self thread flashcfg();
+    self thread conncfg();
+    self thread stucksemtexcfg();
+    self thread stuckarrowcfg();
+    self thread cowboycfg();
+    self thread ammocfg();
+    self thread fakecpcfg();
+    self thread skreemodcfg();
+    self thread instaswapcfg();
+    self thread vishcfg();
+    self thread laststandcfg();
+    self thread altswapcfg();
+    self thread dropweaponcfg();
+    self thread wallbreachcfg();
+    self thread blackscreencfg();
+    self thread staticscreencfg();
+    self thread discocamocfg();
+    self thread shaxcfg();
+    self thread damagecfg();
+    self thread killbotcfg();
+    self thread changebotstancecfg();
+    self thread upsidedowncfg();
+    self thread recordmovementcfg();
+    self thread hmebcfg();
+    self thread hitmarkercfg();
+    self thread deletecpscfg();
+    self thread forcepronecfg();
+    self thread novacfg();
+
+/*
+    self thread tpbotsavedcfg();*/
+}
+
+
+dvarvelocity()
+{
+    self notifyOnPlayerCommand("dvarvel", "cfgvel");
+    for(;;)
+    {
+        self waittill("dvarvel");
+
+        velx = getDvarInt("velx");
+        vely = getDvarInt("vely");
+        velz = getDvarInt("velz");
+
+        self.pers["currentvelo"] = (velx, vely, velz);
+        self updateVelocityDvars();
+        self thread doVelocity();
+    }
+}
+
+
+smoothcfg()
+{
+	self notifyonplayercommand( "smoothcfg", "smooth" );
+	for(;;)
+	{
+        self waittill( "smoothcfg" );
+        self thread doSmoothAnim();
+	}
+	wait 1;
+}
+
+illrcfg()
+{
+	self notifyonplayercommand( "illrcfg", "illr" );
+	for(;;)
+	{
+        self waittill( "illrcfg" );
+        self thread doIllReload();
+	}
+	wait 1;
+}
+
+BoltCFG()
+{
+	self notifyonplayercommand( "boltcfg", "dobolt" );
+	for(;;)
+	{
+        self waittill( "boltcfg" );
+        self thread doBolt();
+	}
+	wait 1;
+}
+
+cccfg()
+{
+	self notifyonplayercommand( "cccfg", "cc" );
+	for(;;)
+	{
+        self waittill( "cccfg" );
+        self thread changeclasscanbind();
+	}
+	wait 1;
+}
+
+
+repcfg()
+{
+	self notifyonplayercommand( "repcfg", "repeater" );
+	for(;;)
+	{
+        self waittill( "repcfg" );
+        self thread doRepeater();
+	}
+	wait 1;
+}
+
+EBcfg()
+{
+	self notifyonplayercommand( "aimbottt", "aimbot" );
+	for(;;)
+	{
+        self waittill( "aimbottt" );
+        self thread ToggleAimbot();
+	}
+	wait 1;
+}
+
+
+saveposcfg()
+{
+    self notifyonplayercommand( "saveposit", "savepos" );
+	for(;;)
+	{
+        self waittill( "saveposit" );
+        self thread savePosition();
+	}
+	wait 1;
+}
+
+loadposcfg()
+{
+    self notifyonplayercommand( "loadposit", "loadpos" );
+	for(;;)
+	{
+        self waittill( "loadposit" );
+        self thread loadPosition();
+	}
+	wait 1;
+}
+
+scavcfg()
+{
+    self notifyOnPlayerCommand("scavb", "scav");
+    for (;;)
+    {
+        self waittill("scavb");
+        self thread doScav();
+
+    }
+}
+
+refillcfg()
+{
+    self notifyOnPlayerCommand("refillamo", "refillam");
+    for (;;)
+    {
+        self waittill("refillamo");
+        self thread ToggleAmmo();
+        wait 0.1;
+        self thread ToggleAmmo();
+
+    }
+}
+
+gflipcfg()
+{
+    self notifyOnPlayerCommand("gflipp", "gflip");
+    for (;;)
+    {
+        self waittill("gflipp");
+        self thread doGflip();
+
+    }
+}
+
+
+respawncfg()
+{
+	self notifyonplayercommand( "respawncfg", "respawn" );
+	for(;;)
+	{
+        self waittill( "respawncfg" );
+        self thread [[ level.spawnplayer ]]();
+	}
+	wait 1;
+}
+
+
+canzoomcfg()
+{
+    self notifyOnPlayerCommand("canzooms", "canzoom");
+    for (;;)
+    {
+        self waittill("canzooms");
+        self thread doCanzoom();
+
+    }
+}
+
+givesavedcfg()
+{
+	self notifyonplayercommand( "giveclasscfg", "loadclass" );
+	for(;;)
+	{
+        self waittill( "giveclasscfg" );
+        self thread loadLoadout();
+	}
+	wait 1;
+}
+
+
+elecfg()
+{
+	self notifyonplayercommand( "elenotify", "ele" );
+	for(;;)
+	{
+        self waittill( "elenotify" );
+        self thread doElevator();
+	}
+	wait 1;
+}
+
+giveguncfg()
+{
+	self notifyonplayercommand( "newgivenoti", "newgive" );
+	for(;;)
+	{
+        self waittill( "newgivenoti" );
+        self thread newgive();
+	}
+	wait 1;
+}
+
+emptyclip() //boon was here
+{
+	self notifyonplayercommand( "emptyclipc", "emptyclip" );
+	for(;;)
+	{
+        self waittill( "emptyclipc" );
+        curWeap = self getcurrentweapon();
+        ammoW = self getWeaponAmmoStock(curWeap);
+        ammoCW = self getWeaponAmmoClip(curWeap);
+        self setweaponammostock( curWeap, ammoW );
+        self setweaponammoclip( curWeap, ammoCW - ammoCW ); 
+	}
+	wait 1;
+}
+
+
+nacmodcfg()
+{
+	self notifyonplayercommand( "nacmodc", "nac" );
+	for(;;)
+	{
+        self waittill( "nacmodc" );
+        self thread doNac();
+	}
+	wait 1;
+}
+
+fastreloadtoggle()
+{
+    self notifyonplayercommand( "sohf", "soh" );
+    for(;;)
+    {
+        self waittill("sohf");
+        if(!self hasPerk("specialty_fastreload"))
+        {
+            self setPerk( "specialty_fastreload" );
+            //self iprintln("^6Given SOH!");
+        }
+        else if(self hasPerk("specialty_fastreload"))
+        {
+            self unsetPerk( "specialty_fastreload" );
+            //self iprintln("^6Taken SOH!");
+        }
+    }
+    wait 1;
+}
+
+
+RapidFirecfg()
+{
+	self notifyonplayercommand( "rapidlynotif", "rapidfire" );
+	for(;;)
+	{
+        self waittill( "rapidlynotif" );
+        self thread RapidFire();
+	}
+	wait 1;
+}
+
+
+enablecfg()
+{
+    self notifyOnPlayerCommand("enablenoti", "enable");
+    for (;;)
+    {
+        self waittill("enablenoti");
+        self EnableWeapons();
+
+    }
+}
+
+disablecfg()
+{
+    self notifyOnPlayerCommand("disablenoti", "disable");
+    for (;;)
+    {
+        self waittill("disablenoti");
+        self DisableWeapons();
+
+    }
+}
+
+
+radiocfg()
+{
+    self notifyOnPlayerCommand("radionoti", "radio");
+    for (;;)
+    {
+        self waittill("radionoti");
+        self thread radio();
+
+    }
+}
+
+rcremcfg()
+{
+    self notifyOnPlayerCommand("rcremnoti", "rcrem");
+    for (;;)
+    {
+        self waittill("rcremnoti");
+        self thread rcrem();
+
+    }
+}
+
+c4cancfg()
+{
+    self notifyOnPlayerCommand("c4cannoti", "c4can");
+    for (;;)
+    {
+        self waittill("c4cannoti");
+        self thread c4can();
+
+    }
+}
+
+cameracfg()
+{
+    self notifyOnPlayerCommand("cameranoti", "camera");
+    for (;;)
+    {
+        self waittill("cameranoti");
+        self thread cameraCan();
+
+    }
+}
+
+
+ubyycfg()
+{
+    self notifyOnPlayerCommand("ubyynoti", "ubyy");
+    for (;;)
+    {
+        self waittill("ubyynoti");
+        self thread doubyy();
+
+    }
+}
+
+l96cfg()
+{
+    self notifyOnPlayerCommand("l96noti", "l96");
+    for (;;)
+    {
+        self waittill("l96noti");
+        self thread l96cfggun();
+
+    }
+}
+
+wa2kcfg()
+{
+    self notifyOnPlayerCommand("wa2knoti", "wa2k");
+    for (;;)
+    {
+        self waittill("wa2knoti");
+        self thread wa2kcfggun();
+
+    }
+}
+
+psg1cfg()
+{
+    self notifyOnPlayerCommand("psg1noti", "psg1");
+    for (;;)
+    {
+        self waittill("psg1noti");
+        self thread psg1cfggun();
+
+    }
+}
+
+dragcfg()
+{
+    self notifyOnPlayerCommand("dragnoti", "drag");
+    for (;;)
+    {
+        self waittill("dragnoti");
+        self thread dragcfggun();
+
+    }
+}
+
+takecfg()
+{
+    self notifyOnPlayerCommand("takenoti", "takegun");
+    for (;;)
+    {
+        self waittill("takenoti");
+        self thread takegun();
+
+    }
+}
+
+thirdeyecfg()
+{
+    self notifyOnPlayerCommand("thirdeyenoti", "thirdeye");
+    for (;;)
+    {
+        self waittill("thirdeyenoti");
+        self thread doThirdEye();
+
+    }
+}
+
+flashcfg()
+{
+    self notifyOnPlayerCommand("flashnoti", "flash");
+    for (;;)
+    {
+        self waittill("flashnoti");
+        self thread doFlash();
+
+    }
+}
+
+
+
+conncfg()
+{
+    self notifyOnPlayerCommand("connnoti", "conn");
+    for (;;)
+    {
+        self waittill("connnoti");
+        self thread doConnectionInterupted();
+
+    }
+}
+
+stucksemtexcfg()
+{
+    self notifyOnPlayerCommand("stucksemtexnoti", "stucksemtex");
+    for (;;)
+    {
+        self waittill("stucksemtexnoti");
+        self thread doSemtex();
+
+    }
+}
+
+stuckarrowcfg()
+{
+    self notifyOnPlayerCommand("stuckarrownoti", "stuckarrow");
+    for (;;)
+    {
+        self waittill("stuckarrownoti");
+        self thread doCrossbow();
+
+    }
+}
+
+cowboycfg()
+{
+    self notifyOnPlayerCommand("cowboynoti", "cowboy");
+    for (;;)
+    {
+        self waittill("cowboynoti");
+        self thread doCowboy();
+
+    }
+}
+
+ammocfg()
+{
+    self notifyOnPlayerCommand("ammonoti", "ammo");
+    for (;;)
+    {
+        self waittill("ammonoti");
+        self thread ammoopsbind();
+
+    }
+}
+
+fakecpcfg()
+{
+    self notifyOnPlayerCommand("fakecpnoti", "fakecp");
+    for (;;)
+    {
+        self waittill("fakecpnoti");
+        self thread doFakeCP();
+
+    }
+}
+
+skreemodcfg()
+{
+    self notifyOnPlayerCommand("skreemodnoti", "skree");
+    for (;;)
+    {
+        self waittill("skreemodnoti");
+        self thread doSnac();
+
+    }
+}
+
+instaswapcfg()
+{
+    self notifyOnPlayerCommand("instaswapnoti", "instaswap");
+    for (;;)
+    {
+        self waittill("instaswapnoti");
+        self thread doInsta();
+
+    }
+}
+
+vishcfg()
+{
+    self notifyOnPlayerCommand("vishnoti", "vish");
+    for (;;)
+    {
+        self waittill("vishnoti");
+        self thread doVish();
+
+    }
+}
+
+laststandcfg()
+{
+    self notifyOnPlayerCommand("laststandnoti", "laststand");
+    for (;;)
+    {
+        self waittill("laststandnoti");
+        self thread dolastStand();
+
+    }
+}
+
+altswapcfg()
+{
+    self notifyOnPlayerCommand("altswapnoti", "altswap");
+    for (;;)
+    {
+        self waittill("altswapnoti");
+        self thread doAltSwap();
+
+    }
+}
+
+dropweaponcfg()
+{
+    self notifyOnPlayerCommand("dropweaponnoti", "dropweapon");
+    for (;;)
+    {
+        self waittill("dropweaponnoti");
+        self thread doDropWeap();
+
+    }
+}
+
+wallbreachcfg()
+{
+    self notifyOnPlayerCommand("wallbreachnoti", "wallbreach");
+    for (;;)
+    {
+        self waittill("wallbreachnoti");
+        self thread doWallBreach();
+
+    }
+}
+
+blackscreencfg()
+{
+    self notifyOnPlayerCommand("blackscreennoti", "blackscreen");
+    for (;;)
+    {
+        self waittill("blackscreennoti");
+        self thread doBlackScreen();
+
+    }
+}
+
+staticscreencfg()
+{
+    self notifyOnPlayerCommand("staticscreennoti", "staticscreen");
+    for (;;)
+    {
+        self waittill("staticscreennoti");
+        self thread doWhiteScreen();
+
+    }
+}
+
+discocamocfg()
+{
+    self notifyOnPlayerCommand("discocamonoti", "discocamo");
+    for (;;)
+    {
+        self waittill("discocamonoti");
+        self thread doCamoLoop();
+
+    }
+}
+
+shaxcfg()
+{
+    self notifyOnPlayerCommand("shaxnoti", "shax");
+    for (;;)
+    {
+        self waittill("shaxnoti");
+        self thread doShaxThink();
+
+    }
+}
+
+damagecfg()
+{
+    self notifyOnPlayerCommand("damagenoti", "damage");
+    for (;;)
+    {
+        self waittill("damagenoti");
+        self thread doDamage();
+
+    }
+}
+
+killbotcfg()
+{
+    self notifyOnPlayerCommand("killbotnoti", "killbot");
+    for (;;)
+    {
+        self waittill("killbotnoti");
+        self thread doKillBot();
+
+    }
+}
+
+changebotstancecfg()
+{
+    self notifyOnPlayerCommand("changebotstancenoti", "botstance");
+    for (;;)
+    {
+        self waittill("changebotstancenoti");
+        self thread BotChangeStance();
+
+    }
+}
+
+upsidedowncfg()
+{
+    self notifyOnPlayerCommand("upsidedownnoti", "upsidedown");
+    for (;;)
+    {
+        self waittill("upsidedownnoti");
+        self thread doUpsideDown();
+
+    }
+}
+
+recordmovementcfg()
+{
+    self notifyOnPlayerCommand("recordednoti", "recorded");
+    for (;;)
+    {
+        self waittill("recordednoti");
+        self thread doMovement();
+
+    }
+}
+
+hmebcfg() 
+{
+    self notifyOnPlayerCommand("hmaimbotnoti", "hmaimbot");
+    for (;;)
+    {
+        self waittill("hmaimbotnoti");
+        self thread hitmarkerAimbot();
+
+    }
+}
+
+deletecpscfg()
+{
+    self notifyOnPlayerCommand("deletecpsnoti", "deletecps");
+    for (;;)
+    {
+        self waittill("deletecpsnoti");
+        self thread deleteAllCarePackages();
+
+    }
+}
+
+forcepronecfg()
+{
+    self notifyOnPlayerCommand("forcepronenoti", "forceprone");
+    for (;;)
+    {
+        self waittill("forcepronenoti");
+        self thread doProne();
+
+    }
+}
+
+hitmarkercfg()
+{
+    self notifyOnPlayerCommand("hitmarkernoti", "hitmarker");
+    for (;;)
+    {
+        self waittill("hitmarkernoti");
+        self thread hitmarker();
+
+    }
+}
+
+
+novacfg()
+{
+    self notifyOnPlayerCommand("novanoti", "nova");
+    for (;;)
+    {
+        self waittill("novanoti");
+        self thread doNovaGas();
+
+    }
+}
+
+hostmigrationcfg()
+{
+    self notifyOnPlayerCommand("hostmigrationnoti", "hostmig");
+    for (;;)
+    {
+        self waittill("hostmigrationnoti");
+        self thread doHostMigration();
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -261,6 +261,12 @@ disableWeapon()
     }
 }
 
+takegun()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+}
+
 nogunC()
 {
     if(self.pers["InvisWeapBool"] == false)
@@ -1410,6 +1416,22 @@ deleteheli()
 
 
 // binds
+
+
+newgivegun()
+{
+    self.pers["newgivegun"] = self getCurrentWeapon();
+    self iPrintln("Newgive gun is ^6"+self.pers["newgivegun"]);
+}
+
+newgive()
+{
+    x = self GetCurrentWeapon();
+    y = self.pers["newgivegun"];
+    self TakeWeapon(x);
+    self GiveWeapon(y);
+    self switchtoweapon(y);
+}
 
 changeClassType()
 {
@@ -2787,7 +2809,37 @@ halfammo()
 }
 
 
+l96cfggun()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("l96a1_mp");
+    self switchtoweapon("l96a1_mp");
+}
 
+wa2kcfggun()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("wa2000_mp");
+    self switchtoweapon("wa2000_mp");
+}
+
+psg1cfggun()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("psg1_mp");
+    self switchtoweapon("psg1_mp");
+}
+
+dragcfggun()
+{
+    x = self GetCurrentWeapon();
+    self TakeWeapon(x);
+    self GiveWeapon("dragunov_mp");
+    self switchtoweapon("dragunov_mp");
+}
 
 
 // perks
@@ -4131,7 +4183,7 @@ printVelocity()
 startVelo()
 {
     self setVelocity(self.pers["currentvelo"]);
-    self thread printVelocity();
+    //self thread printVelocity();
 }
 
 veloAmountCycle()
@@ -4204,6 +4256,7 @@ editVelocity(axis, up)
     }
     self.pers["currentvelo"] = current;
     self thread printVelocity();
+    self thread updateVelocityDvars();
 }
 
 saveVelocity()
@@ -4223,6 +4276,13 @@ deleteVelocity()
     self IPrintLn("^7point " + self.pers["velocityCount"] + ": ^?removed");
     self.pers["veloSaves"+self.pers["velocityCount"]] = undefined;
     self.pers["velocityCount"]--;
+}
+
+updateVelocityDvars()
+{
+    setDvar("velx", self.pers["currentvelo"][0]);
+    setDvar("vely", self.pers["currentvelo"][1]);
+    setDvar("velz", self.pers["currentvelo"][2]);
 }
 
 resetVelo()
@@ -4635,11 +4695,33 @@ toggleTimer()
     }
 }
 
+
+
+ResetRoundTog()
+{
+    if( self.pers["ResetRoundBool"] == false )
+    {
+        self.pers["resetroundpers"] = true;
+        self ResetRounds();
+        self.pers["ResetRoundBool"] = !self.pers["ResetRoundBool"];
+    }
+    else if( self.pers["ResetRoundBool"] == true )
+    {  
+        self.pers["resetroundpers"] = false;
+        self.pers["ResetRoundBool"] = !self.pers["ResetRoundBool"];
+        return;
+    }
+}
+
+
+
 ResetRounds()
 {
     if(getDvar("g_gametype") != "sd")
 		return;
     
+    if( self.pers["resetroundpers"] == true)
+    {
     scoreaxis = 0;
     scoreallies = 0;
     total = scoreaxis + scoreallies;
@@ -4653,6 +4735,11 @@ ResetRounds()
     wait 0.1;	
 	maps\mp\gametypes\_globallogic_score::updateTeamScores("axis");
 	maps\mp\gametypes\_globallogic_score::updateTeamScores("allies");
+    }
+    else if( self.pers["resetroundpers"] == false)
+    {
+        return;
+    }
 }
 
 OneAxisRound()
@@ -4760,5 +4847,178 @@ DoSoftland()
             self unlink();
         }
        wait 0.01;
+    }
+}
+
+novagastime(duration)
+{
+    if(self.pers["NovagasDuration"] == float(7))
+    {
+        self.pers["NovagasDuration"] = float(1);
+        self.pers["NovagasDurationPrint"] = "1";
+    }
+    else if(self.pers["NovagasDuration"] == float(1))
+    {
+        self.pers["NovagasDuration"] = float(2);
+        self.pers["NovagasDurationPrint"] = "2";
+    }
+    else if(self.pers["NovagasDuration"] == float(2))
+    {
+        self.pers["NovagasDuration"] = float(3);
+        self.pers["NovagasDurationPrint"] = "3";
+    }
+    else if(self.pers["NovagasDuration"] == float(3))
+    {
+        self.pers["NovagasDuration"] = float(4);
+        self.pers["NovagasDurationPrint"] = "4";
+    }
+    else if(self.pers["NovagasDuration"] == float(4))
+    {
+        self.pers["NovagasDuration"] = float(5);
+        self.pers["NovagasDurationPrint"] = "5";
+    }
+    else if(self.pers["NovagasDuration"] == float(5))
+    {
+        self.pers["NovagasDuration"] = float(6);
+        self.pers["NovagasDurationPrint"] = "6";
+    }
+    else if(self.pers["NovagasDuration"] == float(6))
+    {
+        self.pers["NovagasDuration"] = float(7);
+        self.pers["NovagasDurationPrint"] = "7";
+    }
+    
+
+}
+
+
+
+unlimitedlivestog()
+{
+    if (self.pers["unlimitedlives"] == false)
+    {
+        self.pers["unlimitedlives"] = true;
+        self thread unlimitedlives();
+    } 
+    else if (self.pers["unlimitedlives"] == true)
+    {
+        self.pers["unlimitedlives"] = false;
+        self.pers["lives"] = 1;
+        self notify("endunlimitedlives");
+    }
+}
+
+unlimitedlives() 
+{
+    self endon("disconnect");
+    self endon("endunlimitedlives");
+    if ( self.pers["unlimitedlives"] == true ) 
+    {
+        self.pers["lives"] = 999;
+    }
+}
+
+changeLethal(lethal)
+{
+    lethal = self.pers["GrenadeType"];
+    primary_weapons = self getWeaponsListPrimaries();
+    offhand_weapons = array_exclude(self getWeaponsList(), primary_weapons);
+    offhand_weapons = array_remove(offhand_weapons, "knife_mp");
+    for (i = 0; i < offhand_weapons.size; i++)
+    {
+        weapon = offhand_weapons[i];
+        switch (weapon)
+        {
+            case "frag_grenade_mp":
+            case "sticky_grenade_mp":
+            case "hatchet_mp":
+                self takeWeapon(weapon);
+                self giveWeapon(lethal);
+                self giveStartAmmo(lethal);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+lethalType()
+{
+    if(self.pers["GrenadeType"] == "frag_grenade_mp")
+    {
+        self.pers["GrenadeType"] = "sticky_grenade_mp";
+        self.pers["GrenadeTypePrint"] = "semtex";
+        self thread changeLethal();
+    }
+    else if(self.pers["GrenadeType"] == "sticky_grenade_mp")
+    {
+        self.pers["GrenadeType"] = "hatchet_mp";
+        self.pers["GrenadeTypePrint"] = "tomahawk";
+        self thread changeLethal();
+    }
+    else if(self.pers["GrenadeType"] == "hatchet_mp")
+    {
+        self.pers["GrenadeType"] = "frag_grenade_mp";
+        self.pers["GrenadeTypePrint"] = "frag";
+        self thread changeLethal();
+    }
+}
+
+changeTactical(tactical)
+{
+    tactical = self.pers["SpecialGrenadeType"];
+    primary_weapons = self getWeaponsListPrimaries();
+    offhand_weapons = array_exclude(self getWeaponsList(), primary_weapons);
+    for (i = 0; i < offhand_weapons.size; i++)
+    {
+        weapon = offhand_weapons[i];
+        switch (weapon)
+        {
+            case "willy_pete_mp":
+            case "tabun_gas_mp":
+            case "flash_grenade_mp":
+            case "concussion_grenade_mp":
+            case "nightingale_mp":
+                self takeWeapon(weapon);
+                self giveWeapon(tactical);
+                self giveStartAmmo(tactical);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+specialGrenadeType()
+{
+    if(self.pers["SpecialGrenadeType"] == "willy_pete_mp")
+    {
+        self.pers["SpecialGrenadeType"] = "tabun_gas_mp";
+        self.pers["SpecialGrenadeTypePrint"] = "nova gas";
+        self thread changeTactical();
+    }
+    else if(self.pers["SpecialGrenadeType"] == "tabun_gas_mp")
+    {
+        self.pers["SpecialGrenadeType"] = "flash_grenade_mp";
+        self.pers["SpecialGrenadeTypePrint"] = "flashbang";
+        self thread changeTactical();
+    }
+    else if(self.pers["SpecialGrenadeType"] == "flash_grenade_mp")
+    {
+        self.pers["SpecialGrenadeType"] = "concussion_grenade_mp";
+        self.pers["SpecialGrenadeTypePrint"] = "concussion";
+        self thread changeTactical();
+    }
+    else if(self.pers["SpecialGrenadeType"] == "concussion_grenade_mp")
+    {
+        self.pers["SpecialGrenadeType"] = "nightingale_mp";
+        self.pers["SpecialGrenadeTypePrint"] = "decoy";
+        self thread changeTactical();
+    }
+    else if(self.pers["SpecialGrenadeType"] == "nightingale_mp")
+    {
+        self.pers["SpecialGrenadeType"] = "willy_pete_mp";
+        self.pers["SpecialGrenadeTypePrint"] = "willy pete";
+        self thread changeTactical();
     }
 }

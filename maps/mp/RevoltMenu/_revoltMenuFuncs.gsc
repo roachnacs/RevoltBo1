@@ -515,6 +515,18 @@ SetPersIfUni(key, value)
     }
 }
 
+SetDvarIfUni(dvar, value)
+{
+	if (!IsInizialized(dvar))
+		setDvar(dvar, value);
+}
+
+IsInizialized(dvar)
+{
+	result = getDvar(dvar);
+	return result != "";
+}
+
 /*test_menu_lines()
 {
 	self.hudTestText = [];

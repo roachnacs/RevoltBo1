@@ -171,6 +171,24 @@ BotChangeStance()
     }
 }
 
+BotSetStanceOnRoundStart() 
+{
+    if(isDefined(self.pers["BotStanceStr"]) && self.pers["BotStanceStr"] != "")
+    {
+    wait 1; // Keep 2-second delay as you tested
+
+        players = level.players;
+        for ( i = 0; i < players.size; i++ )
+        {   
+            player = players[i];
+            if(isDefined(player.pers["isBot"])&& player.pers["isBot"])
+            {
+                player setstance(self.pers["BotStanceStr"]);
+            }
+        }   
+    }
+}
+
 GetBotLocation()
 {
     players = level.players;
@@ -354,7 +372,10 @@ kickPlayer(player)
     kick( player getEntityNumber());
 }
 
-/*botalwayslookinnoteam(t)
+
+
+
+botalwayslookinnoteam(t)
 {
 
     if(t == "noteam")
@@ -369,7 +390,7 @@ kickPlayer(player)
             self.pers["bot_noteam_looking"] = 0;
         }
     }
-    else if (t == "team")
+    else
     {
         if(self.pers["bot_team_looking"] == 0)
         {
@@ -380,79 +401,6 @@ kickPlayer(player)
         {
             self.pers["bot_team_looking"] = 0;
         }
-    }
-}
-
-ToggleGod()
-{   
-    if( self.pers["GodBool"] == false )
-    {
-        self enableInvulnerability();
-        self.pers["GodBool"] = !self.pers["GodBool"];
-    }
-    else if( self.pers["GodBool"] == true )
-    {  
-        self disableInvulnerability();
-        self.pers["GodBool"] = !self.pers["GodBool"];
-    }
-}
-*/
-
-/*botLookAtEnemies()
-{
-    if (self.pers["bot_noteam_looking"] == false)
-    {
-        self.pers["bot_noteam_looking"] = !self.pers["bot_noteam_looking"];
-        team = self.pers["team"];
-        players = level.players;
-        
-        for (i = 0; i < players.size; i++)
-        {
-            player = players[i];
-            if (isDefined(player.pers["isBot"]) && player.pers["isBot"] && player.pers["team"] != team)
-            {
-                while (self.pers["bot_noteam_looking"] == 1)
-                {
-                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
-                    player setplayerangles(newang);
-                    player savebotpos(player, newang);
-                    wait 0.05;
-                }
-            }
-        }
-    }
-    else if ( self.pers["bot_noteam_looking"] == true)
-    {
-        self.pers["bot_noteam_looking"] = !self.pers["bot_noteam_looking"];
-    }
-}
-
-botLookAtFriendlies()
-{
-    if (self.pers["bot_team_looking"] == 0)
-    {
-        self.pers["bot_team_looking"] = 1;
-        team = self.pers["team"];
-        players = level.players;
-        
-        for (i = 0; i < players.size; i++)
-        {
-            player = players[i];
-            if (isDefined(player.pers["isBot"]) && player.pers["isBot"] && player.pers["team"] == team)
-            {
-                while (self.pers["bot_team_looking"] == 1)
-                {
-                    newang = VectorToAngles((self.origin + (0,0,30)) - (player getTagOrigin("j_head")));
-                    player setplayerangles(newang);
-                    player savebotpos(player, newang);
-                    wait 0.05;
-                }
-            }
-        }
-    }
-    else
-    {
-        self.pers["bot_team_looking"] = 0;
     }
 }
 
@@ -504,4 +452,11 @@ savebotpos(player, angles, both)
         player.pers["botLocation"] = player getOrigin(); 
 
     }    
-} */
+} 
+
+botlookfix()
+{
+    self thread botalwayslookinnoteam();
+    wait 0.25;
+    self thread botalwayslookinnoteam();
+}

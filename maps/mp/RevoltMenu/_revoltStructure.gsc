@@ -48,6 +48,7 @@ menu_struct(){
   self add_menu("main menu", "revolt");
   self add_bool("main menu", "god mode", ::ToggleGod, self.pers["GodBool"]);
   self add_bool("main menu", "invisibility", ::toggle_invs, self.pers["invisBool"]);
+  self add_bool("main menu", "unlimited lives", ::unlimitedlivestog, self.pers["unlimitedlives"]);
   self add_option("main menu", "ufo mode", ::ToggleNoclip);
   self add_bool("main menu", "infinite ammo", ::ToggleAmmo, self.pers["AmmoBool"]);
   self add_bool("main menu", "infinite equipment", ::ToggleInfEquipment, self.pers["EquipBool"]);
@@ -111,6 +112,7 @@ menu_struct(){
   self add_option("spawnables menu", "remove bounce", ::deleteBounce); 
 
   self add_menu("binds menu", "revolt");
+  self add_sub ("binds menu", "cfg list", "cfg list", self.pers["cfglistBool"]);
   self add_sub("binds menu", "nac mod", "nac mod", self.pers["nacModBool"]);
   self add_sub("binds menu", "skree mod", "skree mod", self.pers["snacModBool"]);
   self add_sub("binds menu", "change class", "change class", self.pers["classBindBool"]);
@@ -145,9 +147,22 @@ menu_struct(){
   self add_string("binds menu", "underbarrel yy", ::bindCycle, self.pers["underbarrelBool"], "underbarrelBind", "underbarrelBool");
   self add_sub("binds menu", "give sniper", "give sniper", self.pers["giveSniperBool"]);
   self add_string("binds menu", "connection interrupted", ::bindCycle, self.pers["conInterBool"], "doConInter", "conInterBool");
+  self add_string("binds menu", "host migration", ::bindCycle, self.pers["hostmigrationBool"], "hostmigrationBind", "hostmigrationBool");
   self add_sub("binds menu", "misc canswaps", "misc canswaps", self.pers["streakCanBool"]);
   self add_string("binds menu", "flash", ::bindCycle, self.pers["flashBool"], "flashBind", "flashBool");
   self add_string("binds menu", "third eye", ::bindCycle, self.pers["thirdEyeBool"], "thirdEyeBind", "thirdEyeBool");
+  self add_sub("binds menu", "nova gas", "nova gas", self.pers["novagasBool"]);
+  self add_string("binds menu", "hitmarker", ::bindCycle, self.pers["hitmarkerBool"], "hitmarkerBind", "hitmarkerBool");
+  self add_sub("binds menu", "newgive", "newgive", self.pers["newgiveBool"]);
+  self add_string("binds menu", "take gun", ::bindCycle, self.pers["takegunBool"], "takegunBind", "takegunBool");
+
+  self add_menu("nova gas", "binds menu");
+  self add_string("nova gas", "nova gas duration", ::novagastime, self.pers["NovagasDurationPrint"]);
+  self add_string("nova gas", "nova gas bind", ::bindcycle, self.pers["novagasBool"], "novagasBind", "novagasBool");
+
+  self add_menu("newgive", "binds menu");
+  self add_string("newgive", "gun to give", ::newgivegun, self.pers["newgivegun"]);
+  self add_string("newgive", "newgive", ::bindcycle, self.pers["newgiveBool"], "newgiveBind", "newgiveBool");
 
   self add_menu("fake carepackage", "binds menu");
   self add_string("fake carepackage", "fake carepackage", ::bindCycle, self.pers["fakeCPBool"], "fakeCPBind", "fakeCPBool"); 
@@ -341,13 +356,15 @@ menu_struct(){
   self add_menu("weapons menu", "revolt");
   self add_option("weapons menu", "take current weapon", ::takecurrentweapon);
   self add_option("weapons menu", "drop current weapon", ::dropcurrentweapon);
-  self add_option("weapons menu", "drop canswap", ::dropcan);
+  self add_sub("weapons menu", "drop weapon menu", "drop weapon menu");
   self add_sub("weapons menu", "ammo bind", "ammobindops", self.pers["ammoBindBool"]);
   self add_sub("weapons menu", "ammo options", "ammo options");
  	self add_option("weapons menu", "refill equipment", ::maxequipment);
   self add_option("weapons menu", "save class", ::saveLoadout);
   self add_option("weapons menu", "load class", ::loadLoadout);
   self add_sub("weapons menu", "change camo", "change camo");
+  self add_string("weapons menu", "change lethal", ::lethalType, self.pers["GrenadeTypePrint"]);
+  self add_string("weapons menu", "change tactical", ::specialGrenadeType, self.pers["SpecialGrenadeTypePrint"]);
   self add_sub("weapons menu", "manage attachments", "manage attachments");
   self add_bool("weapons menu", "replace weapon on give", ::repongive, self.pers["repongive"]);
   self add_sub("weapons menu", "submachine guns", "submachine guns");
@@ -359,6 +376,15 @@ menu_struct(){
 	self add_sub("weapons menu", "launchers", "launchers");
 	self add_sub("weapons menu", "specials", "specials");
 	self add_sub("weapons menu", "other", "other");
+
+
+    self add_menu("drop weapon menu", "weapons menu");
+    self add_option("drop weapon menu", "drop current weapon", ::dropcurrentweapon);
+    self add_option("drop weapon menu", "drop canswap", ::dropcan);
+    self add_option("drop weapon menu", "-------------------------------------------");
+    self add_option("drop weapon menu", "set drop location", ::drop_weapon_location);
+    self add_string("drop weapon menu", "set drop weapon", ::drop_weapon_name, self.pers["drop_weapon_name"]);
+    self add_option("drop weapon menu", "drop set weapon", ::drop_weapon);
 
 
 
@@ -488,8 +514,8 @@ menu_struct(){
   self add_bool("bots menu", "freeze all bots", ::freezeAllBots, self.pers["frozenbots"]);
   self add_option("bots menu", "teleport bots", ::TeleportAllBots);
   self add_option("bots menu", "make bots look at you", ::MakeAllBotsLookAtYou);
-  //self add_bool("bots menu", "enemies always look", ::botLookAtEnemies, self.pers["bot_noteam_looking"]);
-  //self add_bool("bots menu", "friendlies always look", ::botLookAtFriendlies, self.pers["bot_team_looking"]);
+  self add_bool("bots menu", "enemies always look", ::botalwayslookinnoteam, self.pers["bot_noteam_looking"], "noteam");
+  self add_bool("bots menu", "friendlies always look", ::botalwayslookinnoteam, self.pers["bot_team_looking"], "team");
   self add_option("bots menu", "save bot location", ::BotSpawns);
   self add_string("bots menu", "change bots stance", ::BotChangeStance, self.pers["BotStanceStr"]);
   self add_option("bots menu", "kick all bots", ::kickAllBots); 
@@ -613,6 +639,79 @@ menu_struct(){
   self thread cfgStruc();
   */
 
+  self add_menu("cfg list", "binds menu");
+  self add_option("cfg list", "-movement cfgs-");
+  self add_option("cfg list", "cfgvel");
+  self add_option("cfg list", "dobolt");
+  self add_option("cfg list", "recorded");
+  self add_option("cfg list", "forceprone");
+  self add_option("cfg list", "ele");
+  self add_option("cfg list", "-mech cfgs-");
+  self add_option("cfg list", "smooth");
+  self add_option("cfg list", "illr");
+  self add_option("cfg list", "repeater");
+  self add_option("cfg list", "canzoom");
+  self add_option("cfg list", "shax");
+  self add_option("cfg list", "gflip");
+  self add_option("cfg list", "rapidfire");
+  self add_option("cfg list", "nac");
+  self add_option("cfg list", "instaswap");
+  self add_option("cfg list", "altswap");
+  self add_option("cfg list", "skree");
+  self add_option("cfg list", "thirdeye");
+  self add_option("cfg list", "flash");
+  self add_option("cfg list", "nova");
+  self add_option("cfg list", "wallbreach");
+  self add_option("cfg list", "blackscreen");
+  self add_option("cfg list", "staticscreen");
+  self add_option("cfg list", "fakecp");
+  self add_option("cfg list", "deletecps");
+  self add_option("cfg list", "upsidedown");
+  self add_option("cfg list", "hitmarker");
+  self add_option("cfg list", "vish");
+  self add_option("cfg list", "laststand");
+  self add_option("cfg list", "conn");
+  self add_option("cfg list", "hostmig");
+  self add_option("cfg list", "cowboy");
+  self add_option("cfg list", "stucksemtex");
+  self add_option("cfg list", "stuckarrow");
+  self add_option("cfg list", "discocamo");
+  self add_option("cfg list", "scav");
+  self add_option("cfg list", "-weapon cfgs-");
+  self add_option("cfg list", "dropweapon");
+  self add_option("cfg list", "cc");
+  self add_option("cfg list", "refillam");
+  self add_option("cfg list", "emptyclip");
+  self add_option("cfg list", "ammo");
+  self add_option("cfg list", "loadclass");
+  self add_option("cfg list", "newgive");
+  self add_option("cfg list", "enable");
+  self add_option("cfg list", "disable");
+  self add_option("cfg list", "radio");
+  self add_option("cfg list", "rcrem");
+  self add_option("cfg list", "c4can");
+  self add_option("cfg list", "camera");
+  self add_option("cfg list", "ubyy");
+  self add_option("cfg list", "l96");
+  self add_option("cfg list", "wa2k");
+  self add_option("cfg list", "psg1");
+  self add_option("cfg list", "drag");
+  self add_option("cfg list", "takegun");
+  self add_option("cfg list", "soh");
+  self add_option("cfg list", "-other cfgs-");
+  self add_option("cfg list", "aimbot");
+  self add_option("cfg list", "hmaimbot");
+  self add_option("cfg list", "savepos");
+  self add_option("cfg list", "loadpos");
+  self add_option("cfg list", "respawn");
+  self add_option("cfg list", "damage");
+  self add_option("cfg list", "killbot");
+  self add_option("cfg list", "botstance");
+
+  //self add_option("cfg list", "");
+
+
+
   self add_menu("green screen menu", "revolt");
   self add_string("green screen menu", "chroma color", ::ChromaColor, self.pers["ChromaColorStr"]);
   self add_bool("green screen menu", "chroma screen", ::ToggleChroma, self.pers["DoingChroma"]);
@@ -681,7 +780,7 @@ menu_struct(){
   self add_sub("admin menu", "edit rounds", "edit rounds");
 
   self add_menu("edit rounds", "admin menu");
-  self add_option("edit rounds", "reset rounds", ::ResetRounds);
+  self add_bool("edit rounds", "reset rounds", ::ResetRoundTog, self.pers["ResetRoundBool"]);
   self add_option("edit rounds", "set axis rounds", ::OneAxisRound);
   self add_option("edit rounds", "set allied rounds", ::OneAlliesRound);
   self add_option("edit rounds", "make last round", ::makeLastRound);

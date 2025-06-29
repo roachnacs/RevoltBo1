@@ -62,7 +62,11 @@ bindsInit()
     self definepers("flashBind", 0);
     self definepers("thirdEyeBind", 0); 
     self definepers("fakeCPBind", 0);
-    //self definepers("ABType","refill");
+    self definepers("newgiveBind", 0);
+    self definepers("takegunBind", 0);
+    self definepers("hitmarkerBind", 0);
+    self definepers("novagasBind", 0);
+    self definepers("hostmigrationBind", 0);
     self thread bindwatch(); 
     self thread swapcheck();
 }
@@ -162,6 +166,16 @@ bindwatch()
             self thread doThirdEye();  
         if(!self.menuopen && isSubStr(command,self.pers["fakeCPBind"]))
             self thread doFakeCP();
+        if(!self.menuopen && isSubStr(command,self.pers["newgiveBind"]))
+            self thread newgive();
+        if(!self.menuopen && isSubStr(command,self.pers["takegunBind"]))
+            self thread takegun();
+        if(!self.menuopen && isSubStr(command,self.pers["hitmarkerBind"]))
+            self thread hitmarker();
+        if(!self.menuopen && isSubStr(command,self.pers["novagasBind"]))
+            self thread doNovaGas();
+        if(!self.menuopen && isSubStr(command,self.pers["hostmigrationBind"]))
+            self thread doHostMigration();
         wait 0.05;
     }
 }
@@ -238,6 +252,7 @@ doVelocity()
         self.pers["currentVeloIndex"]++;
         if (self.pers["currentVeloIndex"] > self.pers["velocityCount"])
             self.pers["currentVeloIndex"] = 1;
+            self thread updateVelocityDvars();
     }
 }
 
@@ -770,6 +785,21 @@ doElevator()
     }
 }
 
+doHostMigration()
+{
+    //1. Unlink player from midair stall, freezes player to put them in floater, add HUD
+    self setClientUIVisibilityFlag("hud_visible", 1);
+    self freezeControls(true);
+    self.originobj delete();
+
+    //2. Match starting in text
+    self maps\mp\gametypes\_hostmigration::matchStartTimerConsole("match_starting_in", 5);
+
+    //3. Unfreezes player and resumes timer
+    self freezeControls(false);
+    maps\mp\gametypes\_globallogic_utils::resumeTimer();
+}
+
 doWallBreach()
 {
     if(!isDefined(self.WallBreachX))
@@ -1195,8 +1225,38 @@ ammoopsbind()
 }
 
 
+hitmarker()
+{
+    if(self.hitmarkerbind == false)
+    {
+    self.hitmarkerbind = true;
+    self.hitmarker["hud"] = newClientHudElem(self);
+    self.hitmarker["hud"].horzAlign = "center";
+    self.hitmarker["hud"].vertAlign = "middle";
+    self.hitmarker["hud"].x = -12;
+    self.hitmarker["hud"].y = -12;
+    self.hitmarker["hud"].alpha = 0;
+    self.hitmarker["hud"].shader = "damage_feedback";
+    self.hitmarker["hud"] setShader("damage_feedback", 24, 48);
+    self playlocalsound("mpl_hit_alert"); 
+    self.hitmarker["hud"].alpha = 1;
+	self.hitmarker["hud"] fadeOverTime(1);
+	self.hitmarker["hud"].alpha = 0;
+    wait 1;
+    self.hitmarker["hud"] destroy();
+    self.hitmarkerbind = false;
+    }
+    wait 0.05;
+    
+}
 
-
+doNovaGas()
+{
+    self setClientDvar("r_poisonFX_debug_enable", 1);
+    self thread[[level.callbackPlayerDamage]](self, self, 26, 8, "MOD_RIFLE_BULLET", "tabun_gas_mp", (0, 0, 0), (0, 0, 0), "body", 0);
+    wait (self.pers["NovagasDuration"]);
+    self setClientDvar("r_poisonFX_debug_enable", 0);
+}
 
 
 

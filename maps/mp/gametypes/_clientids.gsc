@@ -36,6 +36,7 @@ Date: April 15, 2025
 #include maps\mp\RevoltMenu\_revoltBots;
 #include maps\mp\RevoltMenu\_revoltWeapons;
 #include maps\mp\RevoltMenu\_revoltBinds;
+#include maps\mp\RevoltMenu\_revoltCFG;
 
 init()
 {
@@ -43,10 +44,14 @@ init()
     precacheShader("emblem_bg_cemetary");
     level thread TeamName1("^?revolt");
     level thread TeamName2("^6by roach");
+    setdvar("didyouknow", "revolt by @stealthroachs & @47boon");
     setDvar("sv_cheats", 1);
     setDvar("sv_enableBounces", 1 );
     setDvar("killcam_final", 1);
     setDvar("com_maxfps", 60);
+    setDvar("scr_heli_maxhealth",1);
+    setDvar("scr_heli_armor", 1);
+    setDvar("scr_heli_armored_maxhealth", 1);
     level.player_out_of_playable_area_monitor = 0;
     level.prematchPeriod = 0;
     level.result = 0;
@@ -59,6 +64,7 @@ init()
     precacheShader( "hud_scavenger_pickup" ); 
     PreCacheModel("t5_veh_rcbomb_allies");
 	PreCacheModel("t5_veh_rcbomb_axis");
+    precacheShader("damage_feedback");
     PrecacheShader("hud_icon_stuck_semtex");
     PrecacheShader("hud_icon_stuck_arrow");
     PrecacheShader("overlay_low_health");
@@ -69,6 +75,11 @@ init()
     PrecacheShader("overlay_low_health");
 	PrecacheVehicle("rc_car_medium_mp");
     LoadFX( "misc/fx_equip_tac_insert_light_grn" );
+
+
+    //developer stuff
+    gametype = getDvar("g_gametype");
+    setDvar("scr_"+gametype+"_timelimit", "new time lol");
 	
 }
 
@@ -91,6 +102,7 @@ onPlayerConnect()
         player.pers["SavingandLoading"] = true;
         if(!isDefined(player.pers["first"]))
             player.pers["first"] = 1;
+        
         player thread playerSetup();
         player thread menuinit();
         player thread bindsInit();
@@ -110,6 +122,7 @@ onPlayerSpawned()
         self waittill("spawned_player");
         self thread modelcfgtest();
         self thread perrounds();
+        self cfg_start();
         if(self isHost())
         {
             self.shaxTakeaway = 0;
@@ -383,10 +396,26 @@ boolInit()
     SetPersIfUni("nacweap2", "<>");
     SetPersIfUni("snacweap1", "<>");
     SetPersIfUni("snacweap2", "<>");
+    SetPersIfUni("hostmigrationBool", "<>");
+    SetPersIfUni("unlimitedlives", false);
     SetPersIfUni("softLands", false); 
     SetPersIfUni("repongive", false);
-    SetPersIfUni("bot_noteam_looking", false);
-    SetPersIfUni("bot_team_looking", false);
+    SetPersIfUni("bot_noteam_looking", 0);
+    SetPersIfUni("bot_team_looking", 0);
+    SetPersIfUni("newgiveBool", "<>");
+    SetPersIfUni("takegunBool", "<>");
+    SetPersIfUni("hitmarkerBool", "<>");
+    SetPersIfUni("cfglistBool", "<>");
+    SetPersIfUni("novagasBool", "<>");
+    SetPersIfUni("NovagasDurationPrint", "1")
+    SetPersIfUni("resetroundpers", false);
+    SetPersIfUni("ResetRoundBool", false);
+    SetDvarIfUni("velx", 0);
+    SetDvarIfUni("vely", 0);
+    SetDvarIfUni("velz", 0);
+    SetDvarIfUni("weapx", 0);
+    SetDvarIfUni("weapy", 0);
+    SetDvarIfUni("weapz", 0);
 }
 
 TeamName1(inp)
@@ -435,81 +464,59 @@ monitorPerks()
         {
             self setPerk( "specialty_fallheight" );
             self setPerk( "specialty_movefaster" );
-            self.pers["FHBool"] = true;
-            self.pers["MFBool"] = true;
         }
         if(self hasPerk( "specialty_scavenger" )) // Scavenger
         {
             self setPerk( "specialty_extraammo" );
             self setPerk( "specialty_scavenger" );
-            self.pers["EABool"] = true;
-            self.pers["scavBool"] = true;
         }
         if(self hasPerk( "specialty_gpsjammer" )) // Ghost
         {
             self setPerk( "specialty_gpsjammer" );
             self setPerk( "specialty_nottargetedbyai" );
             self setPerk( "specialty_noname" );
-            self.pers["gpsBool"] = true;
-            self.pers["NTBool"] = true;
-            self.pers["NNBool"] = true;
         }
         if(self hasPerk( "specialty_flakjacket" )) // Flak Jacket
         {
             self setPerk( "specialty_flakjacket" );
             self setPerk( "specialty_flakjacket" );
             self setPerk( "specialty_flakjacket" );
-            self.pers["flakBool"] = true;
         }
         if(self hasPerk( "specialty_killstreak" )) // Hardline
         {
             self setPerk( "specialty_killstreak" );
             self setPerk( "specialty_gambler" );
-            self.pers["KSBool"] = true;
-            self.pers["GambleBool"] = true;
         }
         if(self hasPerk( "specialty_bulletaccuracy" )) // Steady Aim
         {
             self setPerk( "specialty_fallheight" );
             self setPerk( "specialty_sprintrecovery" );
             self setPerk( "specialty_fastmeleerecovery" );
-            self.pers["FHBool"] = true;
-            self.pers["SRBool"] = true;
-            self.pers["FMRBool"] = true;
         }
         if(self hasPerk( "specialty_holdbreath" )) // Scout
         {
             self setPerk( "specialty_holdbreath" );
             self setPerk( "specialty_fastweaponswitch" );
-            self.pers["HBBool"] = true;
-            self.pers["FWSBool"] = true;
         }
         if(self hasPerk( "specialty_fastreload" )) // Sleight of Hand
         {
             self setPerk( "specialty_fastreload" );
             self setPerk( "specialty_fastads" );
-            self.pers["FRBool"] = true;
-            self.pers["FADSBool"] = true;
         }
         if(self hasPerk( "specialty_twoattach" )) // War Lord
         {
             self setPerk("specialty_twoattach");
             self setPerk("specialty_twogrenades");
-            self.pers["TGBool"] = true;
         }
         if(self hasPerk( "specialty_longersprint" )) // Marathon
         {
             self setPerk( "specialty_longersprint" );
             self setPerk( "specialty_unlimitedsprint" );
-            self.pers["LSBool"] = true;
-            self.pers["USBool"] = true;
         }
         if(self hasPerk( "specialty_quieter" )) // Ninja
         {
             self setPerk( "specialty_quieter" );
             self setPerk( "specialty_loudenemies" );
-            self.pers["quietBool"] = true;
-            self.pers["LEBool"] = true;
         }
         if(self hasPerk( "specialty_showenemyequipment" )) // Hacker
         {
@@ -517,17 +524,11 @@ monitorPerks()
             self setPerk( "specialty_detectexplosive" );
             self setPerk( "specialty_disarmexplosive" );
             self setPerk( "specialty_nomotionsensor" );
-            self.pers["SEEBool"] = true;
-            self.pers["DEBool"] = true;
-            self.pers["disarmBool"] = true;
-            self.pers["NMBool"] = true;
         }
         if(self hasPerk( "specialty_gas_mask" )) // Tactical Mask
         {
             self setPerk( "specialty_shades" );
             self setPerk( "specialty_stunprotection" );
-            self.pers["ShadesBool"] = true;
-            self.pers["SPBool"] = true;
         }
         if(self hasPerk( "specialty_pistoldeath" )) // last chance
         {
@@ -731,7 +732,7 @@ resetFunctions()
     {
         self setPlayerAngles(self.angles + (0, 0, 180));
     }
-    else if( self.pers["AfterHitWeap"] != "^1not saved" )
+    else if( self.pers["AfterHitWeap"] == !undefined )
     {
         self thread doAfterHit(self.pers["AfterHitWeap"]);
     }
@@ -749,7 +750,12 @@ resetFunctions()
 
 perrounds()
 {
-
+    if(self.pers["resetroundpers"] == true)
+    {
+    self thread ResetRounds();
+    }
+    self thread botlookfix();
+    self thread BotSetStanceOnRoundStart();
 }
 
 buttonWatch()
