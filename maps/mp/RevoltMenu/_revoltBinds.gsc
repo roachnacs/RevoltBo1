@@ -109,7 +109,7 @@ bindwatch()
         if(!self.menuopen && isSubStr(command,self.pers["repeaterBind"]))
             self thread doRepeater();
         if(!self.menuopen && isSubStr(command,self.pers["cowboyBind"]))
-            self thread doCowboy(); // doRapidFire doCowboy
+            self thread doCowboy();
         if(!self.menuopen && isSubStr(command,self.pers["smoothAnimBind"]))
             self thread doSmoothAnim();
         if(!self.menuopen && isSubStr(command,self.pers["illReloadBind"]))
@@ -626,6 +626,7 @@ doRapidFire()
     wait 5;
     setDvar("perk_weapReloadMultiplier",0.5);
 }
+
 defaultRepeater()
 {
     current = self getCurrentWeapon();

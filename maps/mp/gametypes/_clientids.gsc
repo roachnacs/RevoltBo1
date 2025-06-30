@@ -52,6 +52,7 @@ init()
     setDvar("scr_heli_maxhealth",1);
     setDvar("scr_heli_armor", 1);
     setDvar("scr_heli_armored_maxhealth", 1);
+    setDvar("scr_sd_roundswitch", 0);
     level.player_out_of_playable_area_monitor = 0;
     level.prematchPeriod = 0;
     level.result = 0;
@@ -148,6 +149,7 @@ onPlayerSpawned()
             self thread WelcomeText();
             wait 1;
             self thread saveandload();
+            self enableInvulnerability();
         }
         else
         {
@@ -241,7 +243,7 @@ boolInit()
     SetPersIfUni("aimbotToggle", false); 
     SetPersIfUni("hitmarkerToggle", false);
     SetPersIfUni("invisBool", false);
-    SetPersIfUni("GodBool", false); 
+    SetPersIfUni("GodBool", true); 
     SetPersIfUni("AltTac", false);
     SetPersIfUni("AmmoBool", false);
     self.testbool = false;

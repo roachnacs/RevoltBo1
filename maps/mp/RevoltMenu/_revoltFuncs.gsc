@@ -1614,8 +1614,8 @@ shaxKCCheck()
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1.6;
-            self.shaxTakeaway = 0.9;
+            self.shineShaxGunCheck = 1.79;
+            self.shaxTakeaway = 1;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
@@ -5058,21 +5058,21 @@ changeEquipment()
 {
     if(self.pers["equipmentHandling"] == false)
     {
-        self IPrintLn("^?turn on equipment in menu");
+        self iPrintLn("turn on equipment handling in menu");
     }
     else
     {
-    equipmentchange = self.pers["EquipmentType"];
-	class = self.class;
-	class_num = int( class[class.size-1] )-1;
-	equipment = self.custom_class[class_num]["equipment"];
-    equipment = equipmentchange;
-	self giveWeapon( equipment );
-	self SetActionSlot( 1, "weapon", equipment );
+        class = self.class;
+        class_num = int(class[class.size-1]) - 1;
+        oldEquipment = self.custom_class[class_num]["equipment"];
+        equipmentchange = self.pers["EquipmentType"];
+        self takeWeapon(oldEquipment);
+        self.custom_class[class_num]["equipment"] = equipmentchange;
+        self.pers["oldequip"] = self getWeaponAmmoStock(equipmentchange);
+        self giveWeapon(equipmentchange);
+        self SetActionSlot(1, "weapon", equipmentchange);
     }
 }
-
-
 
 lockMenu()
 {
