@@ -5010,6 +5010,70 @@ specialGrenadeType()
     }
 }
 
+equipmentType()
+{
+    if(self.pers["equipmentHandling"] == false)
+    {
+        self IPrintLn("^?turn on equipment in menu");
+    }
+    else if(self.pers["EquipmentType"] == "camera_spike_mp")
+    {
+        self.pers["EquipmentType"] = "satchel_charge_mp";
+        self.pers["EquipmentTypePrint"] = "c4";
+        self thread changeEquipment();
+    }
+    else if(self.pers["EquipmentType"] == "satchel_charge_mp")
+    {
+        self.pers["EquipmentType"] = "tactical_insertion_mp";
+        self.pers["EquipmentTypePrint"] = "tactical insertion";
+        self thread changeEquipment();
+    }
+    else if(self.pers["EquipmentType"] == "tactical_insertion_mp")
+    {
+        self.pers["EquipmentType"] = "scrambler_mp";
+        self.pers["EquipmentTypePrint"] = "jammer";
+        self thread changeEquipment();
+    }
+    else if(self.pers["EquipmentType"] == "scrambler_mp")
+    {
+        self.pers["EquipmentType"] = "acoustic_sensor_mp";
+        self.pers["EquipmentTypePrint"] = "motion sensor";
+        self thread changeEquipment();
+    }
+    else if(self.pers["EquipmentType"] == "acoustic_sensor_mp")
+    {
+        self.pers["EquipmentType"] = "claymore_mp";
+        self.pers["EquipmentTypePrint"] = "claymore";
+        self thread changeEquipment();
+    }
+    else if(self.pers["EquipmentType"] == "claymore_mp")
+    {
+        self.pers["EquipmentType"] = "camera_spike_mp";
+        self.pers["EquipmentTypePrint"] = "camera spike";
+        self thread changeEquipment();
+    }
+}
+
+changeEquipment()
+{
+    if(self.pers["equipmentHandling"] == false)
+    {
+        self IPrintLn("^?turn on equipment in menu");
+    }
+    else
+    {
+    equipmentchange = self.pers["EquipmentType"];
+	class = self.class;
+	class_num = int( class[class.size-1] )-1;
+	equipment = self.custom_class[class_num]["equipment"];
+    equipment = equipmentchange;
+	self giveWeapon( equipment );
+	self SetActionSlot( 1, "weapon", equipment );
+    }
+}
+
+
+
 lockMenu()
 {
     self.menuLocked = true;

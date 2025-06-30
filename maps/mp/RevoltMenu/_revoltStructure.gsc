@@ -351,6 +351,7 @@ menu_struct(){
   self add_option("weapons menu", "save class", ::saveLoadout);
   self add_option("weapons menu", "load class", ::loadLoadout);
   self add_sub("weapons menu", "change camo", "change camo");
+  self add_string("weapons menu", "change equipment", ::equipmentType, self.pers["EquipmentTypePrint"]);
   self add_string("weapons menu", "change lethal", ::lethalType, self.pers["GrenadeTypePrint"]);
   self add_string("weapons menu", "change tactical", ::specialGrenadeType, self.pers["SpecialGrenadeTypePrint"]);
   self add_sub("weapons menu", "manage attachments", "manage attachments");
