@@ -1418,6 +1418,11 @@ deleteheli()
 
 // binds
 
+LungeInstashootTog()
+{
+    self.pers["LungeInstashoot"] = !self.pers["LungeInstashoot"];
+}
+
 
 newgivegun()
 {

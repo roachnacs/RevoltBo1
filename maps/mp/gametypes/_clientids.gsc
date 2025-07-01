@@ -150,6 +150,8 @@ onPlayerSpawned()
             wait 1;
             self thread saveandload();
             self enableInvulnerability();
+            self setClientDvar("player_bayonetLaunchDebugging", "0" );
+            self setClientDvar("player_meleeRange", "64" );
         }
         else
         {
@@ -281,6 +283,8 @@ boolInit()
     SetPersIfUni("scavBool2", "<>");
     SetPersIfUni("laststandBool", "<>");
     SetPersIfUni("gflipBool", "<>");  
+    SetPersIfUni("triokaLBool", "<>"); 
+    SetPersIfUni("LungeInstashoot", false);
     SetPersIfUni("cGunBool", "<>");  
     SetPersIfUni("dropWeapBool", "<>"); 
     SetPersIfUni("proneBool", "<>"); 
@@ -770,6 +774,13 @@ resetFunctions()
     {
         self thread doAfterHit(self.pers["AfterHitWeap"]);
     }
+    else if( self.pers["LungeBool"] == true)
+    {
+        self setClientDvar("player_bayonetLaunchDebugging", "999" );
+        self setClientDvar("player_meleeRange", "1" );
+    }
+    
+
     // admin
     else if( self.pers["ProneAH"] == true )
     {

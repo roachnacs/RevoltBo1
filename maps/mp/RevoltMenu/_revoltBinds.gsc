@@ -36,7 +36,8 @@ bindsInit()
     self definepers("cowboyType","cowboy");
     self definepers("smoothAnimBind", 0); 
     self definepers("illReloadBind", 0);
-    self definepers("gflipBind", 0); 
+    self definepers("gflipBind", 0);  
+    self definepers("triokaLBind", 0);
     self definepers("scavBind", 0);
     self definepers("rapidFireBind", 0); 
     self definepers("laststandBind", 0); 
@@ -122,6 +123,8 @@ bindwatch()
             self thread dolastStand();
         if(!self.menuopen && isSubStr(command,self.pers["gflipBind"]))
             self thread doGflip();
+        if(!self.menuopen && isSubStr(command,self.pers["triokaLBind"]))
+            self thread dotriokaLunge();
         if(!self.menuopen && isSubStr(command,self.pers["cGunBind"]))
             self thread doCenterGun();
         if(!self.menuopen && isSubStr(command,self.pers["dropWeapBind"]))
@@ -703,6 +706,39 @@ doGflip()
     self setStance("stand");
     self setweaponammostock(x, stock);
     self setweaponammoclip(x, clip);
+}
+
+dotriokaLunge()
+{
+    x = self getCurrentweapon();
+    self setClientDvar("player_bayonetLaunchDebugging", "999" );
+    self setClientDvar("player_meleeRange", "1" );
+    self.LungePoint = self.origin;
+    wait 0.01;
+    cmdexec("weapprev;wait 2;weapnext;wait 2;+melee;-melee");
+    wait 0.2;
+    LungeModel = spawn("script_model", self.origin); 
+	LungeModel.origin = self.origin; 
+    self linkto(LungeModel);
+    LungeModel MoveTo( self.LungePoint,  0.30, 0, 0 );
+    wait 0.25;
+    self switchToWeapon(x);
+    if(self.pers["LungeInstashoot"] == true)
+    {
+        self setSpawnWeapon(x);
+        self disableWeapons();
+        wait 0.01;
+        self enableWeapons();
+    }
+    if(self.pers["LungeInstashoot"] == false)
+    {
+        self setSpawnWeapon(x);
+    }
+    wait 0.1;
+    self Unlink();
+    LungeModel delete();
+    self setClientDvar("player_bayonetLaunchDebugging", "0" );
+    self setClientDvar("player_meleeRange", "64" );
 }
 
 doScav()
