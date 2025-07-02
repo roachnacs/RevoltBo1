@@ -1128,12 +1128,12 @@ lastStandWeap()
 		laststandweap = self getCurrentWeapon();
 		level.laststandpistol = laststandweap;
 		self.lsweap = true;
-		self iprintln("Second Chance weapon defined to: ^?" + laststandweap);
+		self iprintln("second chance weapon set to: ^?" + laststandweap);
 	}
 	else if(isDefined(self.lsweap))
 	{
 		level.laststandpistol = "l96a1_mp";
 		self.lsweap = false;
-		self iprintln("Second Chance weapon defined to: ^?default");
+		self iprintln("second chance weapon set to: ^?default");
 	}
 }

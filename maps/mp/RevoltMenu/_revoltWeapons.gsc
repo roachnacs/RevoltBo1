@@ -310,7 +310,7 @@ drop_weapon_location()
     setDvar("weapx",self.origin[0]);
     setDvar("weapy",self.origin[1]);
     setDvar("weapz",self.origin[2]);
-    self iprintln("^7Your weapon will drop at: ^?" + self.pers["drop_weapon_location"]);
+    self iprintln("your weapon will drop at: ^?" + self.pers["drop_weapon_location"]);
 
 }
 

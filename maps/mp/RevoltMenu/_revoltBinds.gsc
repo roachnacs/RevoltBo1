@@ -813,11 +813,9 @@ doAltSwap()
     asp = "asp_mp";
     self giveWeapon(asp);
     self switchToWeapon(asp);
-    wait 0.001;
-    self setSpawnWeapon(asp);
-    waittillframeend;
+    wait 0.27;
     self switchToWeapon(current_weapon);
-    waittillframeend;
+    wait 0.001;
     self takeWeapon(asp);
 }
 
