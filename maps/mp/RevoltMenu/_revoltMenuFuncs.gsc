@@ -24,6 +24,13 @@ menuInit(){
     {
         self.pers["equipmentHandling"] = false; 
     }
+    if(!isDefined(self.pers["EquipmentType"]))
+    {
+        class = self.class;
+        class_num = int(class[class.size-1]) - 1;
+        self.pers["EquipmentType"] = self.custom_class[class_num]["equipment"];
+        self.pers["EquipmentTypePrint"] = getEquipmentPrintName(self.pers["EquipmentType"]);
+    }
 }
 
 buttons()
@@ -76,6 +83,17 @@ buttons()
         }
         wait .01;
     }
+}
+
+getEquipmentPrintName(equipment)
+{
+    if(equipment == "camera_spike_mp") return "camera spike";
+    if(equipment == "satchel_charge_mp") return "c4";
+    if(equipment == "tactical_insertion_mp") return "tactical insertion";
+    if(equipment == "scrambler_mp") return "jammer";
+    if(equipment == "acoustic_sensor_mp") return "motion sensor";
+    if(equipment == "claymore_mp") return "claymore";
+    return "unknown";
 }
 
 takeequiponopen()

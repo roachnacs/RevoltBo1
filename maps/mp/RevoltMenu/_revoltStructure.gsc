@@ -25,7 +25,6 @@ menu_struct(){
   self add_sub("revolt", "weapons menu", "weapons menu");
   self add_sub("revolt", "bots menu", "bots menu");
   self add_sub("revolt", "trickshot menu", "trickshot menu"); 
-  //self add_sub("revolt", "cfg menu", "cfg menu");
   self add_sub("revolt", "green screen menu", "green screen menu");
   self add_sub("revolt", "movement menu", "movement menu");
   self add_sub("revolt", "account menu", "account menu");
@@ -133,6 +132,7 @@ menu_struct(){
   self add_string("binds menu", "fake scav", ::bindCycle, self.pers["scavBool2"], "scavBind", "scavBool2");
   self add_sub("binds menu", "last stand", "last stand", self.pers["laststandBool"]);
   self add_string("binds menu", "gflip", ::bindCycle, self.pers["gflipBool"], "gflipBind", "gflipBool");
+  self add_sub("binds menu", "trioka lunge", "trioka lunge", self.pers["triokaLBool"]);
   self add_string("binds menu", "cowboy", ::bindCycle, self.pers["cowboyBool"], "cowboyBind", "cowboyBool");
   self add_string("binds menu", "center gun", ::bindCycle, self.pers["cGunBool"], "cGunBind", "cGunBool");
   self add_string("binds menu", "alt swap", ::bindCycle, self.pers["altSwapBool"], "altSwapBind", "altSwapBool");
@@ -162,6 +162,9 @@ menu_struct(){
   self add_sub("binds menu", "newgive", "newgive", self.pers["newgiveBool"]);
   self add_string("binds menu", "take gun", ::bindCycle, self.pers["takegunBool"], "takegunBind", "takegunBool");
 
+  self add_menu("trioka lunge", "binds menu");
+  self add_string("trioka lunge", "trioka lunge", ::bindCycle, self.pers["triokaLBool"], "triokaLBind", "triokaLBool");
+  self add_bool("trioka lunge", "trioka instashoot", ::LungeInstashootTog, self.pers["LungeInstashoot"]); 
 
   self add_menu("nova gas", "binds menu");
   self add_string("nova gas", "nova gas duration", ::novagastime, self.pers["NovagasDurationPrint"]);

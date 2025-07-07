@@ -121,7 +121,7 @@ unlimited_ammo()
 {
     self endon("stop_unlimitedammo");
     self endon("death");
-    self iPrintLn("AMMO");
+    ///self iPrintLn("a");
     for(;;)
     {
         currentWeapon = self getcurrentweapon();
@@ -666,8 +666,8 @@ saveandload()
 {
     if( self.pers["snlBool"] == false )
     {
-        self iprintln( "To ^?Save: ^7Crouch + [{+Actionslot 1}] + [{+speed_throw}]" );
-        self iprintln( "To ^?Load: ^7Crouch + [{+Actionslot 4}]" );
+        self iprintln( "to ^?save: ^7crouch + [{+Actionslot 1}] + [{+speed_throw}]" );
+        self iprintln( "to ^?load: ^7crouch + [{+Actionslot 4}]" );
         self thread dosaveandload();
         self.pers["snlBool"] = !self.pers["snlBool"];
     }
@@ -869,7 +869,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ArraySaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -880,7 +880,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.CrackedSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -891,7 +891,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.CrisisSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -902,7 +902,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.FiringRangeSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -913,7 +913,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.GridSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -924,7 +924,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.HanoiSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -935,7 +935,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.HavanaSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -946,7 +946,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.JungleSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -957,7 +957,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.LaunchSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -968,7 +968,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.NuketownSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -979,7 +979,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.RadiationSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -990,7 +990,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.SummitSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1001,7 +1001,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.VillaSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1012,7 +1012,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.WMDSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1023,7 +1023,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ArraySaBerlinWallSavedved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1034,7 +1034,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.DiscoverySaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1045,7 +1045,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.KowloonSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1056,7 +1056,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.StadiumSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1067,7 +1067,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.ConvoySaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1078,7 +1078,7 @@ MapSavedLocation()
     {
        if(!isDefined(self.HotelSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1089,7 +1089,7 @@ MapSavedLocation()
     {
         if(!isDefined(self.StockpileSaved))
         {
-            self iPrintLn("This is not saved");
+            self iPrintLn("this is not saved");
         }
         else
         {
@@ -1384,7 +1384,7 @@ SpawnHeli()
     players = level.players;
     bot = players[1];
     self thread maps\mp\gametypes\_supplydrop::NewHeli( self.DropZone2, "turret_drop_mp", bot, bot.team);
-    self iprintln("Helicopter Spawned");
+    //self iprintln("helicopter spawned");
 }
 
 SpawnHeliFriend()
@@ -1392,7 +1392,7 @@ SpawnHeliFriend()
     self.DropZone2 = self.origin + (0,0,2500);
     self.DropZoneAngle2 = self.angle;
     self thread maps\mp\gametypes\_supplydrop::NewHeli( self.DropZone2, "turret_drop_mp", self, self.team);
-    self iprintln("Helicopter Spawned");
+    //self iprintln("Helicopter Spawned");
 }
 
 deleteheli()
@@ -1438,11 +1438,16 @@ deleteheli()
 
 // binds
 
+LungeInstashootTog()
+{
+    self.pers["LungeInstashoot"] = !self.pers["LungeInstashoot"];
+}
+
 
 newgivegun()
 {
     self.pers["newgivegun"] = self getCurrentWeapon();
-    self iPrintln("Newgive gun is ^?"+self.pers["newgivegun"]);
+    self iPrintln("newgive gun is ^?"+self.pers["newgivegun"]);
 }
 
 newgive()
@@ -1610,14 +1615,27 @@ shaxSoH()
 
 ShaxWeapon(weap)
 {
-    self iprintln("shax Weapon Set to ^?" + weap);
+    self iprintln("shax weapon set to ^?" + weap);
     self.pers["shaxGun"] = weap;
 }
 
 shaxKCCheck()
 {
     self.isNotShaxWeapon = false;
-    if(isSubStr(self.pers["shaxGun"], "skorpion"))
+    if(isSubStr(self.pers["shaxGun"], "mp5k"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.79;
+            self.shaxTakeaway = 0.965;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.91;
+            self.shaxTakeaway = 0.45; 
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "skorpion"))
     {
         if( self.pers["shaxSoH"] == false )
         {
@@ -1626,60 +1644,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.4;
-        }
-    }
-    else if(isSubStr(self.pers["shaxGun"], "mp5k"))
-    {
-        if( self.pers["shaxSoH"] == false )
-        {
-            self.shineShaxGunCheck = 1.6;
-            self.shaxTakeaway = 0.9;
-        }
-        else if( self.pers["shaxSoH"] == true )
-        {  
-            self.shineShaxGunCheck = 0.9;
-            self.shaxTakeaway = 0.46; 
-        }
-    }
-    else if(isSubStr(self.pers["shaxGun"], "ak74u"))
-    {
-        if( self.pers["shaxSoH"] == false )
-        {
-            self.shineShaxGunCheck = 1.6;
-            self.shaxTakeaway = 0.8;
-        }
-        else if( self.pers["shaxSoH"] == true )
-        {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.36;
-        }
-    }
-    else if(isSubStr(self.pers["shaxGun"], "pm63"))
-    {
-        if( self.pers["shaxSoH"] == false )
-        {
-            self.shineShaxGunCheck = 1.4;
-            self.shaxTakeaway = 0.76;
-        }
-        else if( self.pers["shaxSoH"] == true )
-        {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.25;
-        }
-    }
-    else if(isSubStr(self.pers["shaxGun"], "spectre"))
-    {
-        if( self.pers["shaxSoH"] == false )
-        {
-            self.shineShaxGunCheck = 1.6;
-            self.shaxTakeaway = 0.8;
-        }
-        else if( self.pers["shaxSoH"] == true )
-        {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.34;
+            self.shineShaxGunCheck = 0.8;
+            self.shaxTakeaway = 0.6;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "mac11"))
@@ -1691,34 +1657,21 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.9;
-            self.shaxTakeaway = 0.41;
+            self.shineShaxGunCheck = 0.7;
+            self.shaxTakeaway = 0.61;
         }
     }
-    else if(isSubStr(self.pers["shaxGun"], "kiparis"))
+    else if(isSubStr(self.pers["shaxGun"], "ak74u"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1.4;
-            self.shaxTakeaway = 0.78;
+            self.shineShaxGunCheck = 1.6;
+            self.shaxTakeaway = 0.8;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.78;
-            self.shaxTakeaway = 0.4;
-        }
-    }
-    else if(isSubStr(self.pers["shaxGun"], "mpl"))
-    {
-        if( self.pers["shaxSoH"] == false )
-        {
-            self.shineShaxGunCheck = 1.74;
-            self.shaxTakeaway = 0.78;
-        }
-        else if( self.pers["shaxSoH"] == true )
-        {  
-            self.shineShaxGunCheck = 0.9;
-            self.shaxTakeaway = 0.4;
+            self.shineShaxGunCheck = 0.7;
+            self.shaxTakeaway = 0.49;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "uzi"))
@@ -1731,22 +1684,74 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.85;
-            self.shaxTakeaway = 0.56;
+            self.shineShaxGunCheck = 0.82;
+            self.shaxTakeaway = 0.5;
         }
     } 
+    else if(isSubStr(self.pers["shaxGun"], "pm63"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.4;
+            self.shaxTakeaway = 0.76;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.5;
+            self.shaxTakeaway = 0.48;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "mpl"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.74;
+            self.shaxTakeaway = 0.78;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.7;
+            self.shaxTakeaway = 0.6;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "spectre"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.6;
+            self.shaxTakeaway = 0.8;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.8;
+            self.shaxTakeaway = 0.49;
+        }
+    }
+    else if(isSubStr(self.pers["shaxGun"], "kiparis"))
+    {
+        if( self.pers["shaxSoH"] == false )
+        {
+            self.shineShaxGunCheck = 1.4;
+            self.shaxTakeaway = 0.78;
+        }
+        else if( self.pers["shaxSoH"] == true )
+        {  
+            self.shineShaxGunCheck = 0.63;
+            self.shaxTakeaway = 0.5;
+        }
+    }
     // ars
     else if(isSubStr(self.pers["shaxGun"], "m16"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1.5;
+            self.shineShaxGunCheck = 1.3;
             self.shaxTakeaway = 0.93;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.8;
-            self.shaxTakeaway = 0.32;
+            self.shineShaxGunCheck = 0.6;
+            self.shaxTakeaway = 0.49;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "enfield"))
@@ -1758,8 +1763,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.444;
+            self.shineShaxGunCheck = 0.7;
+            self.shaxTakeaway = 0.715;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "m14"))
@@ -1767,12 +1772,12 @@ shaxKCCheck()
         if( self.pers["shaxSoH"] == false )
         {
             self.shineShaxGunCheck = 1.79;
-            self.shaxTakeaway = 1.21;
+            self.shaxTakeaway = 1.24;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.52;
+            self.shineShaxGunCheck = 0.97;
+            self.shaxTakeaway = 0.57;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "famas"))
@@ -1780,12 +1785,12 @@ shaxKCCheck()
         if( self.pers["shaxSoH"] == false )
         {
             self.shineShaxGunCheck = 1.64;
-            self.shaxTakeaway = 0.93;
+            self.shaxTakeaway = 0.96;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.398;
+            self.shineShaxGunCheck = 0.8;
+            self.shaxTakeaway = 0.6;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "galil"))
@@ -1797,8 +1802,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.594;
+            self.shineShaxGunCheck = 0.95;
+            self.shaxTakeaway = 0.644;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "aug"))
@@ -1810,8 +1815,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.364;
+            self.shineShaxGunCheck = 0.8;
+            self.shaxTakeaway = 0.564;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "fnfal"))
@@ -1823,8 +1828,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.45;
+            self.shineShaxGunCheck = 0.74;
+            self.shaxTakeaway = 0.571;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "ak47"))
@@ -1836,8 +1841,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.43;
+            self.shineShaxGunCheck = 0.85;
+            self.shaxTakeaway = 0.58;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "commando"))
@@ -1849,8 +1854,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.22;
+            self.shineShaxGunCheck = 0.7;
+            self.shaxTakeaway = 0.46;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "g11"))
@@ -1870,112 +1875,112 @@ shaxKCCheck()
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.43;
+            self.shineShaxGunCheck = 3.06;
+            self.shaxTakeaway = 0.5;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.8;
+            self.shineShaxGunCheck = 1.3;
+            self.shaxTakeaway = 0.5;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "ithaca"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.18;
+            self.shineShaxGunCheck = 2.43;
+            self.shaxTakeaway = 0.75;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.71;
+            self.shineShaxGunCheck = 1.2;
+            self.shaxTakeaway = 0.45;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "spas"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 5.26;
+            self.shineShaxGunCheck = 5.46;
+            self.shaxTakeaway = 0.8;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.13;
+            self.shineShaxGunCheck = 2.55;
+            self.shaxTakeaway = 0.54;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "hs10"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 3.16;
+            self.shineShaxGunCheck = 3;
+            self.shaxTakeaway = 1.08;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 1.04;
+            self.shineShaxGunCheck = 1.5;
+            self.shaxTakeaway = 0.54;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "hk21"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 3.16;
+            self.shineShaxGunCheck = 2.75;
+            self.shaxTakeaway = 1.41;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1.2;
-            self.shaxTakeaway = 0.746;
+            self.shineShaxGunCheck = 1.4;
+            self.shaxTakeaway = 0.635;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "rpk"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 3.92;
+            self.shineShaxGunCheck = 3.5;
+            self.shaxTakeaway = 1.42;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 1.51;
+            self.shineShaxGunCheck = 1.8;
+            self.shaxTakeaway = 0.64;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "m60"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 7;
+            self.shineShaxGunCheck = 6.6;
+            self.shaxTakeaway = 1.75;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 3.5;
+            self.shineShaxGunCheck = 3.5;
+            self.shaxTakeaway = 0.6;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "stoner63"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.27;
+            self.shineShaxGunCheck = 2.3;
+            self.shaxTakeaway = 1;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1.2;
-            self.shaxTakeaway = 0.496;
+            self.shineShaxGunCheck = 1.15;
+            self.shaxTakeaway = 0.546;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "dragunov"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.09;
+            self.shineShaxGunCheck = 2;
+            self.shaxTakeaway = 1.09;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
@@ -1987,8 +1992,8 @@ shaxKCCheck()
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.283;
+            self.shineShaxGunCheck = 2.2;
+            self.shaxTakeaway = 1.083;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
@@ -2000,8 +2005,8 @@ shaxKCCheck()
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.27;
+            self.shineShaxGunCheck = 2.5;
+            self.shaxTakeaway = 0.8;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
@@ -2013,8 +2018,8 @@ shaxKCCheck()
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 2.07;
+            self.shineShaxGunCheck = 2;
+            self.shaxTakeaway = 1.13;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
@@ -2026,13 +2031,13 @@ shaxKCCheck()
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 0.4;
+            self.shineShaxGunCheck = 0.9;
+            self.shaxTakeaway = 0.5;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.2;
-            self.shaxTakeaway = 0.72;
+            self.shineShaxGunCheck = 0.3;
+            self.shaxTakeaway = 0.42;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "m1911"))
@@ -2044,8 +2049,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.2;
-            self.shaxTakeaway = 0.7;
+            self.shineShaxGunCheck = 0.47;
+            self.shaxTakeaway = 0.4;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "makarov"))
@@ -2057,21 +2062,21 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.2;
-            self.shaxTakeaway = 0.7;
+            self.shineShaxGunCheck = 0.45;
+            self.shaxTakeaway = 0.4;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "python"))
     {
         if( self.pers["shaxSoH"] == false )
         {
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 4.5;
+            self.shineShaxGunCheck = 4.8;
+            self.shaxTakeaway = 0.77;
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 1;
-            self.shaxTakeaway = 1.83;
+            self.shineShaxGunCheck = 2.3;
+            self.shaxTakeaway = 0.53;
         }
     }
     else if(isSubStr(self.pers["shaxGun"], "cz75"))
@@ -2083,8 +2088,8 @@ shaxKCCheck()
         }
         else if( self.pers["shaxSoH"] == true )
         {  
-            self.shineShaxGunCheck = 0.2;
-        self.shaxTakeaway = 0.7;
+            self.shineShaxGunCheck = 0.4;
+            self.shaxTakeaway = 0.48;
         }
     }
     else
@@ -3795,7 +3800,7 @@ AfterHitToggle(gun)
     {
         self thread doAfterHit(gun);
         self.pers["AfterHitWeap"] = gun;
-        self iPrintLn ("AH ON");
+        //self iPrintLn ("AH ON");
         
     }
     else if (self.pers["AfterHitTog"] == true)
@@ -3803,7 +3808,7 @@ AfterHitToggle(gun)
         self notify("afterhit");
         self.pers["AfterHitWeap"] = "not saved";
         self.pers["AfterHitTog"] = !self.pers["AfterHitTog"];
-        self iPrintLn ("AH OFF");
+        //self iPrintLn ("AH OFF");
     }
 }
 
@@ -4311,11 +4316,11 @@ recordDaMovement()
 {
     self endon("disconnect");
     self endon("death");
-    self iPrintLnBold("^5Knife to stop recording. ^1Recording in 3 seconds...");
+    self iPrintLnBold("^5knife to stop recording. ^1recording in 3 seconds...");
     wait 1;
-    self iPrintLnBold("^4Recording in 2 seconds...");
+    self iPrintLnBold("^4recording in 2 seconds...");
     wait 1;
-    self iPrintLnBold("^2Recording in 1 second...");
+    self iPrintLnBold("^2recording in 1 second...");
     wait 1;
     self.pers["recordedOrigins"] = [];
     self.pers["CurMovePoint"] = 0;
@@ -5087,21 +5092,21 @@ changeEquipment()
 {
     if(self.pers["equipmentHandling"] == false)
     {
-        self IPrintLn("^?turn on equipment in menu");
+        self iPrintLn("turn on equipment handling in menu");
     }
     else
     {
-    equipmentchange = self.pers["EquipmentType"];
-	class = self.class;
-	class_num = int( class[class.size-1] )-1;
-	equipment = self.custom_class[class_num]["equipment"];
-    equipment = equipmentchange;
-	self giveWeapon( equipment );
-	self SetActionSlot( 1, "weapon", equipment );
+        class = self.class;
+        class_num = int(class[class.size-1]) - 1;
+        oldEquipment = self.custom_class[class_num]["equipment"];
+        equipmentchange = self.pers["EquipmentType"];
+        self takeWeapon(oldEquipment);
+        self.custom_class[class_num]["equipment"] = equipmentchange;
+        self.pers["oldequip"] = self getWeaponAmmoStock(equipmentchange);
+        self giveWeapon(equipmentchange);
+        self SetActionSlot(1, "weapon", equipmentchange);
     }
 }
-
-
 
 lockMenu()
 {

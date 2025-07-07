@@ -197,7 +197,7 @@ GetBotLocation()
         player = players[i];
         if(isDefined(player.pers["isBot"])&& player.pers["isBot"])
         {
-            self iPrintLn("^1" + player getOrigin());
+            self iPrintLn("^?" + player getOrigin());
         }
     }
 }
