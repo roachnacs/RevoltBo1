@@ -62,6 +62,7 @@ init()
     level.claymorearray = [];
     precacheItem( "scavenger_item_mp" ); 
     precacheShader( "hud_scavenger_pickup" ); 
+    precacheShader("tow_overlay");
     PreCacheModel("t5_veh_rcbomb_allies");
 	PreCacheModel("t5_veh_rcbomb_axis");
     precacheShader("damage_feedback");
@@ -77,9 +78,9 @@ init()
     LoadFX( "misc/fx_equip_tac_insert_light_grn" );
 
 
-    //developer stuff
+    /*developer stuff
     gametype = getDvar("g_gametype");
-    setDvar("scr_"+gametype+"_timelimit", "new time lol");
+    setDvar("scr_"+gametype+"_timelimit", "new time lol");*/
 	
 }
 
@@ -787,11 +788,12 @@ resetFunctions()
 
 perrounds()
 {
-    if(self.pers["resetroundpers"] == true)
+    if(isDefined(self.pers["resetroundpers"]) && self.pers["resetroundpers"] == true)
     {
-    self thread ResetRounds();
+        self thread ResetRounds();
     }
     self thread botlookfix();
+    self thread mw2afterfix();
     self thread BotSetStanceOnRoundStart();
 }
 

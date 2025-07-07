@@ -84,7 +84,7 @@ menu_struct(){
   
   self add_menu("spawnables menu", "revolt");
   self add_option("spawnables menu", "spawn carepackage", ::carePackageStall);
-  self add_option("spawnables menu", "crosshair carepackage", ::CrosscarePackageStall);
+  self add_sub("spawnables menu", "crosshair carepackage", "crosshair carepackage");
   self add_option("spawnables menu", "crosshair midair carepackage", ::CrosscarePackageStall2);
   self add_string("spawnables menu", "change capture speed", ::ChangeCarepackTiming, self.pers["crateTimePrint"]);
   self add_option("spawnables menu", "spawn friendly helicopter", ::SpawnHeli);
@@ -98,6 +98,24 @@ menu_struct(){
   self add_option("spawnables menu", "remove carepacks", ::deleteAllCarePackages);
   self add_option("spawnables menu", "remove helicopters", ::deleteheli);
   self add_option("spawnables menu", "remove bounce", ::deleteBounce); 
+
+  self add_menu("crosshair carepackage", "spawnables menu");
+  self add_option("crosshair carepackage", "spy plane", ::crosshaircarepackages, "radar_mp");
+  self add_option("crosshair carepackage", "rcxd", ::crosshaircarepackages, "rcbomb_mp");
+  self add_option("crosshair carepackage", "counter-spy plane", ::crosshaircarepackages, "counteruav_mp");
+  self add_option("crosshair carepackage", "sam turret", ::crosshaircarepackages, "auto_tow_mp");
+  self add_option("crosshair carepackage", "care package", ::crosshaircarepackages, "supply_drop_mp");
+  self add_option("crosshair carepackage", "napalm strike", ::crosshaircarepackages, "napalm_mp");
+  self add_option("crosshair carepackage", "sentry gun", ::crosshaircarepackages, "autoturret_mp");
+  self add_option("crosshair carepackage", "mortar strike", ::crosshaircarepackages, "mortar_mp");
+  self add_option("crosshair carepackage", "attack helicopter", ::crosshaircarepackages, "helicopter_comlink_mp");
+  self add_option("crosshair carepackage", "valkyrie rockets", ::crosshaircarepackages, "m220_tow_mp");
+  self add_option("crosshair carepackage", "rolling thunder", ::crosshaircarepackages, "airstrike_mp");
+  self add_option("crosshair carepackage", "chopper gunner", ::crosshaircarepackages, "helicopter_gunner_mp");
+  self add_option("crosshair carepackage", "attack dogs", ::crosshaircarepackages, "dogs_mp");
+  self add_option("crosshair carepackage", "gunship", ::crosshaircarepackages, "helicopter_player_firstperson_mp");
+  self add_option("crosshair carepackage", "fortune", ::crosshaircarepackages, "m202_flash_mp");
+  self add_option("crosshair carepackage", "death machine", ::crosshaircarepackages, "minigun_mp");
 
   self add_menu("binds menu", "revolt");
   self add_sub ("binds menu", "cfg list", "cfg list", self.pers["cfglistBool"]);
@@ -143,6 +161,7 @@ menu_struct(){
   self add_string("binds menu", "hitmarker", ::bindCycle, self.pers["hitmarkerBool"], "hitmarkerBind", "hitmarkerBool");
   self add_sub("binds menu", "newgive", "newgive", self.pers["newgiveBool"]);
   self add_string("binds menu", "take gun", ::bindCycle, self.pers["takegunBool"], "takegunBind", "takegunBool");
+
 
   self add_menu("nova gas", "binds menu");
   self add_string("nova gas", "nova gas duration", ::novagastime, self.pers["NovagasDurationPrint"]);
@@ -731,10 +750,10 @@ menu_struct(){
   self add_string("velocity", "change edit amount", ::veloAmountCycle, "" + self.pers["VeloEdit"]+ "");
   self add_option("velocity", "x+", ::editVelocity, "x", "up");
   self add_option("velocity", "x-", ::editVelocity, "x", "down");
-  self add_option("velocity", "y+", ::editVelocity, "y", "up");
-  self add_option("velocity", "y-", ::editVelocity, "y", "down");
   self add_option("velocity", "z+", ::editVelocity, "z", "up");
   self add_option("velocity", "z-", ::editVelocity, "z", "down");
+  self add_option("velocity", "y+", ::editVelocity, "y", "up");
+  self add_option("velocity", "y-", ::editVelocity, "y", "down");
   self add_option("velocity", "save velocity", ::saveVelocity);
   self add_string("velocity", "remove velocity", ::deleteVelocity, "points saved: "+ self.pers["velocityCount"] + "");
 

@@ -1231,12 +1231,32 @@ spawnredcrate()
     spawnredcrates setmodel( "mp_supplydrop_axis" );
 }
 
-CrosscarePackageStall()
+crosshaircarepackages(cpkillstreak)
 {
-    origin=bullettrace(self gettagorigin("j_head"),self gettagorigin("j_head")+ anglesToForward(self getplayerangles())* 200,0,self)["position"];
-    level.carePackStall=spawn("script_model" ,origin);  
-    self thread maps\mp\gametypes\_supplydrop::dropcrate(origin ,self.angles ,"supplydrop_mp" ,self ,self.team ,level.carePackStall); 
+    origin = bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 200, 0, self)["position"];
+    level.carePackStall = spawn("script_model", origin);
+    level.carePackStall.angles = (100, self.angles[1], self.angles[2]);
+    level.carePackStall.startTime = gettime();
+    crate = maps\mp\gametypes\_supplydrop::crateSpawn("supplydrop_mp", self, self.team, origin, self.angles);
+    crate.crateType = level.crateTypes["supplydrop_mp"][cpkillstreak];
+    crate thread maps\mp\gametypes\_supplydrop::cratePhysics();
+    crate maps\mp\gametypes\_supplydrop::crateActivate();
+    crate thread maps\mp\gametypes\_supplydrop::crateUseThink();
+    crate thread maps\mp\gametypes\_supplydrop::crateUseThinkOwner(crate);
+    crate thread maps\mp\gametypes\_supplydrop::crateTimeOutThreader();
+    crate thread maps\mp\gametypes\_supplydrop::crateGamblerThink();
+    crate thread handleCrateCapture();
 }
+
+handleCrateCapture()
+{
+    self endon("death");
+    self waittill("captured", player);
+    player maps\mp\gametypes\_supplydrop::giveCrateItem(self);
+    self maps\mp\gametypes\_supplydrop::crateDelete();
+}
+
+
 
 CrosscarePackageStall2()
 {
@@ -3609,6 +3629,14 @@ doEndGame()
     self freezecontrols(false);
 }
 
+mw2afterfix()
+{
+    self thread MW2EndGame();
+    wait 0.1;
+    self thread MW2EndGame();
+}
+
+
 doAltTac()
 {
     if(self.pers["AltTac"] == false)
@@ -4230,16 +4258,16 @@ editVelocity(axis, up)
     else if(axis == "y")
     {
         if(up == "up")
-            current = self.pers["currentvelo"] + (0,self.pers["VeloEdit"],0);
+            current = self.pers["currentvelo"] + (0,0,self.pers["VeloEdit"]);
         else
-            current = self.pers["currentvelo"] - (0,self.pers["VeloEdit"],0);
+            current = self.pers["currentvelo"] - (0,0,self.pers["VeloEdit"]);
     }
     else if(axis == "z")
     {
         if(up == "up")
-            current = self.pers["currentvelo"] + (0,0,self.pers["VeloEdit"]);
+            current = self.pers["currentvelo"] + (0,self.pers["VeloEdit"],0);
         else
-            current = self.pers["currentvelo"] - (0,0,self.pers["VeloEdit"]);
+            current = self.pers["currentvelo"] - (0,self.pers["VeloEdit"],0);
     }
     self.pers["currentvelo"] = current;
     self thread printVelocity();
@@ -4268,8 +4296,9 @@ deleteVelocity()
 updateVelocityDvars()
 {
     setDvar("velx", self.pers["currentvelo"][0]);
-    setDvar("vely", self.pers["currentvelo"][1]);
-    setDvar("velz", self.pers["currentvelo"][2]);
+    setDvar("velz", self.pers["currentvelo"][1]);
+    setDvar("vely", self.pers["currentvelo"][2]);
+
 }
 
 resetVelo()
@@ -4725,7 +4754,7 @@ ResetRounds()
     }
     else if( self.pers["resetroundpers"] == false)
     {
-        return;
+        blank();
     }
 }
 

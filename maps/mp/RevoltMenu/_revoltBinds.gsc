@@ -1314,7 +1314,19 @@ doNovaGas()
 
 
 
+
+
 /*
+
+
+
+
+
+    
+
+
+
+
 
 //(DEBUGGING BULLSHIT)
 whatsmypers()

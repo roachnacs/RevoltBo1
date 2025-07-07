@@ -74,6 +74,7 @@ cfg_start()
     self thread deletecpscfg();
     self thread forcepronecfg();
     self thread novacfg();
+    self thread hostmigrationcfg();
 
 /*
     self thread tpbotsavedcfg();*/
@@ -91,7 +92,7 @@ dvarvelocity()
         vely = getDvarInt("vely");
         velz = getDvarInt("velz");
 
-        self.pers["currentvelo"] = (velx, vely, velz);
+        self.pers["currentvelo"] = (velx, velz, vely);
         self updateVelocityDvars();
         self thread doVelocity();
     }
@@ -807,10 +808,6 @@ hostmigrationcfg()
 
     }
 }
-
-
-
-
 
 
 
