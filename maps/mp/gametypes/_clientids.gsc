@@ -48,7 +48,7 @@ init()
     setDvar("sv_cheats", 1);
     setDvar("sv_enableBounces", 1 );
     setDvar("killcam_final", 1);
-    setDvar("com_maxfps", 60);
+    setDvar("com_maxfps", 57);
     setDvar("scr_heli_maxhealth",1);
     setDvar("scr_heli_armor", 1);
     setDvar("scr_heli_armored_maxhealth", 1);
@@ -291,7 +291,7 @@ boolInit()
     SetPersIfUni("proneBool", "<>"); 
     SetPersIfUni("altSwapBool", "<>"); 
     SetPersIfUni("elevatorBool", "<>"); 
-    SetPersIfUni("elevatorSpeed", "5"); 
+    SetPersIfUni("elevatorSpeed", 5); 
     SetPersIfUni("elevatorType", "up"); 
     SetPersIfUni("fakeCPBool", "<>");  
     SetPersIfUni("CPType", "default"); 

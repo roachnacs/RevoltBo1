@@ -623,10 +623,12 @@ doRapidFire()
     setDvar("perk_weapReloadMultiplier",0.001);
     self setWeaponAmmoClip(x,999);
     self setWeaponAmmoStock(x,999);
-    cmdexec("+usereload;wait 2;+attack;wait 700;-usereload;-attack;");
+    cmdexec("+usereload;wait 2;+attack;wait 300;-usereload;-attack;");
     self setWeaponAmmoClip(x,999);
     self setWeaponAmmoStock(x,999);
-    wait 5;
+    wait 2.25;
+    self setWeaponAmmoClip(x,clip);
+    self setWeaponAmmoStock(x,stock);
     setDvar("perk_weapReloadMultiplier",0.5);
 }
 
