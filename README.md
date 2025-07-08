@@ -15,3 +15,5 @@ On the main menu press mods option and find "mp_revolt" then select
 
 
 If you are having issues please join the discord for help https://discord.gg/jqYDedzMUs
+
+Roach x Boon on top
